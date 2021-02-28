@@ -64,3 +64,7 @@ buck-out/
 
 coverage
 tmp
+
+# codeclimate
+code-quality.html
+/src/.codeclimate.yml
