@@ -8,8 +8,8 @@ describe('App', () => {
       When App load
       Then I should see "Home"`, async () => {
     const {getByText} = render(<App />);
-    await waitFor(() => expect(getByText('Home')).toBeDefined());
+    await waitFor(() => expect(getByText('Tasks')).toBeDefined());
 
-    expect(getByText('Home')).toBeDefined();
+    expect(getByText('Tasks')).toBeDefined();
   });
 });
