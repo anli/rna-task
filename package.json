@@ -5,7 +5,7 @@
   "scripts": {
     "cc": "npm run test -- --coverage && npx codecov",
     "cq": "cp .codeclimate.yml src && cd src && codeclimate analyze -f html > code-quality.html && open code-quality.html && cd ..",
-    "ci": "npm run lint && cc",
+    "ci": "npm run lint && npm run cc",
     "reset": "cd android && ./gradlew clean && cd .. && watchman watch-del-all && npm start -- --reset-cache",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -20,9 +20,11 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-paper": "^4.7.2",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
-    "react-native-screens": "^2.18.0"
+    "react-native-screens": "^2.18.0",
+    "react-native-vector-icons": "^8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
