@@ -1,12 +1,18 @@
 import styled from '@emotion/native';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import React from 'react';
 import {FlatList} from 'react-native';
-import {Appbar, List} from 'react-native-paper';
+import {Appbar, FAB, List} from 'react-native-paper';
 import useTask from './use-task';
 
 const Component = (): JSX.Element => {
   const {data} = useTask();
+  const {navigate} = useNavigation();
+
+  const onAdd = () => {
+    navigate('TaskAddScreen');
+  };
 
   return (
     <Screen>
@@ -17,6 +23,11 @@ const Component = (): JSX.Element => {
         data={data}
         renderItem={({item: {name}}) => <Task title={name} />}
         keyExtractor={({id}) => id}
+      />
+      <AddTaskButton
+        accessibilityLabel="Add Task"
+        icon="plus"
+        onPress={onAdd}
       />
     </Screen>
   );
@@ -31,6 +42,14 @@ export default class HomeScreen {
   static options = options;
 }
 
-const Screen = styled.SafeAreaView``;
+const Screen = styled.SafeAreaView`
+  flex: 1;
+`;
 
 const Task = ({title}: {title: string}) => <List.Item title={title} />;
+
+const AddTaskButton = styled(FAB)`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+`;

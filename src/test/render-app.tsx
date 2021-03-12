@@ -10,7 +10,7 @@ import {render} from '@testing-library/react-native';
 import React from 'react';
 import {Provider as StoreProvider} from 'react-redux';
 
-export const initialState = {task: {data: []}};
+export const initialState: RootState = {task: {ids: [], entities: {}}};
 
 interface Props {
   Component: () => JSX.Element;
