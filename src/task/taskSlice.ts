@@ -6,9 +6,7 @@ interface Task {
   name: string;
 }
 
-const taskAdapter = createEntityAdapter<Task>({
-  selectId: (task) => task.id,
-});
+const taskAdapter = createEntityAdapter<Task>();
 
 const taskSlice = createSlice({
   name: 'task',
