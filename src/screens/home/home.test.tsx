@@ -12,10 +12,11 @@ describe('Home Screen', () => {
     const state = {
       ...initialState,
       task: {
-        data: [
-          {id: '1', name: 'Task A'},
-          {id: '2', name: 'Task B'},
-        ],
+        ids: ['id1', 'id2'],
+        entities: {
+          id1: {id: 'id1', name: 'Task A'},
+          id2: {id: 'id2', name: 'Task B'},
+        },
       },
     };
     const {getByText} = renderApp({
