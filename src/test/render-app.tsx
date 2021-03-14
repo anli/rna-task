@@ -41,7 +41,7 @@ const renderApp = ({
       </NavigationContainer>
     </StoreProvider>
   );
-  return render(<App />);
+  return {...render(<App />), store};
 };
 
 export default renderApp;

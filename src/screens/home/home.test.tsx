@@ -13,7 +13,7 @@ jest.mock('@react-navigation/native', () => {
 });
 
 describe('Home Screen', () => {
-  it('Scenario: See Home Screen', () => {
+  it('See Home Screen', () => {
     const state = {
       ...initialState,
       task: {
@@ -34,7 +34,7 @@ describe('Home Screen', () => {
     expect(getByText('Task B')).toBeDefined();
   });
 
-  it('Scenario: Add Task Button', () => {
+  it('Add Task Button', () => {
     const {getByA11yLabel} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,

@@ -11,7 +11,9 @@ const taskAdapter = createEntityAdapter<Task>();
 const taskSlice = createSlice({
   name: 'task',
   initialState: taskAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    created: taskAdapter.addOne,
+  },
 });
 
 const adapterSelectors = taskAdapter.getSelectors<RootState>(

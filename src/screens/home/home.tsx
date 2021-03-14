@@ -1,13 +1,14 @@
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
+import {useAppSelector} from '@store';
+import {TaskSelectors} from '@task';
 import React from 'react';
 import {FlatList} from 'react-native';
 import {Appbar, FAB, List} from 'react-native-paper';
-import useTask from './use-task';
 
 const Component = (): JSX.Element => {
-  const {data} = useTask();
+  const data = useAppSelector(TaskSelectors.selectAll);
   const {navigate} = useNavigation();
 
   const onAdd = () => {

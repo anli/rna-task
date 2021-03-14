@@ -21,14 +21,17 @@
     "@react-navigation/stack": "^5.14.3",
     "@reduxjs/toolkit": "^1.5.0",
     "react": "16.13.1",
+    "react-hook-form": "^6.15.4",
     "react-native": "0.63.4",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-get-random-values": "^1.6.0",
     "react-native-paper": "^4.7.2",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.18.0",
     "react-native-vector-icons": "^8.1.0",
-    "react-redux": "^7.2.2"
+    "react-redux": "^7.2.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -39,6 +42,7 @@
     "@types/react-native": "^0.63.2",
     "@types/react-redux": "^7.1.16",
     "@types/react-test-renderer": "^16.9.2",
+    "@types/uuid": "^8.3.0",
     "babel-jest": "^25.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "codecov": "^3.8.1",
@@ -63,6 +67,9 @@
     ],
     "setupFiles": [
       "<rootDir>/jest/setup.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest/after-environment-setup.js"
     ],
     "coverageThreshold": {
       "global": {
