@@ -12,3 +12,9 @@ Feature: Home Screen
     Given I am at 'Home' Screen
     When I press 'Add Task' Button
     Then I should see 'Task Add' Screen
+
+  Scenario: Update Task
+    Given I have a task 'Task A'
+    And I am at 'Home' Screen
+    When I press 'Task A' Button
+    Then I should see 'Task Update' Screen

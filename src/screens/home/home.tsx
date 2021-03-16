@@ -5,7 +5,8 @@ import {useAppSelector} from '@store';
 import {TaskSelectors} from '@task';
 import React from 'react';
 import {FlatList} from 'react-native';
-import {Appbar, FAB, List} from 'react-native-paper';
+import {Appbar, FAB} from 'react-native-paper';
+import {Task} from './components';
 
 const Component = (): JSX.Element => {
   const data = useAppSelector(TaskSelectors.selectAll);
@@ -15,6 +16,10 @@ const Component = (): JSX.Element => {
     navigate('TaskAddScreen');
   };
 
+  const onUpdate = (id: string) => {
+    navigate('TaskUpdateScreen', {id});
+  };
+
   return (
     <Screen>
       <Appbar.Header>
@@ -22,7 +27,9 @@ const Component = (): JSX.Element => {
       </Appbar.Header>
       <FlatList
         data={data}
-        renderItem={({item: {name}}) => <Task title={name} />}
+        renderItem={({item: {name, id}}) => (
+          <Task title={name} onPress={() => onUpdate(id)} />
+        )}
         keyExtractor={({id}) => id}
       />
       <AddTaskButton
@@ -46,8 +53,6 @@ export default class HomeScreen {
 const Screen = styled.SafeAreaView`
   flex: 1;
 `;
-
-const Task = ({title}: {title: string}) => <List.Item title={title} />;
 
 const AddTaskButton = styled(FAB)`
   position: absolute;

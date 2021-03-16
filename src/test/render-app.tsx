@@ -16,12 +16,14 @@ interface Props {
   Component: () => JSX.Element;
   navigationOptions?: StackNavigationOptions;
   preloadedState?: RootState;
+  initialParams?: any;
 }
 
 const renderApp = ({
   Component,
   navigationOptions = {},
   preloadedState = initialState,
+  initialParams = {},
 }: Props) => {
   const store = configureStore({
     preloadedState,
@@ -36,6 +38,7 @@ const renderApp = ({
             name="Home"
             component={Component}
             options={navigationOptions}
+            initialParams={initialParams}
           />
         </Stack.Navigator>
       </NavigationContainer>

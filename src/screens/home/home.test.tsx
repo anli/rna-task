@@ -12,22 +12,27 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+const defaultState = {
+  ...initialState,
+  task: {
+    ids: ['idA', 'idB'],
+    entities: {
+      idA: {id: 'idA', name: 'Task A'},
+      idB: {id: 'idB', name: 'Task B'},
+    },
+  },
+};
+
 describe('Home Screen', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('See Home Screen', () => {
-    const state = {
-      ...initialState,
-      task: {
-        ids: ['id1', 'id2'],
-        entities: {
-          id1: {id: 'id1', name: 'Task A'},
-          id2: {id: 'id2', name: 'Task B'},
-        },
-      },
-    };
     const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
-      preloadedState: state,
+      preloadedState: defaultState,
     });
     expect(getByText('Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
@@ -44,5 +49,18 @@ describe('Home Screen', () => {
 
     expect(mockedNavigate).toBeCalledTimes(1);
     expect(mockedNavigate).toBeCalledWith('TaskAddScreen');
+  });
+
+  it('Update Task', () => {
+    const {getByText} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+      preloadedState: defaultState,
+    });
+
+    fireEvent.press(getByText('Task A'));
+
+    expect(mockedNavigate).toBeCalledTimes(1);
+    expect(mockedNavigate).toBeCalledWith('TaskUpdateScreen', {id: 'idA'});
   });
 });
