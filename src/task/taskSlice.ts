@@ -1,4 +1,8 @@
-import {createEntityAdapter, createSlice} from '@reduxjs/toolkit';
+import {
+  createEntityAdapter,
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 import {RootState} from '@store';
 
 interface Task {
@@ -13,6 +17,9 @@ const taskSlice = createSlice({
   initialState: taskAdapter.getInitialState(),
   reducers: {
     created: taskAdapter.addOne,
+    deleted: (state, action: PayloadAction<string>) => {
+      taskAdapter.removeOne(state, action.payload);
+    },
   },
 });
 
@@ -22,6 +29,8 @@ const adapterSelectors = taskAdapter.getSelectors<RootState>(
 
 export class TaskSelectors {
   static selectAll = (state: RootState) => adapterSelectors.selectAll(state);
+  static getSelectById = (id: string) => (state: RootState) =>
+    adapterSelectors.selectById(state, id);
 }
 
 export default taskSlice;

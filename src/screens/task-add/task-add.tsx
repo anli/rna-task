@@ -56,7 +56,7 @@ const Component = (): JSX.Element => {
         </HelperText>
       </View>
 
-      <SaveButton accessibilityLabel="Save" icon="plus" onPress={onSave} />
+      <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />
     </Screen>
   );
 };
