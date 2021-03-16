@@ -30,7 +30,7 @@ describe('Task Update Screen', () => {
   });
 
   it('See UI', () => {
-    const {getByText, getByA11yLabel} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -38,7 +38,8 @@ describe('Task Update Screen', () => {
     });
 
     expect(getByA11yLabel('Back')).toBeDefined();
-    expect(getByText('Task A')).toBeDefined();
+    expect(getByA11yLabel('Task Name')).toBeDefined();
+    expect(getByA11yLabel('Task Name').props.value).toEqual('Task A');
     expect(getByA11yLabel('Delete')).toBeDefined();
   });
 
@@ -86,5 +87,29 @@ describe('Task Update Screen', () => {
 
     await expect(mockedGoBack).toBeCalledTimes(1);
     expect(store.getState().task.entities).toEqual({});
+  });
+
+  it('Press Update Button', async () => {
+    mockedCanGoBack.mockReturnValue(true);
+    const taskName = 'Task A2';
+
+    const {getByA11yLabel, store} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: defaultState,
+      initialParams: defaultParams,
+    });
+
+    act(() => {
+      fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByA11yLabel('Save'));
+    });
+
+    await expect(mockedGoBack).toBeCalledTimes(1);
+    const task = Object.values(store.getState().task.entities)[0];
+    expect(task?.name).toEqual(taskName);
   });
 });

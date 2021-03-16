@@ -5,10 +5,11 @@ import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch} from '@store';
 import {taskSlice} from '@task';
 import React from 'react';
-import {Controller, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, FAB, HelperText, TextInput} from 'react-native-paper';
+import {Appbar, FAB} from 'react-native-paper';
 import {v4 as uuidv4} from 'uuid';
+import {TaskNameInput} from '../home/components';
 
 interface FormData {
   name: string;
@@ -36,24 +37,7 @@ const Component = (): JSX.Element => {
         <Appbar.Content title="Add Task" />
       </Appbar.Header>
       <View>
-        <Controller
-          control={control}
-          render={({onChange, onBlur, value}) => (
-            <TextInput
-              label="Task Name"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              accessibilityLabel="Task Name"
-            />
-          )}
-          name="name"
-          rules={{required: true}}
-          defaultValue=""
-        />
-        <HelperText type="error" visible={Boolean(errors?.name)}>
-          This is required.
-        </HelperText>
+        <TaskNameInput control={control} errors={errors} />
       </View>
 
       <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />

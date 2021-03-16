@@ -20,6 +20,12 @@ const taskSlice = createSlice({
     deleted: (state, action: PayloadAction<string>) => {
       taskAdapter.removeOne(state, action.payload);
     },
+    updated: (
+      state,
+      action: PayloadAction<{id: string; changes: Partial<Task>}>,
+    ) => {
+      taskAdapter.updateOne(state, action.payload);
+    },
   },
 });
 

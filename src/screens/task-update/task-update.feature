@@ -23,6 +23,13 @@ Feature: Task Update Screen
 
   Scenario: Press Delete Button
     Given I am at 'Task Update' Screen
-    When I press 'Save' Button
+    When I press 'Delete' Button
     Then I should see 'Dashboard Screen'
     And I should not see 'Task A'
+
+  Scenario: Press Update Button
+    Given I am at 'Task Update' Screen
+    When that I change 'Task Name' to 'Task A2'
+    And I press 'Save' Button
+    Then I should see 'Dashboard Screen'
+    And I should see 'Task A2'

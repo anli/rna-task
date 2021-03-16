@@ -4,9 +4,15 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch, useAppSelector} from '@store';
 import {TaskSelectors, taskSlice} from '@task';
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, List} from 'react-native-paper';
+import {Appbar, FAB} from 'react-native-paper';
+import {TaskNameInput} from '../home/components';
+
+interface FormData {
+  name: string;
+}
 
 const Component = (): JSX.Element => {
   const {goBack, canGoBack} = useNavigation();
@@ -15,6 +21,13 @@ const Component = (): JSX.Element => {
   } = useRoute() as any;
   const data = useAppSelector(TaskSelectors.getSelectById(id));
   const dispatch = useAppDispatch();
+  const {control, handleSubmit, errors, setValue} = useForm<FormData>();
+
+  useEffect(() => {
+    if (data) {
+      setValue('name', data.name);
+    }
+  }, [setValue, data]);
 
   const onBack = () => {
     canGoBack() && goBack();
@@ -24,6 +37,11 @@ const Component = (): JSX.Element => {
     dispatch(taskSlice.actions.deleted(id));
     onBack();
   };
+
+  const onSave = handleSubmit((changes) => {
+    dispatch(taskSlice.actions.updated({id, changes}));
+    onBack();
+  });
 
   return (
     <Screen>
@@ -37,8 +55,9 @@ const Component = (): JSX.Element => {
         />
       </Appbar.Header>
       <View>
-        <List.Item title={data?.name} />
+        <TaskNameInput control={control} errors={errors} />
       </View>
+      <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />
     </Screen>
   );
 };
@@ -54,4 +73,10 @@ export default class TaskUpdateScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
+`;
+
+const SaveButton = styled(FAB)`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
 `;
