@@ -17,9 +17,13 @@
     "@emotion/native": "^11.0.0",
     "@emotion/react": "^11.1.5",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-firebase/app": "^11.1.2",
+    "@react-native-firebase/auth": "^11.1.2",
+    "@react-native-google-signin/google-signin": "github:react-native-community/google-signin",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
     "@reduxjs/toolkit": "^1.5.0",
+    "ramda": "^0.27.1",
     "react": "16.13.1",
     "react-hook-form": "^6.15.4",
     "react-native": "0.63.4",
@@ -39,6 +43,7 @@
     "@react-native-community/eslint-config": "^1.1.0",
     "@testing-library/react-native": "^7.1.0",
     "@types/jest": "^25.2.3",
+    "@types/ramda": "^0.27.39",
     "@types/react-native": "^0.63.2",
     "@types/react-redux": "^7.1.16",
     "@types/react-test-renderer": "^16.9.2",
@@ -63,9 +68,10 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/style.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community)"
+      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community|@?react-native-firebase|@react-native-google-signin)"
     ],
     "setupFiles": [
+      "<rootDir>/__mocks__/react-native-modules.ts",
       "<rootDir>/jest/setup.js"
     ],
     "setupFilesAfterEnv": [
