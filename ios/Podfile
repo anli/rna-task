@@ -23,6 +23,7 @@ target 'Task' do
   end
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'GoogleSignIn', '~> 5.0.2'
 end
 
 target 'Task-tvOS' do
