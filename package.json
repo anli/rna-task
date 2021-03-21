@@ -68,9 +68,10 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/style.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community)"
+      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community|@?react-native-firebase|@react-native-google-signin)"
     ],
     "setupFiles": [
+      "<rootDir>/__mocks__/react-native-modules.ts",
       "<rootDir>/jest/setup.js"
     ],
     "setupFilesAfterEnv": [
