@@ -37,9 +37,8 @@ const Component = (): JSX.Element => {
       await unwrapResult(action$);
       setStatus(STATUS.IDLE);
       onBack();
-    } catch (error) {
+    } catch ({message}) {
       setStatus(STATUS.IDLE);
-      const {message} = error;
       Toast.show({
         type: 'error',
         text2: message,

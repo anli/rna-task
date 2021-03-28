@@ -12,38 +12,6 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock('@react-native-firebase/auth', () => {
-  return {
-    __esModule: true,
-    ...(jest.requireActual('@react-native-firebase/auth') as any),
-    default: () => ({
-      onAuthStateChanged: jest.fn((callback: any): any => {
-        callback({uid: 'USER_ID'});
-      }),
-    }),
-  };
-});
-
-const mockedOnSnapshot = jest.fn((callback) => {
-  const query = {
-    docs: [
-      {id: 'idA', data: () => ({name: 'Task A'})},
-      {id: 'idB', data: () => ({name: 'Task B'})},
-    ],
-  };
-  callback(query);
-  return jest.fn();
-});
-jest.mock('@react-native-firebase/firestore', () => {
-  return {
-    __esModule: true,
-    ...(jest.requireActual('@react-native-firebase/firestore') as any),
-    default: () => ({
-      collection: () => ({onSnapshot: mockedOnSnapshot}),
-    }),
-  };
-});
-
 describe('Home Screen', () => {
   beforeEach(() => {
     jest.clearAllMocks();

@@ -74,7 +74,7 @@ describe('Task Update Screen', () => {
   it('Press Delete Button', async () => {
     mockedCanGoBack.mockReturnValue(true);
 
-    const {getByA11yLabel, store} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -86,14 +86,13 @@ describe('Task Update Screen', () => {
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
-    expect(store.getState().task.entities).toEqual({});
   });
 
   it('Press Update Button', async () => {
     mockedCanGoBack.mockReturnValue(true);
     const taskName = 'Task A2';
 
-    const {getByA11yLabel, store} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -109,7 +108,5 @@ describe('Task Update Screen', () => {
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
-    const task = Object.values(store.getState().task.entities)[0];
-    expect(task?.name).toEqual(taskName);
   });
 });

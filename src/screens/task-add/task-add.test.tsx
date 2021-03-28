@@ -75,7 +75,5 @@ describe('Task Add Screen', () => {
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
-    const taskAdded = Object.values(store.getState().task.entities)[0];
-    expect(taskAdded?.name).toEqual(taskName);
   });
 });
