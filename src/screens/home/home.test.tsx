@@ -1,4 +1,4 @@
-import {initialState, renderApp} from '@test';
+import {renderApp} from '@test';
 import {fireEvent} from '@testing-library/react-native';
 import HomeScreen from './home';
 
@@ -12,16 +12,37 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-const defaultState = {
-  ...initialState,
-  task: {
-    ids: ['idA', 'idB'],
-    entities: {
-      idA: {id: 'idA', name: 'Task A'},
-      idB: {id: 'idB', name: 'Task B'},
-    },
-  },
-};
+jest.mock('@react-native-firebase/auth', () => {
+  return {
+    __esModule: true,
+    ...(jest.requireActual('@react-native-firebase/auth') as any),
+    default: () => ({
+      onAuthStateChanged: jest.fn((callback: any): any => {
+        callback({uid: 'USER_ID'});
+      }),
+    }),
+  };
+});
+
+const mockedOnSnapshot = jest.fn((callback) => {
+  const query = {
+    docs: [
+      {id: 'idA', data: () => ({name: 'Task A'})},
+      {id: 'idB', data: () => ({name: 'Task B'})},
+    ],
+  };
+  callback(query);
+  return jest.fn();
+});
+jest.mock('@react-native-firebase/firestore', () => {
+  return {
+    __esModule: true,
+    ...(jest.requireActual('@react-native-firebase/firestore') as any),
+    default: () => ({
+      collection: () => ({onSnapshot: mockedOnSnapshot}),
+    }),
+  };
+});
 
 describe('Home Screen', () => {
   beforeEach(() => {
@@ -32,7 +53,6 @@ describe('Home Screen', () => {
     const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
-      preloadedState: defaultState,
     });
     expect(getByText('Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
@@ -55,7 +75,6 @@ describe('Home Screen', () => {
     const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
-      preloadedState: defaultState,
     });
 
     fireEvent.press(getByText('Task A'));
