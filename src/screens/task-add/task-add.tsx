@@ -1,33 +1,50 @@
-import {BackButton} from '@components';
+import {BackButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
+import {unwrapResult} from '@reduxjs/toolkit';
 import {useAppDispatch} from '@store';
-import {taskSlice} from '@task';
-import React from 'react';
+import {TaskActions} from '@task';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
 import {Appbar, FAB} from 'react-native-paper';
-import {v4 as uuidv4} from 'uuid';
-import {TaskNameInput} from '../home/components';
+import Toast from 'react-native-toast-message';
 
 interface FormData {
   name: string;
+}
+
+enum STATUS {
+  IDLE,
+  LOADING,
 }
 
 const Component = (): JSX.Element => {
   const {goBack, canGoBack} = useNavigation();
   const {control, handleSubmit, errors} = useForm<FormData>();
   const dispatch = useAppDispatch();
+  const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
 
   const onBack = () => {
     canGoBack() && goBack();
   };
 
-  const onSave = handleSubmit(({name}) => {
-    const id = uuidv4();
-    dispatch(taskSlice.actions.created({id, name}));
-    onBack();
+  const onSave = handleSubmit(async (task) => {
+    try {
+      setStatus(STATUS.LOADING);
+      const action$ = await dispatch(TaskActions.create(task));
+      await unwrapResult(action$);
+      setStatus(STATUS.IDLE);
+      onBack();
+    } catch (error) {
+      setStatus(STATUS.IDLE);
+      const {message} = error;
+      Toast.show({
+        type: 'error',
+        text2: message,
+      });
+    }
   });
 
   return (
@@ -40,7 +57,13 @@ const Component = (): JSX.Element => {
         <TaskNameInput control={control} errors={errors} />
       </View>
 
-      <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />
+      <SaveButton
+        disabled={status === STATUS.LOADING}
+        loading={status === STATUS.LOADING}
+        accessibilityLabel="Save"
+        icon="check"
+        onPress={onSave}
+      />
     </Screen>
   );
 };

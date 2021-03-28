@@ -11,6 +11,7 @@ import {
 import store from '@store';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import {Provider as StoreProvider} from 'react-redux';
 
 const Stack = createStackNavigator();
@@ -23,6 +24,7 @@ const App = (): JSX.Element => {
       <PaperProvider>
         <NavigationContainer>
           <Navigator isLoading={isLoading} isAuthenticated={isAuthenticated} />
+          <Toast ref={(ref) => Toast.setRef(ref)} />
         </NavigationContainer>
       </PaperProvider>
     </StoreProvider>

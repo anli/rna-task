@@ -1,14 +1,13 @@
-import {BackButton} from '@components';
+import {BackButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch, useAppSelector} from '@store';
-import {TaskSelectors, taskSlice} from '@task';
+import {TaskActions, TaskSelectors} from '@task';
 import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
 import {Appbar, FAB} from 'react-native-paper';
-import {TaskNameInput} from '../home/components';
 
 interface FormData {
   name: string;
@@ -34,12 +33,12 @@ const Component = (): JSX.Element => {
   };
 
   const onDelete = () => {
-    dispatch(taskSlice.actions.deleted(id));
+    dispatch(TaskActions.remove(id));
     onBack();
   };
 
   const onSave = handleSubmit((changes) => {
-    dispatch(taskSlice.actions.updated({id, changes}));
+    dispatch(TaskActions.update({id, changes}));
     onBack();
   });
 

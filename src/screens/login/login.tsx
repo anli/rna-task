@@ -6,6 +6,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import React from 'react';
+import Toast from 'react-native-toast-message';
 
 const Component = (): JSX.Element => {
   const onLogin = async () => {
@@ -14,7 +15,13 @@ const Component = (): JSX.Element => {
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth?.GoogleAuthProvider?.credential(idToken);
       return auth().signInWithCredential(googleCredential);
-    } catch (error) {}
+    } catch (error) {
+      const {message} = error;
+      Toast.show({
+        type: 'error',
+        text2: message,
+      });
+    }
   };
 
   return (

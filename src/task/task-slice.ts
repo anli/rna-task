@@ -1,11 +1,7 @@
-import {
-  createEntityAdapter,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import {createEntityAdapter, createSlice} from '@reduxjs/toolkit';
 import {RootState} from '@store';
 
-interface Task {
+export interface Task {
   id: string;
   name: string;
 }
@@ -16,16 +12,7 @@ const taskSlice = createSlice({
   name: 'task',
   initialState: taskAdapter.getInitialState(),
   reducers: {
-    created: taskAdapter.addOne,
-    deleted: (state, action: PayloadAction<string>) => {
-      taskAdapter.removeOne(state, action.payload);
-    },
-    updated: (
-      state,
-      action: PayloadAction<{id: string; changes: Partial<Task>}>,
-    ) => {
-      taskAdapter.updateOne(state, action.payload);
-    },
+    fetched: taskAdapter.setAll,
   },
 });
 
