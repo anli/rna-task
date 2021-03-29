@@ -1,9 +1,12 @@
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {renderApp} from '@test';
-import {fireEvent, waitFor} from '@testing-library/react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { renderApp } from '@test';
+import { fireEvent, waitFor } from '@testing-library/react-native';
 import Toast from 'react-native-toast-message';
-import {act} from 'react-test-renderer';
+import { act } from 'react-test-renderer';
 import LoginScreen from './login';
+<<<<<<< HEAD
+=======
+>>>>>>> develop
 
 const mockedNavigate = jest.fn();
 const mockedGoBack = jest.fn();
