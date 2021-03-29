@@ -1,23 +1,17 @@
-import {BackButton, TaskNameInput} from '@components';
+import {BackButton, SaveButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
-import {unwrapResult} from '@reduxjs/toolkit';
 import {useAppDispatch, useAppSelector} from '@store';
 import {TaskActions, TaskSelectors} from '@task';
+import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, FAB} from 'react-native-paper';
-import Toast from 'react-native-toast-message';
+import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
-}
-
-enum STATUS {
-  IDLE,
-  LOADING,
 }
 
 const Component = (): JSX.Element => {
@@ -38,37 +32,22 @@ const Component = (): JSX.Element => {
     canGoBack() && goBack();
   };
 
-  const onDelete = async () => {
-    try {
-      setStatus(STATUS.LOADING);
-      const action$ = await dispatch(TaskActions.remove(id));
-      await unwrapResult(action$);
-      setStatus(STATUS.IDLE);
-      onBack();
-    } catch ({message}) {
-      setStatus(STATUS.IDLE);
-      Toast.show({
-        type: 'error',
-        text2: message,
-      });
-    }
+  const onDelete = () => {
+    doAction(TaskActions.remove(id));
   };
 
-  const onSave = handleSubmit(async (changes) => {
-    try {
-      setStatus(STATUS.LOADING);
-      const action$ = await dispatch(TaskActions.update({id, changes}));
-      await unwrapResult(action$);
-      setStatus(STATUS.IDLE);
-      onBack();
-    } catch ({message}) {
-      setStatus(STATUS.IDLE);
-      Toast.show({
-        type: 'error',
-        text2: message,
-      });
-    }
+  const onUpdate = handleSubmit(async (changes) => {
+    doAction(TaskActions.update({id, changes}));
   });
+
+  const doAction = async (action: any) => {
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus,
+      dispatch,
+      action: action,
+    });
+    isSuccessful && onBack();
+  };
 
   return (
     <Screen>
@@ -88,9 +67,7 @@ const Component = (): JSX.Element => {
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}
-        accessibilityLabel="Save"
-        icon="check"
-        onPress={onSave}
+        onPress={onUpdate}
       />
     </Screen>
   );
@@ -107,10 +84,4 @@ export default class TaskUpdateScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
-`;
-
-const SaveButton = styled(FAB)`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
 `;

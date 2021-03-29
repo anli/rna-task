@@ -6,7 +6,7 @@ const create = createAsyncThunk(
   'task/create',
   async (task: Omit<Task, 'id'>) => {
     const userId = firebase.auth().currentUser?.uid;
-    const url = `users/${userId}123/tasks`;
+    const url = `users/${userId}/tasks`;
     await firestore().collection<Omit<Task, 'id'>>(url).add(task);
     return true;
   },

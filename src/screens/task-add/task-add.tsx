@@ -1,23 +1,17 @@
-import {BackButton, TaskNameInput} from '@components';
+import {BackButton, SaveButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
-import {unwrapResult} from '@reduxjs/toolkit';
 import {useAppDispatch} from '@store';
 import {TaskActions} from '@task';
+import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, FAB} from 'react-native-paper';
-import Toast from 'react-native-toast-message';
+import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
-}
-
-enum STATUS {
-  IDLE,
-  LOADING,
 }
 
 const Component = (): JSX.Element => {
@@ -31,19 +25,12 @@ const Component = (): JSX.Element => {
   };
 
   const onSave = handleSubmit(async (task) => {
-    try {
-      setStatus(STATUS.LOADING);
-      const action$ = await dispatch(TaskActions.create(task));
-      await unwrapResult(action$);
-      setStatus(STATUS.IDLE);
-      onBack();
-    } catch ({message}) {
-      setStatus(STATUS.IDLE);
-      Toast.show({
-        type: 'error',
-        text2: message,
-      });
-    }
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus,
+      dispatch,
+      action: TaskActions.create(task),
+    });
+    isSuccessful && onBack();
   });
 
   return (
@@ -59,8 +46,6 @@ const Component = (): JSX.Element => {
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}
-        accessibilityLabel="Save"
-        icon="check"
         onPress={onSave}
       />
     </Screen>
@@ -78,10 +63,4 @@ export default class TaskAddScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
-`;
-
-const SaveButton = styled(FAB)`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
 `;
