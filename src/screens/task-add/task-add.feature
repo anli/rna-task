@@ -19,9 +19,16 @@ Feature: Task Add Screen
     When I press 'Back' Button
     Then I should not see 'Dashboard Screen'
 
-  Scenario: Press Save Button
+  Scenario: Add Task Successful
     Given I am at 'Task Add' Screen
     And I enter 'Task A' to 'Task Name' Input
     When I press 'Save' Button
     Then I should see 'Dashboard Screen'
     And I should see 'Task A'
+
+  Scenario: Add Task Failed
+    Given I am at 'Task Add' Screen
+    And Add Task will always fail
+    And I enter 'Task A' to 'Task Name' Input
+    When I press 'Save' Button
+    Then I should see Error Message

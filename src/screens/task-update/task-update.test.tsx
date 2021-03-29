@@ -1,6 +1,8 @@
+import {mockFirestoreDelete, mockFirestoreUpdate} from '@mocks';
 import {RootState} from '@store';
 import {initialState, renderApp} from '@test';
 import {act, fireEvent} from '@testing-library/react-native';
+import Toast from 'react-native-toast-message';
 import TaskUpdateScreen from './task-update';
 
 const mockedNavigate = jest.fn();
@@ -71,10 +73,10 @@ describe('Task Update Screen', () => {
     expect(mockedGoBack).toBeCalledTimes(0);
   });
 
-  it('Press Delete Button', async () => {
+  it('Delete Successful', async () => {
     mockedCanGoBack.mockReturnValue(true);
 
-    const {getByA11yLabel, store} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -86,14 +88,34 @@ describe('Task Update Screen', () => {
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
-    expect(store.getState().task.entities).toEqual({});
   });
 
-  it('Press Update Button', async () => {
+  it('Delete Failed', async () => {
+    const spyToastShow = jest.spyOn(Toast, 'show');
+    mockFirestoreDelete.mockRejectedValue(new Error('ERROR'));
+    mockedCanGoBack.mockReturnValue(true);
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: defaultState,
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByA11yLabel('Delete'));
+    });
+
+    await expect(mockedGoBack).toBeCalledTimes(0);
+    expect(spyToastShow).toBeCalledTimes(1);
+    expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
+  });
+
+  it('Update Successful', async () => {
     mockedCanGoBack.mockReturnValue(true);
     const taskName = 'Task A2';
 
-    const {getByA11yLabel, store} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -109,7 +131,31 @@ describe('Task Update Screen', () => {
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
-    const task = Object.values(store.getState().task.entities)[0];
-    expect(task?.name).toEqual(taskName);
+  });
+
+  it('Update Failed', async () => {
+    const spyToastShow = jest.spyOn(Toast, 'show');
+    mockFirestoreUpdate.mockRejectedValue(new Error('ERROR'));
+    mockedCanGoBack.mockReturnValue(true);
+    const taskName = 'Task A2';
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: defaultState,
+      initialParams: defaultParams,
+    });
+
+    act(() => {
+      fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByA11yLabel('Save'));
+    });
+
+    await expect(mockedGoBack).toBeCalledTimes(0);
+    expect(spyToastShow).toBeCalledTimes(1);
+    expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
   });
 });

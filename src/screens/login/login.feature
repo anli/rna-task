@@ -7,5 +7,11 @@ Feature: Login Screen
 
   Scenario: Login Successfully
     Given I am at 'Login' Screen
-    And I press 'Google Login' Button
+    When I press 'Google Login' Button
     Then I should be 'Logged In to Firebase'
+
+  Scenario: Login Failure
+    Given I am at 'Login' Screen
+    And login will always fail
+    When I press 'Google Login' Button
+    Then I should see Error Message

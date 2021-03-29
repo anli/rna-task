@@ -1,4 +1,4 @@
-import {initialState, renderApp} from '@test';
+import {renderApp} from '@test';
 import {fireEvent} from '@testing-library/react-native';
 import HomeScreen from './home';
 
@@ -12,17 +12,6 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-const defaultState = {
-  ...initialState,
-  task: {
-    ids: ['idA', 'idB'],
-    entities: {
-      idA: {id: 'idA', name: 'Task A'},
-      idB: {id: 'idB', name: 'Task B'},
-    },
-  },
-};
-
 describe('Home Screen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -32,7 +21,6 @@ describe('Home Screen', () => {
     const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
-      preloadedState: defaultState,
     });
     expect(getByText('Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
@@ -55,7 +43,6 @@ describe('Home Screen', () => {
     const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
-      preloadedState: defaultState,
     });
 
     fireEvent.press(getByText('Task A'));

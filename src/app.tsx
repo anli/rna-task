@@ -1,4 +1,5 @@
 import {useAuthentication} from '@authentication';
+import {Toast} from '@components';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
@@ -23,6 +24,7 @@ const App = (): JSX.Element => {
       <PaperProvider>
         <NavigationContainer>
           <Navigator isLoading={isLoading} isAuthenticated={isAuthenticated} />
+          <Toast />
         </NavigationContainer>
       </PaperProvider>
     </StoreProvider>

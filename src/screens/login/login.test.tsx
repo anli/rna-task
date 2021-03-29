@@ -1,6 +1,7 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {renderApp} from '@test';
 import {fireEvent, waitFor} from '@testing-library/react-native';
+import Toast from 'react-native-toast-message';
 import {act} from 'react-test-renderer';
 import LoginScreen from './login';
 
@@ -55,5 +56,23 @@ describe('Login Screen', () => {
     });
 
     await waitFor(() => expect(mockedSignInWithCredential).toBeCalledTimes(1));
+  });
+
+  it('Login Failure', async () => {
+    jest.spyOn(GoogleSignin, 'signIn').mockRejectedValue(new Error('ERROR'));
+    const spyToastShow = jest.spyOn(Toast, 'show');
+
+    const {getByA11yLabel} = renderApp({
+      Component: LoginScreen.Component,
+      navigationOptions: LoginScreen.options,
+    });
+
+    act(() => {
+      fireEvent.press(getByA11yLabel('Google Login'));
+    });
+
+    await waitFor(() => expect(mockedSignInWithCredential).toBeCalledTimes(0));
+    expect(spyToastShow).toBeCalledTimes(1);
+    expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
   });
 });

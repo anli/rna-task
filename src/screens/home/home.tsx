@@ -2,15 +2,17 @@ import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppSelector} from '@store';
-import {TaskSelectors} from '@task';
+import {TaskSelectors, useFetchTask} from '@task';
 import React from 'react';
 import {FlatList} from 'react-native';
 import {Appbar, FAB} from 'react-native-paper';
 import {Task} from './components';
 
 const Component = (): JSX.Element => {
-  const data = useAppSelector(TaskSelectors.selectAll);
   const {navigate} = useNavigation();
+  const data = useAppSelector(TaskSelectors.selectAll);
+
+  useFetchTask();
 
   const onAdd = () => {
     navigate('TaskAddScreen');

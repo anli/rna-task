@@ -1,14 +1,14 @@
-import {BackButton} from '@components';
+import {BackButton, SaveButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch, useAppSelector} from '@store';
-import {TaskSelectors, taskSlice} from '@task';
-import React, {useEffect} from 'react';
+import {TaskActions, TaskSelectors} from '@task';
+import {dispatchAsyncAction, STATUS} from '@utils';
+import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, FAB} from 'react-native-paper';
-import {TaskNameInput} from '../home/components';
+import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
@@ -22,11 +22,10 @@ const Component = (): JSX.Element => {
   const data = useAppSelector(TaskSelectors.getSelectById(id));
   const dispatch = useAppDispatch();
   const {control, handleSubmit, errors, setValue} = useForm<FormData>();
+  const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
 
   useEffect(() => {
-    if (data) {
-      setValue('name', data.name);
-    }
+    setValue('name', data?.name);
   }, [setValue, data]);
 
   const onBack = () => {
@@ -34,14 +33,21 @@ const Component = (): JSX.Element => {
   };
 
   const onDelete = () => {
-    dispatch(taskSlice.actions.deleted(id));
-    onBack();
+    doAction(TaskActions.remove(id));
   };
 
-  const onSave = handleSubmit((changes) => {
-    dispatch(taskSlice.actions.updated({id, changes}));
-    onBack();
+  const onUpdate = handleSubmit(async (changes) => {
+    doAction(TaskActions.update({id, changes}));
   });
+
+  const doAction = async (action: any) => {
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus,
+      dispatch,
+      action: action,
+    });
+    isSuccessful && onBack();
+  };
 
   return (
     <Screen>
@@ -49,6 +55,7 @@ const Component = (): JSX.Element => {
         <BackButton onPress={onBack} />
         <Appbar.Content title="" />
         <Appbar.Action
+          disabled={status === STATUS.LOADING}
           icon="trash-can-outline"
           accessibilityLabel="Delete"
           onPress={onDelete}
@@ -57,7 +64,11 @@ const Component = (): JSX.Element => {
       <View>
         <TaskNameInput control={control} errors={errors} />
       </View>
-      <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />
+      <SaveButton
+        disabled={status === STATUS.LOADING}
+        loading={status === STATUS.LOADING}
+        onPress={onUpdate}
+      />
     </Screen>
   );
 };
@@ -73,10 +84,4 @@ export default class TaskUpdateScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
-`;
-
-const SaveButton = styled(FAB)`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
 `;

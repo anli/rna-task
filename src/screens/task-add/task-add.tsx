@@ -1,15 +1,14 @@
-import {BackButton} from '@components';
+import {BackButton, SaveButton, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch} from '@store';
-import {taskSlice} from '@task';
-import React from 'react';
+import {TaskActions} from '@task';
+import {dispatchAsyncAction, STATUS} from '@utils';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {View} from 'react-native';
-import {Appbar, FAB} from 'react-native-paper';
-import {v4 as uuidv4} from 'uuid';
-import {TaskNameInput} from '../home/components';
+import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
@@ -19,15 +18,19 @@ const Component = (): JSX.Element => {
   const {goBack, canGoBack} = useNavigation();
   const {control, handleSubmit, errors} = useForm<FormData>();
   const dispatch = useAppDispatch();
+  const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
 
   const onBack = () => {
     canGoBack() && goBack();
   };
 
-  const onSave = handleSubmit(({name}) => {
-    const id = uuidv4();
-    dispatch(taskSlice.actions.created({id, name}));
-    onBack();
+  const onSave = handleSubmit(async (task) => {
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus,
+      dispatch,
+      action: TaskActions.create(task),
+    });
+    isSuccessful && onBack();
   });
 
   return (
@@ -40,7 +43,11 @@ const Component = (): JSX.Element => {
         <TaskNameInput control={control} errors={errors} />
       </View>
 
-      <SaveButton accessibilityLabel="Save" icon="check" onPress={onSave} />
+      <SaveButton
+        disabled={status === STATUS.LOADING}
+        loading={status === STATUS.LOADING}
+        onPress={onSave}
+      />
     </Screen>
   );
 };
@@ -56,10 +63,4 @@ export default class TaskAddScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
-`;
-
-const SaveButton = styled(FAB)`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
 `;

@@ -15,3 +15,8 @@ jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
 
 // https://github.com/invertase/react-native-firebase/issues/2475
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+jest.mock('@components', () => ({
+  ...jest.requireActual('@components'),
+  Toast: jest.fn().mockReturnValue(null),
+}));
