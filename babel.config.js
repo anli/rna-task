@@ -17,6 +17,7 @@ module.exports = {
           '.json',
         ],
         alias: {
+          '@mocks': './__mocks__',
           '@authentication': './src/authentication',
           '@components': './src/components',
           '@test': './src/test',

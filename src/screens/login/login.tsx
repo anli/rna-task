@@ -15,8 +15,7 @@ const Component = (): JSX.Element => {
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth?.GoogleAuthProvider?.credential(idToken);
       return auth().signInWithCredential(googleCredential);
-    } catch (error) {
-      const {message} = error;
+    } catch ({message}) {
       Toast.show({
         type: 'error',
         text2: message,
