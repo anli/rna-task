@@ -1,4 +1,10 @@
-import {BackButton, SaveButton, TaskNameInput} from '@components';
+import {
+  BackButton,
+  DatePickerInput,
+  Header,
+  SaveButton,
+  TaskNameInput,
+} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -12,6 +18,7 @@ import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
+  date?: string;
 }
 
 const Component = (): JSX.Element => {
@@ -35,12 +42,14 @@ const Component = (): JSX.Element => {
 
   return (
     <Screen>
-      <Appbar.Header>
+      <Header>
         <BackButton onPress={onBack} />
         <Appbar.Content title="Add Task" />
-      </Appbar.Header>
+      </Header>
       <View>
         <TaskNameInput control={control} errors={errors} />
+
+        <DatePickerInput control={control} />
       </View>
 
       <SaveButton

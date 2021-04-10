@@ -4,6 +4,7 @@ import {RootState} from '@store';
 export interface Task {
   id: string;
   name: string;
+  date?: string;
 }
 
 const taskAdapter = createEntityAdapter<Task>();

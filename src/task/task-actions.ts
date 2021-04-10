@@ -1,13 +1,16 @@
 import firestore, {firebase} from '@react-native-firebase/firestore';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import R from 'ramda';
 import {Task} from './task-slice';
 
 const create = createAsyncThunk(
   'task/create',
   async (task: Omit<Task, 'id'>) => {
+    const removeNull = R.filter((n) => !R.isNil(n));
+    const cleanTask = removeNull(task) as Omit<Task, 'id'>;
     const userId = firebase.auth().currentUser?.uid;
     const url = `users/${userId}/tasks`;
-    await firestore().collection<Omit<Task, 'id'>>(url).add(task);
+    await firestore().collection<Omit<Task, 'id'>>(url).add(cleanTask);
     return true;
   },
 );

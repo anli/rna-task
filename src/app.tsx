@@ -1,6 +1,9 @@
 import {useAuthentication} from '@authentication';
 import {Toast} from '@components';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  DefaultTheme as NavigationDefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   HomeScreen,
@@ -10,9 +13,29 @@ import {
   TaskUpdateScreen,
 } from '@screens';
 import store from '@store';
+import {defaultTheme} from '@themes';
 import React from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {
+  DefaultTheme as PaperDefaultTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
+
+const navigationTheme = {
+  ...NavigationDefaultTheme,
+  colors: {
+    ...NavigationDefaultTheme.colors,
+    ...defaultTheme.colors,
+  },
+};
+
+const paperTheme = {
+  ...PaperDefaultTheme,
+  colors: {
+    ...PaperDefaultTheme.colors,
+    ...defaultTheme.colors,
+  },
+};
 
 const Stack = createStackNavigator();
 
@@ -21,8 +44,8 @@ const App = (): JSX.Element => {
 
   return (
     <StoreProvider store={store}>
-      <PaperProvider>
-        <NavigationContainer>
+      <PaperProvider theme={paperTheme}>
+        <NavigationContainer theme={navigationTheme}>
           <Navigator isLoading={isLoading} isAuthenticated={isAuthenticated} />
           <Toast />
         </NavigationContainer>

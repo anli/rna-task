@@ -1,7 +1,6 @@
 import React from 'react';
 import {Platform} from 'react-native';
-import {IconButton} from 'react-native-paper';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {IconButton, useTheme} from 'react-native-paper';
 
 interface Props {
   onPress?: () => void;
@@ -16,10 +15,11 @@ const icon = Platform.select({
 }) as string;
 
 const BackButton = ({onPress}: Props) => {
+  const {colors} = useTheme();
   return (
     <IconButton
       icon={icon}
-      color={Colors.white}
+      color={colors.text}
       onPress={onPress}
       accessibilityLabel="Back"
     />
