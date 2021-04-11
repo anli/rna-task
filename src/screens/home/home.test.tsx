@@ -24,7 +24,6 @@ describe('Home Screen', () => {
     });
     expect(getByText('Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
-    expect(getByText('Sat, 10 Apr')).toBeDefined();
     expect(getByText('Task B')).toBeDefined();
   });
 
