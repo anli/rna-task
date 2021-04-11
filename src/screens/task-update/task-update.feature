@@ -1,6 +1,6 @@
 Feature: Task Update Screen
   Background:
-    Given I have a task 'Task A'
+    Given I have a task 'Task A', date 'Sat, 10 Apr'
     And I update 'Task A'
 
   Scenario: See UI
@@ -8,7 +8,11 @@ Feature: Task Update Screen
     When I am at 'Task Update' Screen
     Then I should see 'Back' Button
     And I should see 'Task A'
+    And I should see 'Sat, 10 Apr'
     And I should see 'Delete' Button
+    And I should see 'Close' Button
+    When I press 'Close' Button
+    Then I should see 'Add date' Button
 
   Scenario: Press Back Button
     Given I am at 'Task Update' Screen
@@ -36,9 +40,11 @@ Feature: Task Update Screen
   Scenario: Update Successful
     Given I am at 'Task Update' Screen
     When that I change 'Task Name' to 'Task A2'
+    And I press 'Sat, 10 Apr'
+    And I press 'Cancel' Button
     And I press 'Save' Button
     Then I should see 'Dashboard Screen'
-    And I should see 'Task A2'
+    And I should see 'Task A2', date 'Sat, 10 Apr'
 
   Scenario: Update Failed
     Given I am at 'Task Update' Screen

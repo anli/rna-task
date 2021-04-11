@@ -1,4 +1,4 @@
-import {BackButton, SaveButton, TaskNameInput} from '@components';
+import {BackButton, Header, SaveButton, TaskForm} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -7,11 +7,11 @@ import {TaskActions, TaskSelectors} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 
 interface FormData {
   name: string;
+  date?: string;
 }
 
 const Component = (): JSX.Element => {
@@ -26,6 +26,7 @@ const Component = (): JSX.Element => {
 
   useEffect(() => {
     setValue('name', data?.name);
+    setValue('date', data?.date);
   }, [setValue, data]);
 
   const onBack = () => {
@@ -51,7 +52,7 @@ const Component = (): JSX.Element => {
 
   return (
     <Screen>
-      <Appbar.Header>
+      <Header>
         <BackButton onPress={onBack} />
         <Appbar.Content title="" />
         <Appbar.Action
@@ -60,10 +61,8 @@ const Component = (): JSX.Element => {
           accessibilityLabel="Delete"
           onPress={onDelete}
         />
-      </Appbar.Header>
-      <View>
-        <TaskNameInput control={control} errors={errors} />
-      </View>
+      </Header>
+      <TaskForm control={control} errors={errors} />
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}

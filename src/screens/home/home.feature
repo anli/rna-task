@@ -1,7 +1,7 @@
 Feature: Home Screen
 
   Scenario: See Home Screen
-    Given I have a task 'Task A'
+    Given I have a task 'Task A', date 'Sat, 10 Apr'
     And I have a task 'Task B'
     When I am at 'Home' Screen
     Then I should see 'Tasks'

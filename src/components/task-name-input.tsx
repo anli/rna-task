@@ -1,6 +1,7 @@
+import styled from '@emotion/native';
 import React from 'react';
 import {Controller} from 'react-hook-form';
-import {HelperText, TextInput} from 'react-native-paper';
+import {HelperText} from 'react-native-paper';
 
 interface Props {
   control: any;
@@ -12,7 +13,7 @@ interface Props {
 
 const TaskNameInput = ({
   control,
-  label = 'Task Name',
+  label = 'Enter title',
   accessibilityLabel = 'Task Name',
   name = 'name',
   errors,
@@ -22,8 +23,8 @@ const TaskNameInput = ({
       <Controller
         control={control}
         render={({onChange, onBlur, value}) => (
-          <TextInput
-            label={label}
+          <Input
+            placeholder={label}
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
@@ -34,11 +35,18 @@ const TaskNameInput = ({
         rules={{required: true}}
         defaultValue=""
       />
-      <HelperText type="error" visible={Boolean(errors?.name)}>
-        This is required.
-      </HelperText>
+      {Boolean(errors?.name) && (
+        <HelperText type="error" visible={Boolean(errors?.name)}>
+          This is required.
+        </HelperText>
+      )}
     </>
   );
 };
 
 export default TaskNameInput;
+
+const Input = styled.TextInput`
+  padding: 16px 16px 16px 16px;
+  font-size: 24px;
+`;

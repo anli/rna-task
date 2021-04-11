@@ -1,3 +1,4 @@
+import {Header} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -24,13 +25,13 @@ const Component = (): JSX.Element => {
 
   return (
     <Screen>
-      <Appbar.Header>
+      <Header>
         <Appbar.Content title="Tasks" />
-      </Appbar.Header>
+      </Header>
       <FlatList
         data={data}
-        renderItem={({item: {name, id}}) => (
-          <Task title={name} onPress={() => onUpdate(id)} />
+        renderItem={({item: {name, id, date}}) => (
+          <Task title={name} onPress={() => onUpdate(id)} date={date} />
         )}
         keyExtractor={({id}) => id}
       />

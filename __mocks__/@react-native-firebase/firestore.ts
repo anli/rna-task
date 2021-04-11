@@ -7,7 +7,10 @@ const firestore = jest.fn().mockReturnValue({
     onSnapshot: jest.fn((callback) => {
       const query = {
         docs: [
-          {id: 'idA', data: () => ({name: 'Task A'})},
+          {
+            id: 'idA',
+            data: () => ({name: 'Task A', date: '2021-04-10T00:00:00+08:00'}),
+          },
           {id: 'idB', data: () => ({name: 'Task B'})},
         ],
       };
