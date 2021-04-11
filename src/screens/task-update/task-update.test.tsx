@@ -145,7 +145,7 @@ describe('Task Update Screen', () => {
     });
 
     act(() => {
-      fireEvent.press(getByText('Confirm'));
+      fireEvent.press(getByText('Cancel'));
     });
 
     await act(async () => {
