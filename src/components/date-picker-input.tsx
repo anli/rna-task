@@ -21,7 +21,9 @@ const DatePickerInput = ({
 }: Props) => {
   const [show, setShow] = useState(false);
 
-  const onShow = () => setShow(true);
+  const onShow = () => {
+    setShow(true);
+  };
 
   const onCancel = () => {
     setShow(false);

@@ -1,6 +1,8 @@
 import {mockFirestoreAdd} from '@mocks';
+import {TaskActions} from '@task';
 import {renderApp} from '@test';
 import {act, fireEvent} from '@testing-library/react-native';
+import {formatISO} from 'date-fns';
 import Toast from 'react-native-toast-message';
 import TaskAddScreen from './task-add';
 
@@ -30,7 +32,7 @@ describe('Task Add Screen', () => {
     });
 
     expect(getByA11yLabel('Back')).toBeDefined();
-    expect(getByText('Add Task')).toBeDefined();
+    expect(getByText('Add date')).toBeDefined();
     expect(getByA11yLabel('Task Name')).toBeDefined();
     expect(getByA11yLabel('Save')).toBeDefined();
   });
@@ -61,9 +63,11 @@ describe('Task Add Screen', () => {
 
   it('Add Task Successful', async () => {
     mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionCreate = jest.spyOn(TaskActions, 'create');
     const taskName = 'Task A';
+    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)));
 
-    const {getByA11yLabel} = renderApp({
+    const {getByA11yLabel, getByText} = renderApp({
       Component: TaskAddScreen.Component,
       navigationOptions: TaskAddScreen.options,
     });
@@ -72,11 +76,32 @@ describe('Task Add Screen', () => {
       fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
     });
 
+    act(() => {
+      fireEvent.press(getByText('Add date'));
+    });
+
+    act(() => {
+      fireEvent.press(getByText('Cancel'));
+    });
+
+    act(() => {
+      fireEvent.press(getByText('Add date'));
+    });
+
+    act(() => {
+      fireEvent.press(getByText('Confirm'));
+    });
+
     await act(async () => {
       await fireEvent.press(getByA11yLabel('Save'));
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
+    expect(spyTaskActionCreate).toBeCalledTimes(1);
+    expect(spyTaskActionCreate).toBeCalledWith({
+      name: taskName,
+      date,
+    });
   });
 
   it('Add Task Failed', async () => {
@@ -86,10 +111,16 @@ describe('Task Add Screen', () => {
 
     const taskName = 'Task A';
 
-    const {getByA11yLabel} = renderApp({
+    const {getByA11yLabel, getByText} = renderApp({
       Component: TaskAddScreen.Component,
       navigationOptions: TaskAddScreen.options,
     });
+
+    await act(async () => {
+      await fireEvent.press(getByA11yLabel('Save'));
+    });
+
+    expect(getByText('This is required.')).toBeDefined();
 
     act(() => {
       fireEvent.changeText(getByA11yLabel('Task Name'), taskName);

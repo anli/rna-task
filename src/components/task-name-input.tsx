@@ -13,7 +13,7 @@ interface Props {
 
 const TaskNameInput = ({
   control,
-  label = 'Task Name',
+  label = 'Enter title',
   accessibilityLabel = 'Task Name',
   name = 'name',
   errors,

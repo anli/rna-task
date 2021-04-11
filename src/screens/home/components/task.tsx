@@ -1,5 +1,4 @@
-import {formatRelative, parseISO} from 'date-fns';
-import {enUS} from 'date-fns/esm/locale';
+import {format, parseISO} from 'date-fns/fp';
 import React from 'react';
 import {List} from 'react-native-paper';
 
@@ -18,22 +17,9 @@ const Task = ({title, date, onPress}: Props) => (
 
 export default Task;
 
-const getDescription = (date?: string) => {
-  if (date) {
-    const locale = {
-      ...enUS,
-      formatRelative: (token: any) => formatRelativeLocale[token],
-    };
-    return formatRelative(parseISO(date), new Date(), {locale});
+const getDescription = (value?: string) => {
+  if (value) {
+    return format('EEE, d MMM')(parseISO(value));
   }
   return null;
 };
-
-const formatRelativeLocale = {
-  lastWeek: "'Last' eeee",
-  yesterday: "'Yesterday",
-  today: "'Today",
-  tomorrow: "'Tomorrow",
-  nextWeek: 'eeee',
-  other: 'EEE, d MMM yyyy',
-} as any;

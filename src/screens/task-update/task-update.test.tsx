@@ -1,5 +1,6 @@
 import {mockFirestoreDelete, mockFirestoreUpdate} from '@mocks';
 import {RootState} from '@store';
+import {TaskActions} from '@task';
 import {initialState, renderApp} from '@test';
 import {act, fireEvent} from '@testing-library/react-native';
 import Toast from 'react-native-toast-message';
@@ -21,7 +22,12 @@ jest.mock('@react-navigation/native', () => {
 
 const defaultState: RootState = {
   ...initialState,
-  task: {ids: ['idA'], entities: {idA: {id: 'idA', name: 'Task A'}}},
+  task: {
+    ids: ['idA'],
+    entities: {
+      idA: {id: 'idA', name: 'Task A', date: '2021-04-10T00:00:00+08:00'},
+    },
+  },
 };
 
 const defaultParams = {id: 'idA'};
@@ -32,7 +38,7 @@ describe('Task Update Screen', () => {
   });
 
   it('See UI', () => {
-    const {getByA11yLabel} = renderApp({
+    const {getByA11yLabel, getByText} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -42,7 +48,14 @@ describe('Task Update Screen', () => {
     expect(getByA11yLabel('Back')).toBeDefined();
     expect(getByA11yLabel('Task Name')).toBeDefined();
     expect(getByA11yLabel('Task Name').props.value).toEqual('Task A');
+    expect(getByText('Sat, 10 Apr')).toBeDefined();
     expect(getByA11yLabel('Delete')).toBeDefined();
+
+    expect(getByA11yLabel('Close')).toBeDefined();
+    fireEvent.press(getByA11yLabel('Close'));
+    expect(getByText('Add date')).toBeDefined();
+    fireEvent.press(getByText('Add date'));
+    fireEvent.press(getByText('Confirm'));
   });
 
   it('Press Back Button', () => {
@@ -113,9 +126,10 @@ describe('Task Update Screen', () => {
 
   it('Update Successful', async () => {
     mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
     const taskName = 'Task A2';
 
-    const {getByA11yLabel} = renderApp({
+    const {getByA11yLabel, getByText} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
       preloadedState: defaultState,
@@ -126,11 +140,24 @@ describe('Task Update Screen', () => {
       fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
     });
 
+    act(() => {
+      fireEvent.press(getByText('Sat, 10 Apr'));
+    });
+
+    act(() => {
+      fireEvent.press(getByText('Confirm'));
+    });
+
     await act(async () => {
       await fireEvent.press(getByA11yLabel('Save'));
     });
 
     await expect(mockedGoBack).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {date: '2021-04-10T00:00:00+08:00', name: 'Task A2'},
+      id: 'idA',
+    });
   });
 
   it('Update Failed', async () => {

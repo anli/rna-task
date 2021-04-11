@@ -1,10 +1,4 @@
-import {
-  BackButton,
-  DatePickerInput,
-  Header,
-  SaveButton,
-  TaskNameInput,
-} from '@components';
+import {BackButton, Header, SaveButton, TaskForm} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -13,7 +7,6 @@ import {TaskActions} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 
 interface FormData {
@@ -44,13 +37,9 @@ const Component = (): JSX.Element => {
     <Screen>
       <Header>
         <BackButton onPress={onBack} />
-        <Appbar.Content title="Add Task" />
+        <Appbar.Content title="" />
       </Header>
-      <View>
-        <TaskNameInput control={control} errors={errors} />
-
-        <DatePickerInput control={control} />
-      </View>
+      <TaskForm control={control} errors={errors} />
 
       <SaveButton
         disabled={status === STATUS.LOADING}
