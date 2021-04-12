@@ -25,7 +25,7 @@ const defaultState: RootState = {
   task: {
     ids: ['idA'],
     entities: {
-      idA: {id: 'idA', name: 'Task A', date: '2021-04-10T00:00:00+08:00'},
+      idA: {id: 'idA', name: 'Task A', date: '2021-04-10'},
     },
   },
 };
@@ -155,7 +155,7 @@ describe('Task Update Screen', () => {
     await expect(mockedGoBack).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10T00:00:00+08:00', name: 'Task A2'},
+      changes: {date: '2021-04-10', name: 'Task A2'},
       id: 'idA',
     });
   });

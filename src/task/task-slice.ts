@@ -7,7 +7,19 @@ export interface Task {
   date?: string;
 }
 
-const taskAdapter = createEntityAdapter<Task>();
+const taskAdapter = createEntityAdapter<Task>({
+  sortComparer: (a, b) => {
+    if (!a?.date) {
+      return 1;
+    }
+
+    if (!b?.date) {
+      return -1;
+    }
+
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  },
+});
 
 const taskSlice = createSlice({
   name: 'task',

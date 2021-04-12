@@ -31,7 +31,7 @@ const DatePickerInput = ({
 
   const onConfirm = (selectedDate: Date, onChange: any) => {
     setShow(false);
-    onChange(formatISO(selectedDate as Date));
+    onChange(formatISO(selectedDate as Date, {representation: 'date'}));
   };
 
   return (

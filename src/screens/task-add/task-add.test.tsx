@@ -65,7 +65,9 @@ describe('Task Add Screen', () => {
     mockedCanGoBack.mockReturnValue(true);
     const spyTaskActionCreate = jest.spyOn(TaskActions, 'create');
     const taskName = 'Task A';
-    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)));
+    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
+      representation: 'date',
+    });
 
     const {getByA11yLabel, getByText} = renderApp({
       Component: TaskAddScreen.Component,
