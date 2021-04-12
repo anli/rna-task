@@ -1,5 +1,6 @@
 import {renderApp} from '@test';
-import {fireEvent} from '@testing-library/react-native';
+import {fireEvent, waitFor} from '@testing-library/react-native';
+import BottomSheet from 'react-native-bottomsheet';
 import HomeScreen from './home';
 
 const mockedNavigate = jest.fn();
@@ -22,7 +23,7 @@ describe('Home Screen', () => {
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
-    expect(getByText('Tasks')).toBeDefined();
+    expect(getByText('All Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
     expect(getByText('Task B')).toBeDefined();
   });
@@ -49,5 +50,41 @@ describe('Home Screen', () => {
 
     expect(mockedNavigate).toBeCalledTimes(1);
     expect(mockedNavigate).toBeCalledWith('TaskUpdateScreen', {id: 'idA'});
+  });
+
+  it('Filter tasks by today', async () => {
+    jest
+      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
+      .mockImplementation((_, callback: any) => {
+        callback(0);
+      });
+
+    const {getByText, getByA11yLabel} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    fireEvent.press(getByA11yLabel('Filter'));
+
+    await waitFor(() => expect(getByText("Today's Tasks")).toBeDefined());
+    await expect(getByText("Today's Tasks")).toBeDefined();
+  });
+
+  it('Filter tasks by yesterday', async () => {
+    jest
+      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
+      .mockImplementation((_, callback: any) => {
+        callback(1);
+      });
+
+    const {getByText, getByA11yLabel} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    fireEvent.press(getByA11yLabel('Filter'));
+
+    await waitFor(() => expect(getByText("Yesterday's Tasks")).toBeDefined());
+    await expect(getByText("Yesterday's Tasks")).toBeDefined();
   });
 });

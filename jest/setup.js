@@ -20,3 +20,7 @@ jest.mock('@components', () => ({
   ...jest.requireActual('@components'),
   Toast: jest.fn().mockReturnValue(null),
 }));
+
+jest.mock('react-native-bottomsheet', () => ({
+  showBottomSheetWithOptions: jest.fn(),
+}));
