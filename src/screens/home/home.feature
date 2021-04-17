@@ -32,3 +32,9 @@ Feature: Home Screen
     And I press 'Filter' Button
     And I press 'Yesterday'
     Then I should see 'Yesterday's Tasks'
+
+  Scenario: See completed task
+    Given I am logged in
+    And I have a completed task
+    When App load
+    Then I should see completed task correctly

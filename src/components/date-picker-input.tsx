@@ -90,7 +90,10 @@ const getDateValue = (value: string | null): Date => {
   return new Date(new Date().setHours(0, 0, 0, 0));
 };
 
-const Input = styled(List.Item)``;
+const Input = styled(List.Item)`
+  padding-top: 0px;
+  padding-bottom: 0px;
+`;
 
 const Description = ({value, onChange, accessibilityLabel}: any) => {
   return (

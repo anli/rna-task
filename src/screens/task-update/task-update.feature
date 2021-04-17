@@ -41,6 +41,7 @@ Feature: Task Update Screen
     Given I am at 'Task Update' Screen
     When that I change 'Task Name' to 'Task A2'
     And I press 'Sat, 10 Apr'
+    And I press 'Mark completed'
     And I press 'Cancel' Button
     And I press 'Save' Button
     Then I should see 'Dashboard Screen'

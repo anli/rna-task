@@ -16,6 +16,14 @@ const firestore = jest.fn().mockReturnValue({
             id: 'idC',
             data: () => ({name: 'Task C', date: '2021-04-09'}),
           },
+          {
+            id: 'CompletedTaskId',
+            data: () => ({
+              name: 'Completed Task',
+              date: '2021-04-09',
+              isCompleted: true,
+            }),
+          },
         ],
       };
       callback(query);

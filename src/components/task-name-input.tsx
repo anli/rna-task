@@ -9,6 +9,7 @@ interface Props {
   accessibilityLabel?: string;
   name?: string;
   errors: any;
+  isCompleted?: boolean;
 }
 
 const TaskNameInput = ({
@@ -17,6 +18,7 @@ const TaskNameInput = ({
   accessibilityLabel = 'Task Name',
   name = 'name',
   errors,
+  isCompleted = false,
 }: Props) => {
   return (
     <>
@@ -24,6 +26,7 @@ const TaskNameInput = ({
         control={control}
         render={({onChange, onBlur, value}) => (
           <Input
+            isCompleted={isCompleted}
             placeholder={label}
             value={value}
             onChangeText={onChange}
@@ -46,7 +49,9 @@ const TaskNameInput = ({
 
 export default TaskNameInput;
 
-const Input = styled.TextInput`
+const Input = styled.TextInput<{isCompleted?: boolean}>`
   padding: 16px 16px 16px 16px;
   font-size: 24px;
+  text-decoration-line: ${({isCompleted}) =>
+    isCompleted ? 'line-through' : 'none'};
 `;
