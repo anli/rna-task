@@ -87,4 +87,13 @@ describe('Home Screen', () => {
     await waitFor(() => expect(getByText("Yesterday's Tasks")).toBeDefined());
     await expect(getByText("Yesterday's Tasks")).toBeDefined();
   });
+
+  it('See completed task', () => {
+    const {getByText} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    expect(getByText('Completed Task')).toBeDefined();
+  });
 });

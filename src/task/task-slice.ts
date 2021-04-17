@@ -5,6 +5,7 @@ export interface Task {
   id: string;
   name: string;
   date?: string;
+  isCompleted?: boolean;
 }
 
 const taskAdapter = createEntityAdapter<Task>({

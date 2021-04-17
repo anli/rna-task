@@ -1,4 +1,10 @@
-import {BackButton, Header, SaveButton, TaskForm} from '@components';
+import {
+  BackButton,
+  DatePickerInput,
+  Header,
+  SaveButton,
+  TaskNameInput,
+} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -8,10 +14,12 @@ import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Appbar} from 'react-native-paper';
+import {IsCompletedInput} from './components';
 
 interface FormData {
   name: string;
   date?: string;
+  isCompleted?: boolean;
 }
 
 const Component = (): JSX.Element => {
@@ -21,12 +29,14 @@ const Component = (): JSX.Element => {
   } = useRoute() as any;
   const data = useAppSelector(TaskSelectors.getSelectById(id));
   const dispatch = useAppDispatch();
-  const {control, handleSubmit, errors, setValue} = useForm<FormData>();
+  const {control, handleSubmit, errors, setValue, watch} = useForm<FormData>();
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
+  const isCompleted = watch('isCompleted', false);
 
   useEffect(() => {
-    setValue('name', data?.name);
-    setValue('date', data?.date);
+    data?.name && setValue('name', data.name);
+    data?.date && setValue('date', data.date);
+    setValue('isCompleted', Boolean(data?.isCompleted));
   }, [setValue, data]);
 
   const onBack = () => {
@@ -62,7 +72,14 @@ const Component = (): JSX.Element => {
           onPress={onDelete}
         />
       </Header>
-      <TaskForm control={control} errors={errors} />
+      <TaskNameInput
+        control={control}
+        errors={errors}
+        isCompleted={isCompleted}
+      />
+
+      <DatePickerInput control={control} />
+      <IsCompletedInput control={control} />
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}

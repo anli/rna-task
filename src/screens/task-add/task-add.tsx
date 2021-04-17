@@ -1,4 +1,10 @@
-import {BackButton, Header, SaveButton, TaskForm} from '@components';
+import {
+  BackButton,
+  DatePickerInput,
+  Header,
+  SaveButton,
+  TaskNameInput,
+} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -39,8 +45,8 @@ const Component = (): JSX.Element => {
         <BackButton onPress={onBack} />
         <Appbar.Content title="" />
       </Header>
-      <TaskForm control={control} errors={errors} />
-
+      <TaskNameInput control={control} errors={errors} />
+      <DatePickerInput control={control} />
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}

@@ -69,11 +69,12 @@ const Component = (): JSX.Element => {
       </Header>
       <FlatList
         data={data}
-        renderItem={({item: {name, id, date}}) => (
+        renderItem={({item: {name, id, date, isCompleted}}) => (
           <TaskComponent
             title={name}
             onPress={() => onUpdate(id)}
             date={date}
+            isCompleted={isCompleted}
           />
         )}
         keyExtractor={({id}) => id}

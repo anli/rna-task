@@ -145,6 +145,10 @@ describe('Task Update Screen', () => {
     });
 
     act(() => {
+      fireEvent.press(getByA11yLabel('Is Completed'));
+    });
+
+    act(() => {
       fireEvent.press(getByText('Cancel'));
     });
 
@@ -155,7 +159,7 @@ describe('Task Update Screen', () => {
     await expect(mockedGoBack).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10', name: 'Task A2'},
+      changes: {date: '2021-04-10', name: 'Task A2', isCompleted: true},
       id: 'idA',
     });
   });
