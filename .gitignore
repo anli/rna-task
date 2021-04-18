@@ -68,3 +68,12 @@ tmp
 # codeclimate
 code-quality.html
 /src/.codeclimate.yml
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/README.md
+fastlane/screenshots
+
+.env
+
+*/playstore.json
