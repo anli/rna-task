@@ -63,7 +63,7 @@ const Component = (): JSX.Element => {
       {
         options: [...Object.values(FilterOptions), 'Cancel'],
         title: 'See',
-        cancelButtonIndex: 3,
+        cancelButtonIndex: Object.values(FilterOptions).length,
       },
       (index) => {
         const value = Object.values(FilterOptions)[index];
@@ -96,7 +96,7 @@ const Component = (): JSX.Element => {
         <Appbar.Content title={title} />
         <Appbar.Action
           accessibilityLabel="Filter"
-          icon="dots-vertical"
+          icon="filter-variant"
           onPress={onPresentFilterRelativeDay}
         />
         <Appbar.Action
