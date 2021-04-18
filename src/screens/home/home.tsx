@@ -11,18 +11,38 @@ import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, FAB} from 'react-native-paper';
 import {Task as TaskComponent} from './components';
 
-type Filter = 'Today' | 'Yesterday' | 'All';
+type Filter = keyof typeof FilterOptions;
 
 const FilterOptions = {
-  Today: "Today's Tasks",
-  Yesterday: "Yesterday's Tasks",
-  All: 'All Tasks',
+  canDo: 'What I can do',
+  wantToDoToday: 'What I want to do Today',
+  didYesterday: 'What I did Yesterday',
+  all: 'All Tasks',
+};
+
+const getData = (data: Task[], filter: Filter) => {
+  switch (filter) {
+    case 'canDo':
+      return data.filter((task) => !task?.isCompleted);
+    case 'wantToDoToday':
+      return data.filter(
+        (task) =>
+          !task?.isCompleted && task?.date && isToday(new Date(task.date)),
+      );
+    case 'didYesterday':
+      return data.filter(
+        (task) =>
+          task?.isCompleted && task?.date && isYesterday(new Date(task.date)),
+      );
+    default:
+      return data;
+  }
 };
 
 const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
-  const [filter, setFilter] = useState<Filter>('All');
+  const [filter, setFilter] = useState<Filter>('all');
 
   useFetchTask();
 
@@ -106,16 +126,3 @@ const AddTaskButton = styled(FAB)`
   bottom: 16px;
   right: 16px;
 `;
-
-const getData = (data: Task[], filter: Filter) => {
-  switch (filter) {
-    case 'Today':
-      return data.filter((task) => task?.date && isToday(new Date(task.date)));
-    case 'Yesterday':
-      return data.filter(
-        (task) => task?.date && isYesterday(new Date(task.date)),
-      );
-    default:
-      return data;
-  }
-};
