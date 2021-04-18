@@ -39,3 +39,16 @@ Feature: Home Screen
     And I press 'Filter' Button
     And I press 'What I did Yesterday'
     Then I should see 'What I did Yesterday'
+
+  Scenario: Logout Successfully
+    Given I am logged in
+    When App load
+    And I press 'Logout' Button
+    Then I should be 'Logout'
+
+  Scenario: Logout Failed
+    Given I am logged in
+    And Logout API will always return error
+    When App load
+    And I press 'Logout' Button
+    Then I should see 'Error Message'
