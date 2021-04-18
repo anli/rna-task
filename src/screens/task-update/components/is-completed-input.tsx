@@ -1,3 +1,4 @@
+import {Text} from '@components';
 import styled from '@emotion/native';
 import React from 'react';
 import {Controller} from 'react-hook-form';
@@ -50,7 +51,7 @@ const Input = styled(List.Item)`
   padding-bottom: 0px;
 `;
 
-const Description = styled.Text<{color: string}>`
+const Description = styled(Text)`
   margin-left: -12px;
   color: ${({color}) => color};
 `;

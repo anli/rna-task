@@ -30,11 +30,19 @@ Feature: Task Add Screen
     Then I should see 'Dashboard Screen'
     And I should see 'Task A', date 'Today'
 
-  Scenario: Add Task Failed
+  Scenario: Add Task Validation Failed
     Given I am at 'Task Add' Screen
-    And Add Task will always fail
     When I press 'Save' Button
     Then I should see 'This is required.'
-    When I enter 'Task A' to 'Task Name' Input
+
+  Scenario: Add Task API Failed
+    Given I am at 'Task Add' Screen
+    And Add Task API will always fail
+    When I enter form data
     And I press 'Save' Button
     Then I should see Error Message
+
+  Scenario: Process task description successfully
+    Given I am at 'Task Add' Screen
+    And I enter 'Task A Today' to 'Task Name' Input
+    And I should see date chip set to 'Today'

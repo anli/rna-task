@@ -47,7 +47,7 @@ describe('Task Update Screen', () => {
 
     expect(getByA11yLabel('Back')).toBeDefined();
     expect(getByA11yLabel('Task Name')).toBeDefined();
-    expect(getByA11yLabel('Task Name').props.value).toEqual('Task A');
+    expect(getByA11yLabel('Task Name').props.children).toEqual('Task A');
     expect(getByA11yLabel('Selected Date')).toBeDefined();
     expect(getByA11yLabel('Delete')).toBeDefined();
 

@@ -22,7 +22,7 @@ interface FormData {
 
 const Component = (): JSX.Element => {
   const {goBack, canGoBack} = useNavigation();
-  const {control, handleSubmit, errors} = useForm<FormData>();
+  const {control, handleSubmit, errors, setValue} = useForm<FormData>();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
 
@@ -39,13 +39,21 @@ const Component = (): JSX.Element => {
     isSuccessful && onBack();
   });
 
+  const onProcessText = (date: string) => {
+    date && setValue('date', date);
+  };
+
   return (
     <Screen>
       <Header>
         <BackButton onPress={onBack} />
         <Appbar.Content title="" />
       </Header>
-      <TaskNameInput control={control} errors={errors} />
+      <TaskNameInput
+        control={control}
+        errors={errors}
+        onProcessText={onProcessText}
+      />
       <DatePickerInput control={control} />
       <SaveButton
         disabled={status === STATUS.LOADING}
