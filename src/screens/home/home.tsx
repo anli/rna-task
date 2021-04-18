@@ -8,7 +8,7 @@ import {isToday, isYesterday} from 'date-fns';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
-import {Appbar, FAB} from 'react-native-paper';
+import {Appbar, FAB, useTheme} from 'react-native-paper';
 import {Task as TaskComponent} from './components';
 
 type Filter = keyof typeof FilterOptions;
@@ -40,6 +40,7 @@ const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
   const [filter, setFilter] = useState<Filter>('all');
+  const {colors} = useTheme();
 
   useFetchTask();
 
@@ -97,6 +98,7 @@ const Component = (): JSX.Element => {
         keyExtractor={({id}) => id}
       />
       <AddTaskButton
+        backgroundColor={colors.primary}
         accessibilityLabel="Add Task"
         icon="plus"
         onPress={onAdd}
@@ -118,7 +120,8 @@ const Screen = styled.SafeAreaView`
   flex: 1;
 `;
 
-const AddTaskButton = styled(FAB)`
+const AddTaskButton = styled(FAB)<{backgroundColor: string}>`
+  background-color: ${({backgroundColor}) => backgroundColor};
   position: absolute;
   bottom: 16px;
   right: 16px;
