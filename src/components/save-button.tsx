@@ -1,6 +1,6 @@
-import {FAB} from '@components';
 import React from 'react';
 import {useTheme} from 'react-native-paper';
+import FAB from './fab';
 
 interface Props {
   onPress: () => any;
