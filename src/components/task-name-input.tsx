@@ -70,7 +70,8 @@ const TaskNameInput = ({
                   onProcessText && debounce(() => onChangeText(text));
                 }}
                 onBlur={onBlur}
-                accessibilityLabel={accessibilityLabel}>
+                accessibilityLabel={accessibilityLabel}
+                multiline>
                 {displayValue}
               </Input>
               {isProcessing && (
@@ -118,7 +119,7 @@ const processText = (input: string, color: string) => {
       R.slice(endPosition, Infinity)(input),
     ];
 
-    const date = formatISO(result?.start?.date(), {representation: 'date'});
+    const date = formatISO(result.start.date(), {representation: 'date'});
     return {texts, date};
   }
 

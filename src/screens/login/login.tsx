@@ -13,7 +13,7 @@ const Component = (): JSX.Element => {
     try {
       await GoogleSignin.hasPlayServices();
       const {idToken} = await GoogleSignin.signIn();
-      const googleCredential = auth?.GoogleAuthProvider?.credential(idToken);
+      const googleCredential = auth.GoogleAuthProvider?.credential(idToken);
       return auth().signInWithCredential(googleCredential);
     } catch ({message}) {
       Toast.show({
