@@ -1,5 +1,7 @@
 import {Header} from '@components';
 import styled from '@emotion/native';
+import auth from '@react-native-firebase/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppSelector} from '@store';
@@ -9,6 +11,7 @@ import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, FAB} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import {Task as TaskComponent} from './components';
 
 type Filter = keyof typeof FilterOptions;
@@ -43,6 +46,9 @@ const Component = (): JSX.Element => {
 
   useFetchTask();
 
+  const data = getData(allData, filter);
+  const title = FilterOptions[filter];
+
   const onAdd = () => {
     navigate('TaskAddScreen');
   };
@@ -70,9 +76,18 @@ const Component = (): JSX.Element => {
     );
   };
 
-  const data = getData(allData, filter);
-
-  const title = FilterOptions[filter];
+  const onLogout = async () => {
+    try {
+      await GoogleSignin.revokeAccess().catch();
+      await GoogleSignin.signOut().catch();
+      await auth().signOut();
+    } catch ({message}) {
+      Toast.show({
+        type: 'error',
+        text2: message,
+      });
+    }
+  };
 
   return (
     <Screen>
@@ -82,6 +97,11 @@ const Component = (): JSX.Element => {
           accessibilityLabel="Filter"
           icon="dots-vertical"
           onPress={onPresentFilterRelativeDay}
+        />
+        <Appbar.Action
+          accessibilityLabel="Logout"
+          icon="logout"
+          onPress={onLogout}
         />
       </Header>
       <FlatList
