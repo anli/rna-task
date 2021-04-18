@@ -10,7 +10,6 @@ interface Props {
 }
 
 const Task = ({title, date, onPress, isCompleted = false}: Props) => {
-  console.log({title, isCompleted});
   const {colors} = useTheme();
   const icon = isCompleted ? 'check' : 'checkbox-blank-outline';
   const iconColor = isCompleted ? colors.primary : colors.backdrop;
