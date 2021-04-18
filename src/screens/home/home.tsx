@@ -25,10 +25,7 @@ const getData = (data: Task[], filter: Filter) => {
     case 'canDo':
       return data.filter((task) => !task?.isCompleted);
     case 'wantToDoToday':
-      return data.filter(
-        (task) =>
-          !task?.isCompleted && task?.date && isToday(new Date(task.date)),
-      );
+      return data.filter((task) => task?.date && isToday(new Date(task.date)));
     case 'didYesterday':
       return data.filter(
         (task) =>
