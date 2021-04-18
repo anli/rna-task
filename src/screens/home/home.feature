@@ -19,22 +19,23 @@ Feature: Home Screen
     When I press 'Task A' Button
     Then I should see 'Task Update' Screen
 
-  Scenario: Filter tasks by today
+  Scenario: Filter tasks by What I can do
     Given I am logged in
     When App load
     And I press 'Filter' Button
-    And I press 'Today'
-    Then I should see 'Today's Tasks'
+    And I press 'What I can do'
+    Then I should see 'What I can do'
 
-  Scenario: Filter tasks by yesterday
+  Scenario: Filter tasks by What I want to do Today
     Given I am logged in
     When App load
     And I press 'Filter' Button
-    And I press 'Yesterday'
-    Then I should see 'Yesterday's Tasks'
+    And I press 'What I want to do Today'
+    Then I should see 'What I want to do Today'
 
-  Scenario: See completed task
+  Scenario: Filter tasks by What I did Yesterday
     Given I am logged in
-    And I have a completed task
     When App load
-    Then I should see completed task correctly
+    And I press 'Filter' Button
+    And I press 'What I did Yesterday'
+    Then I should see 'What I did Yesterday'

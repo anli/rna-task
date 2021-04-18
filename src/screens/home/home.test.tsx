@@ -1,5 +1,5 @@
 import {renderApp} from '@test';
-import {fireEvent, waitFor} from '@testing-library/react-native';
+import {fireEvent} from '@testing-library/react-native';
 import BottomSheet from 'react-native-bottomsheet';
 import HomeScreen from './home';
 
@@ -52,7 +52,7 @@ describe('Home Screen', () => {
     expect(mockedNavigate).toBeCalledWith('TaskUpdateScreen', {id: 'idA'});
   });
 
-  it('Filter tasks by today', async () => {
+  it('Filter tasks by What I can do', async () => {
     jest
       .spyOn(BottomSheet, 'showBottomSheetWithOptions')
       .mockImplementation((_, callback: any) => {
@@ -66,11 +66,10 @@ describe('Home Screen', () => {
 
     fireEvent.press(getByA11yLabel('Filter'));
 
-    await waitFor(() => expect(getByText("Today's Tasks")).toBeDefined());
-    await expect(getByText("Today's Tasks")).toBeDefined();
+    await expect(getByText('What I can do')).toBeDefined();
   });
 
-  it('Filter tasks by yesterday', async () => {
+  it('Filter tasks by What I want to do Today', async () => {
     jest
       .spyOn(BottomSheet, 'showBottomSheetWithOptions')
       .mockImplementation((_, callback: any) => {
@@ -84,16 +83,23 @@ describe('Home Screen', () => {
 
     fireEvent.press(getByA11yLabel('Filter'));
 
-    await waitFor(() => expect(getByText("Yesterday's Tasks")).toBeDefined());
-    await expect(getByText("Yesterday's Tasks")).toBeDefined();
+    await expect(getByText('What I want to do Today')).toBeDefined();
   });
 
-  it('See completed task', () => {
-    const {getByText} = renderApp({
+  it('Filter tasks by What I did Yesterday', async () => {
+    jest
+      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
+      .mockImplementation((_, callback: any) => {
+        callback(2);
+      });
+
+    const {getByText, getByA11yLabel} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
 
-    expect(getByText('Completed Task')).toBeDefined();
+    fireEvent.press(getByA11yLabel('Filter'));
+
+    await expect(getByText('What I did Yesterday')).toBeDefined();
   });
 });
