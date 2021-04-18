@@ -1,4 +1,4 @@
-import {Header} from '@components';
+import {FAB, Header} from '@components';
 import styled from '@emotion/native';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -10,7 +10,7 @@ import {isToday, isYesterday} from 'date-fns';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
-import {Appbar, FAB, useTheme} from 'react-native-paper';
+import {Appbar, useTheme} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {Task as TaskComponent} from './components';
 
@@ -117,7 +117,7 @@ const Component = (): JSX.Element => {
         )}
         keyExtractor={({id}) => id}
       />
-      <AddTaskButton
+      <FAB
         backgroundColor={colors.primary}
         accessibilityLabel="Add Task"
         icon="plus"
@@ -138,11 +138,4 @@ export default class HomeScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
-`;
-
-const AddTaskButton = styled(FAB)<{backgroundColor: string}>`
-  background-color: ${({backgroundColor}) => backgroundColor};
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
 `;

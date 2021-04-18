@@ -1,6 +1,6 @@
-import styled from '@emotion/native';
+import {FAB} from '@components';
 import React from 'react';
-import {FAB, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 
 interface Props {
   onPress: () => any;
@@ -12,7 +12,7 @@ const SaveButton = ({onPress, disabled, loading}: Props) => {
   const {colors} = useTheme();
 
   return (
-    <Button
+    <FAB
       backgroundColor={colors.primary}
       disabled={disabled}
       loading={loading}
@@ -24,10 +24,3 @@ const SaveButton = ({onPress, disabled, loading}: Props) => {
 };
 
 export default SaveButton;
-
-const Button = styled(FAB)<{backgroundColor: string}>`
-  background-color: ${({backgroundColor}) => backgroundColor};
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-`;
