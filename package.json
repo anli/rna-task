@@ -1,8 +1,9 @@
 {
   "name": "rna-task",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
+    "deploy": "fastlane android build",
     "cc": "npm run test -- --coverage && npx codecov",
     "cq": "cp .codeclimate.yml src && cd src && codeclimate analyze -f html > code-quality.html && open code-quality.html && cd ..",
     "ci": "npm run lint && npm run cc",
