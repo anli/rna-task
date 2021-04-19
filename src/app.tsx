@@ -1,5 +1,6 @@
 import {useAuthentication} from '@authentication';
 import {Toast} from '@components';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   DefaultTheme as NavigationDefaultTheme,
   NavigationContainer,
@@ -9,6 +10,7 @@ import {
   HomeScreen,
   LoadingScreen,
   LoginScreen,
+  SettingScreen,
   TaskAddScreen,
   TaskUpdateScreen,
 } from '@screens';
@@ -74,13 +76,32 @@ const Navigator = ({
   return <GuestScreens />;
 };
 
+const Tab = createBottomTabNavigator();
+
+const TabScreens = () => {
+  return (
+    <Tab.Navigator tabBarOptions={{showLabel: false}}>
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeScreen.Component}
+        options={HomeScreen.options}
+      />
+      <Tab.Screen
+        name="SettingScreen"
+        component={SettingScreen.Component}
+        options={SettingScreen.options}
+      />
+    </Tab.Navigator>
+  );
+};
+
 const AuthenticatedScreens = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen.Component}
-        options={HomeScreen.options}
+        name="TabScreens"
+        component={TabScreens}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="TaskAddScreen"

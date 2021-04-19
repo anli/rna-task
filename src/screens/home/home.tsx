@@ -3,9 +3,9 @@ import styled from '@emotion/native';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppSelector} from '@store';
 import {Task, TaskSelectors, useFetchTask} from '@task';
+import {getBottomTabOptions} from '@utils';
 import {isToday, isYesterday} from 'date-fns';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
@@ -127,9 +127,7 @@ const Component = (): JSX.Element => {
   );
 };
 
-export const options: StackNavigationOptions = {
-  headerShown: false,
-};
+export const options = getBottomTabOptions('home-variant-outline');
 
 export default class HomeScreen {
   static Component = Component;
