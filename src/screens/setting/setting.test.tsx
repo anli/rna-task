@@ -15,7 +15,7 @@ describe('Setting Screen', () => {
       navigationOptions: SettingScreen.options,
     });
 
-    expect(getByText('Version')).toBeDefined();
     expect(getByText('1.0.0')).toBeDefined();
+    expect(getByText('user@email.com')).toBeDefined();
   });
 });
