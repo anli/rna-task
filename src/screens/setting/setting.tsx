@@ -1,3 +1,4 @@
+import {useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
 import {getBottomTabOptions} from '@utils';
@@ -7,11 +8,15 @@ import {Appbar, List} from 'react-native-paper';
 
 const Component = (): JSX.Element => {
   const version = getVersion();
+  const {user} = useAuthentication();
+  const email = user?.email;
+
   return (
     <Screen>
       <Header>
         <Appbar.Content title="Setting" />
       </Header>
+      <List.Item title={email} description="Account" />
       <List.Item title={version} description="Version" />
     </Screen>
   );
