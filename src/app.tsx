@@ -21,7 +21,6 @@ import {
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Provider as StoreProvider} from 'react-redux';
 
 const navigationTheme = {
@@ -78,28 +77,19 @@ const Navigator = ({
 };
 
 const Tab = createBottomTabNavigator();
+
 const TabScreens = () => {
   return (
     <Tab.Navigator tabBarOptions={{showLabel: false}}>
       <Tab.Screen
         name="HomeScreen"
         component={HomeScreen.Component}
-        options={{
-          ...HomeScreen.options,
-          tabBarIcon: ({color, size}) => (
-            <Icon name="home-variant-outline" color={color} size={size} />
-          ),
-        }}
+        options={HomeScreen.options}
       />
       <Tab.Screen
         name="SettingScreen"
         component={SettingScreen.Component}
-        options={{
-          ...SettingScreen.options,
-          tabBarIcon: ({color, size}) => (
-            <Icon name="cog" color={color} size={size} />
-          ),
-        }}
+        options={SettingScreen.options}
       />
     </Tab.Navigator>
   );
