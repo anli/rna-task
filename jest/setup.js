@@ -1,3 +1,4 @@
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock';
 import 'react-native-gesture-handler/jestSetup';
 
 jest.mock('react-native-reanimated', () => {
@@ -24,3 +25,5 @@ jest.mock('@components', () => ({
 jest.mock('react-native-bottomsheet', () => ({
   showBottomSheetWithOptions: jest.fn(),
 }));
+
+jest.mock('react-native-device-info', () => mockRNDeviceInfo);
