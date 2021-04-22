@@ -1,9 +1,9 @@
 import {FAB, Header} from '@components';
 import styled from '@emotion/native';
 import {useNavigation} from '@react-navigation/native';
-import {useAppSelector} from '@store';
-import {Task, TaskSelectors, useFetchTask} from '@task';
-import {getBottomTabOptions} from '@utils';
+import {useAppDispatch, useAppSelector} from '@store';
+import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
+import {getBottomTabOptions, STATUS} from '@utils';
 import {isToday, isYesterday} from 'date-fns';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
@@ -36,11 +36,16 @@ const getData = (data: Task[], filter: Filter) => {
   }
 };
 
+interface UpdateStatus {
+  [id: string]: STATUS;
+}
+
 const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
   const [filter, setFilter] = useState<Filter>('all');
   const {colors} = useTheme();
+  const dispatch = useAppDispatch();
 
   useFetchTask();
 
@@ -74,6 +79,10 @@ const Component = (): JSX.Element => {
     );
   };
 
+  const onComplete = async (id: string, changes: {isCompleted: boolean}) => {
+    dispatch(TaskActions.update({id, changes}));
+  };
+
   return (
     <Screen>
       <Header>
@@ -86,14 +95,19 @@ const Component = (): JSX.Element => {
       </Header>
       <FlatList
         data={data}
-        renderItem={({item: {name, id, date, isCompleted}}) => (
-          <TaskComponent
-            title={name}
-            onPress={() => onUpdate(id)}
-            date={date}
-            isCompleted={isCompleted}
-          />
-        )}
+        renderItem={({item: {name, id, date, isCompleted}}) => {
+          return (
+            <TaskComponent
+              title={name}
+              onPress={() => onUpdate(id)}
+              date={date}
+              isCompleted={isCompleted}
+              onCompletePress={() =>
+                onComplete(id, {isCompleted: !isCompleted})
+              }
+            />
+          );
+        }}
         keyExtractor={({id}) => id}
       />
       <FAB
