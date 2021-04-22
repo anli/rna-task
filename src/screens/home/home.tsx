@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '@store';
 import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
 import {getBottomTabOptions, STATUS} from '@utils';
 import {isToday, isYesterday} from 'date-fns';
+import R from 'ramda';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
@@ -21,18 +22,23 @@ const FilterOptions = {
 };
 
 const getData = (data: Task[], filter: Filter) => {
+  const sort = R.sortBy(R.prop('isCompleted'));
   switch (filter) {
     case 'canDo':
-      return data.filter((task) => !task?.isCompleted);
+      return sort(data.filter((task) => !task?.isCompleted));
     case 'wantToDoToday':
-      return data.filter((task) => task?.date && isToday(new Date(task.date)));
+      return sort(
+        data.filter((task) => task?.date && isToday(new Date(task.date))),
+      );
     case 'didYesterday':
-      return data.filter(
-        (task) =>
-          task?.isCompleted && task?.date && isYesterday(new Date(task.date)),
+      return sort(
+        data.filter(
+          (task) =>
+            task?.isCompleted && task?.date && isYesterday(new Date(task.date)),
+        ),
       );
     default:
-      return data;
+      return sort(data);
   }
 };
 
