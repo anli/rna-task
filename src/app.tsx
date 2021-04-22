@@ -17,6 +17,7 @@ import {
 import store from '@store';
 import {defaultTheme} from '@themes';
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
@@ -47,6 +48,11 @@ const App = (): JSX.Element => {
   return (
     <StoreProvider store={store}>
       <PaperProvider theme={paperTheme}>
+        <StatusBar
+          animated={true}
+          backgroundColor={paperTheme.colors.background}
+          barStyle="dark-content"
+        />
         <NavigationContainer theme={navigationTheme}>
           <Navigator isLoading={isLoading} isAuthenticated={isAuthenticated} />
           <Toast />
