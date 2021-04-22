@@ -202,4 +202,29 @@ describe('Task Add Screen', () => {
 
     expect(getByText(dateChipText)).toBeDefined();
   });
+
+  it('Press Clear Text Button', async () => {
+    const taskName = 'Task A';
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskAddScreen.Component,
+      navigationOptions: TaskAddScreen.options,
+    });
+
+    fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
+
+    expect(getByA11yLabel('Process Text Indicator')).toBeDefined();
+
+    await waitForElementToBeRemoved(() =>
+      getByA11yLabel('Process Text Indicator'),
+    );
+
+    expect(getByA11yLabel('Clear Text Button')).toBeDefined();
+
+    await act(async () => {
+      fireEvent.press(getByA11yLabel('Clear Text Button'));
+    });
+
+    expect(getByA11yLabel('Task Name').props.children).toEqual('');
+  });
 });
