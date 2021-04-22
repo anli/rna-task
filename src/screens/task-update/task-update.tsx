@@ -79,7 +79,7 @@ const Component = (): JSX.Element => {
       />
 
       <DatePickerInput control={control} />
-      <IsCompletedInput control={control} />
+      <IsCompletedInput control={control} onPress={onUpdate} />
       <SaveButton
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}

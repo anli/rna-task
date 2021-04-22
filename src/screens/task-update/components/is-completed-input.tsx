@@ -10,27 +10,35 @@ interface Props {
   control: any;
   accessibilityLabel?: string;
   name?: string;
+  onPress: () => void;
 }
 const IsCompletedInput = ({
   control,
   accessibilityLabel = 'Is Completed',
   name = 'isCompleted',
+  onPress,
 }: Props) => {
   const {colors} = useTheme();
+
   return (
     <Controller
       control={control}
       render={({onChange, value}) => {
+        const onPressInput = () => {
+          onChange(!value);
+          onPress();
+        };
+
         return (
           <Input
             accessibilityLabel={accessibilityLabel}
             testID="IsCompletedInput"
-            onPress={() => onChange(!value)}
+            onPress={onPressInput}
             titleStyle={NO_TITLE_STYLE}
             title={null}
             description={() => (
               <Description color={colors.primary}>
-                {value ? 'Mark uncompleted' : 'Mark completed'}
+                {value ? 'Mark not completed' : 'Mark completed'}
               </Description>
             )}
             left={(props) => <List.Icon {...props} icon="check" />}
