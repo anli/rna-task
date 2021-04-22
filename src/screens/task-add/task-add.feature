@@ -44,5 +44,11 @@ Feature: Task Add Screen
 
   Scenario: Process task description successfully
     Given I am at 'Task Add' Screen
-    And I enter 'Task A Today' to 'Task Name' Input
-    And I should see date chip set to 'Today'
+    When I enter 'Task A Today' to 'Task Name' Input
+    Then I should see date chip set to 'Today'
+
+  Scenario: Press Clear Text Button
+    Given I am at 'Task Add' Screen
+    And I enter 'Task A' to 'Task Name' Input
+    When I press 'Clear Text' Button
+    Then I should see '' in 'Task Name' Input

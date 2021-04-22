@@ -5,7 +5,7 @@ import NativeDebounce from 'lodash.debounce';
 import R from 'ramda';
 import React, {useState} from 'react';
 import {Controller} from 'react-hook-form';
-import {ActivityIndicator, HelperText, useTheme} from 'react-native-paper';
+import {HelperText, IconButton, useTheme} from 'react-native-paper';
 import Text from './text';
 
 interface Props {
@@ -59,6 +59,12 @@ const TaskNameInput = ({
         control={control}
         render={({onChange, onBlur, value}) => {
           const displayValue = formattedValue ? formattedValue : value;
+          const onClearText = () => {
+            onChange('');
+            onChangeText('');
+          };
+          const canClear = !R.isEmpty(value);
+
           return (
             <InputContainer>
               <Input
@@ -74,10 +80,18 @@ const TaskNameInput = ({
                 multiline>
                 {displayValue}
               </Input>
+              {canClear && (
+                <ClearTextButton
+                  accessibilityLabel="Clear Text Button"
+                  icon="close"
+                  onPress={onClearText}
+                  size={16}
+                />
+              )}
               {isProcessing && (
                 <ProcessTextIndicator
                   accessibilityLabel="Process Text Indicator"
-                  size={24}
+                  color={colors.placeholder}
                 />
               )}
             </InputContainer>
@@ -99,6 +113,7 @@ const TaskNameInput = ({
 export default TaskNameInput;
 
 const Input = styled.TextInput<{isCompleted?: boolean}>`
+  flex: 1;
   font-size: 24px;
   text-decoration-line: ${({isCompleted}) =>
     isCompleted ? 'line-through' : 'none'};
@@ -128,13 +143,14 @@ const processText = (input: string, color: string) => {
 
 const DateText = styled(Text)``;
 
-const ProcessTextIndicator = styled(ActivityIndicator)`
-  position: absolute;
-  right: 16px;
-  top: 20px;
-`;
+const ProcessTextIndicator = styled.ActivityIndicator``;
 
 const InputContainer = styled.View`
   padding: 16px 16px 16px 16px;
   flex-direction: row;
+`;
+
+const ClearTextButton = styled(IconButton)`
+  padding: 0px 0px 0px 0px;
+  margin: 4px 0px 0px 0px;
 `;

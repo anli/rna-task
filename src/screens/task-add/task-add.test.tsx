@@ -202,4 +202,21 @@ describe('Task Add Screen', () => {
 
     expect(getByText(dateChipText)).toBeDefined();
   });
+
+  it('Press Clear Text Button', async () => {
+    const taskName = 'Task A';
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskAddScreen.Component,
+      navigationOptions: TaskAddScreen.options,
+    });
+
+    fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
+
+    await expect(getByA11yLabel('Clear Text Button')).toBeDefined();
+
+    fireEvent.press(getByA11yLabel('Clear Text Button'));
+
+    await expect(getByA11yLabel('Task Name').props.children).toEqual('');
+  });
 });
