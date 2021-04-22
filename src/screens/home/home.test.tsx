@@ -1,3 +1,4 @@
+import {TaskActions} from '@task';
 import {renderApp} from '@test';
 import {fireEvent} from '@testing-library/react-native';
 import BottomSheet from 'react-native-bottomsheet';
@@ -101,5 +102,18 @@ describe('Home Screen', () => {
     fireEvent.press(getByA11yLabel('Filter'));
 
     await expect(getByText('What I did Yesterday')).toBeDefined();
+  });
+
+  it('Mark task as done', async () => {
+    const {getAllByA11yHint} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+    const spy = jest.spyOn(TaskActions, 'update');
+
+    fireEvent.press(getAllByA11yHint('Mark completed')[0]);
+
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith({changes: {isCompleted: true}, id: 'idA'});
   });
 });
