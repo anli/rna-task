@@ -213,10 +213,18 @@ describe('Task Add Screen', () => {
 
     fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
 
-    await expect(getByA11yLabel('Clear Text Button')).toBeDefined();
+    expect(getByA11yLabel('Process Text Indicator')).toBeDefined();
 
-    fireEvent.press(getByA11yLabel('Clear Text Button'));
+    await waitForElementToBeRemoved(() =>
+      getByA11yLabel('Process Text Indicator'),
+    );
 
-    await expect(getByA11yLabel('Task Name').props.children).toEqual('');
+    expect(getByA11yLabel('Clear Text Button')).toBeDefined();
+
+    await act(async () => {
+      fireEvent.press(getByA11yLabel('Clear Text Button'));
+    });
+
+    expect(getByA11yLabel('Task Name').props.children).toEqual('');
   });
 });
