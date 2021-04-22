@@ -39,3 +39,9 @@ Feature: Home Screen
     And I press 'Filter' Button
     And I press 'What I did Yesterday'
     Then I should see 'What I did Yesterday'
+
+  Scenario: Mark task as done
+    Given I have 'Task A' not completed
+    When App load
+    And I press 'Task A' 'Mark as complete' Button
+    Then I should see 'Task A' completed
