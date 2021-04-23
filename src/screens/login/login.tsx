@@ -5,17 +5,24 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import {StackNavigationOptions} from '@react-navigation/stack';
-import React from 'react';
+import React, {useState} from 'react';
+import {useTheme} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
 const Component = (): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {colors} = useTheme();
   const onLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider?.credential(idToken);
-      return auth().signInWithCredential(googleCredential);
+      setIsLoading(true);
+      await auth().signInWithCredential(googleCredential);
+      setIsLoading(false);
+      return;
     } catch ({message}) {
+      setIsLoading(false);
       Toast.show({
         type: 'error',
         text2: message,
@@ -25,7 +32,13 @@ const Component = (): JSX.Element => {
 
   return (
     <Screen>
-      <GoogleSigninButton onPress={onLogin} accessibilityLabel="Google Login" />
+      {!isLoading && (
+        <GoogleSigninButton
+          onPress={onLogin}
+          accessibilityLabel="Google Login"
+        />
+      )}
+      {isLoading && <ActivityIndicator size="large" color={colors.primary} />}
     </Screen>
   );
 };
@@ -44,3 +57,5 @@ const Screen = styled.SafeAreaView`
   justify-content: center;
   align-items: center;
 `;
+
+const ActivityIndicator = styled.ActivityIndicator``;
