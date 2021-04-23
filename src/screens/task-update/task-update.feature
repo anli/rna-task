@@ -62,5 +62,12 @@ Feature: Task Update Screen
   Scenario: Mark task as not completed
     Given I am at 'Task Update' Screen
     When I press 'Mark not completed'
-    Then I should see 'Dashboard Screen'
+    Then I should not see 'Dashboard Screen'
     And I should see Task has 'isCompleted' as 'false'
+
+  Scenario: Mark task as completed
+    Given I am at 'Task Update' Screen
+    And I have task 'not completed'
+    When I press 'Mark completed'
+    Then I should see 'Dashboard Screen'
+    And I should see Task has 'isCompleted' as 'true'
