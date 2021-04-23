@@ -8,6 +8,9 @@ import {Chip, List, Text} from 'react-native-paper';
 
 const NO_TITLE_STYLE = {height: 0};
 
+const TODAY_DATE_STRING = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
+  representation: 'date',
+});
 interface Props {
   control: any;
   accessibilityLabel?: string;
@@ -78,7 +81,7 @@ const DatePickerInput = ({
       }}
       name={name}
       rules={{required: false}}
-      defaultValue={null}
+      defaultValue={TODAY_DATE_STRING}
     />
   );
 };
@@ -90,9 +93,6 @@ const ChipContainer = styled.View`
   flex-direction: row;
 `;
 
-const TODAY_DATE_STRING = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
-  representation: 'date',
-});
 const getDateValue = (value: string = TODAY_DATE_STRING): Date => {
   return parseISO(value);
 };

@@ -25,19 +25,23 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
+const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
+  representation: 'date',
+});
+const dateChipText = format('EEE, d MMM')(parseISO(date));
+
 describe('Task Add Screen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('See UI', () => {
-    const {getByText, getByA11yLabel} = renderApp({
+    const {getByA11yLabel} = renderApp({
       Component: TaskAddScreen.Component,
       navigationOptions: TaskAddScreen.options,
     });
 
     expect(getByA11yLabel('Back')).toBeDefined();
-    expect(getByText('Add date')).toBeDefined();
     expect(getByA11yLabel('Task Name')).toBeDefined();
     expect(getByA11yLabel('Save')).toBeDefined();
   });
@@ -70,9 +74,6 @@ describe('Task Add Screen', () => {
     mockedCanGoBack.mockReturnValue(true);
     const spyTaskActionCreate = jest.spyOn(TaskActions, 'create');
     const taskName = 'Task A';
-    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
-      representation: 'date',
-    });
 
     const {getByA11yLabel, getByText} = renderApp({
       Component: TaskAddScreen.Component,
@@ -90,7 +91,7 @@ describe('Task Add Screen', () => {
     );
 
     act(() => {
-      fireEvent.press(getByText('Add date'));
+      fireEvent.press(getByText(dateChipText));
     });
 
     act(() => {
@@ -98,7 +99,7 @@ describe('Task Add Screen', () => {
     });
 
     act(() => {
-      fireEvent.press(getByText('Add date'));
+      fireEvent.press(getByText(dateChipText));
     });
 
     act(() => {
@@ -156,7 +157,7 @@ describe('Task Add Screen', () => {
     );
 
     act(() => {
-      fireEvent.press(getByText('Add date'));
+      fireEvent.press(getByText(dateChipText));
     });
 
     act(() => {
@@ -164,7 +165,7 @@ describe('Task Add Screen', () => {
     });
 
     act(() => {
-      fireEvent.press(getByText('Add date'));
+      fireEvent.press(getByText(dateChipText));
     });
 
     act(() => {
@@ -182,10 +183,6 @@ describe('Task Add Screen', () => {
 
   it('Process task description successfully', async () => {
     const taskName = 'Task A Today';
-    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
-      representation: 'date',
-    });
-    const dateChipText = format('EEE, d MMM')(parseISO(date));
 
     const {getByA11yLabel, getByText} = renderApp({
       Component: TaskAddScreen.Component,
