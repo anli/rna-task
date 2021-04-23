@@ -1,6 +1,6 @@
 import {TaskActions} from '@task';
 import {renderApp} from '@test';
-import {fireEvent} from '@testing-library/react-native';
+import {fireEvent, waitFor} from '@testing-library/react-native';
 import BottomSheet from 'react-native-bottomsheet';
 import HomeScreen from './home';
 
@@ -67,7 +67,7 @@ describe('Home Screen', () => {
 
     fireEvent.press(getByA11yLabel('Filter'));
 
-    await expect(getByText('What I can do')).toBeDefined();
+    await waitFor(() => expect(getByText('What I can do')).toBeDefined());
   });
 
   it('Filter tasks by What I want to do Today', async () => {
@@ -84,7 +84,9 @@ describe('Home Screen', () => {
 
     fireEvent.press(getByA11yLabel('Filter'));
 
-    await expect(getByText('What I want to do Today')).toBeDefined();
+    await waitFor(() =>
+      expect(getByText('What I want to do Today')).toBeDefined(),
+    );
   });
 
   it('Filter tasks by What I did Yesterday', async () => {
@@ -101,7 +103,9 @@ describe('Home Screen', () => {
 
     fireEvent.press(getByA11yLabel('Filter'));
 
-    await expect(getByText('What I did Yesterday')).toBeDefined();
+    await waitFor(() =>
+      expect(getByText('What I did Yesterday')).toBeDefined(),
+    );
   });
 
   it('Mark task as done', async () => {
