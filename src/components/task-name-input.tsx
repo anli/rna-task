@@ -16,6 +16,7 @@ interface Props {
   errors: any;
   isCompleted?: boolean;
   onProcessText?: (date: string) => void;
+  onUpdate?: () => void;
 }
 
 type FormattedValue = (string | Element)[] | string | undefined;
@@ -30,6 +31,7 @@ const TaskNameInput = ({
   errors,
   isCompleted = false,
   onProcessText,
+  onUpdate = () => {},
 }: Props) => {
   const [formattedValue, setFormattedValue] = useState<FormattedValue>(
     undefined,
@@ -62,6 +64,7 @@ const TaskNameInput = ({
           const onClearText = () => {
             onChange('');
             onChangeText('');
+            onUpdate();
           };
           const canClear = !R.isEmpty(value);
 
@@ -75,7 +78,10 @@ const TaskNameInput = ({
                   onChange(text);
                   onProcessText && debounce(() => onChangeText(text));
                 }}
-                onBlur={onBlur}
+                onBlur={() => {
+                  onBlur;
+                  onUpdate();
+                }}
                 accessibilityLabel={accessibilityLabel}
                 multiline>
                 {displayValue}

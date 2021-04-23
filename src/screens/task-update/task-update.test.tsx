@@ -2,7 +2,8 @@ import {mockFirestoreDelete, mockFirestoreUpdate} from '@mocks';
 import {RootState} from '@store';
 import {TaskActions} from '@task';
 import {initialState, renderApp} from '@test';
-import {act, fireEvent} from '@testing-library/react-native';
+import {act, fireEvent, waitFor} from '@testing-library/react-native';
+import {formatISO} from 'date-fns';
 import Toast from 'react-native-toast-message';
 import TaskUpdateScreen from './task-update';
 
@@ -38,7 +39,9 @@ describe('Task Update Screen', () => {
     mockFirestoreUpdate.mockResolvedValue(true);
   });
 
-  it('See UI', () => {
+  it('See UI', async () => {
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+    const spyToastShow = jest.spyOn(Toast, 'show');
     const {getByA11yLabel, getByText} = renderApp({
       Component: TaskUpdateScreen.Component,
       navigationOptions: TaskUpdateScreen.options,
@@ -51,12 +54,14 @@ describe('Task Update Screen', () => {
     expect(getByA11yLabel('Task Name').props.children).toEqual('Task A');
     expect(getByA11yLabel('Selected Date')).toBeDefined();
     expect(getByA11yLabel('Delete')).toBeDefined();
+    expect(spyTaskActionUpdate).toBeCalledTimes(0);
+    expect(spyToastShow).toBeCalledTimes(0);
 
     expect(getByA11yLabel('Close')).toBeDefined();
     fireEvent.press(getByA11yLabel('Close'));
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
+    expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(getByText('Add date')).toBeDefined();
-    fireEvent.press(getByText('Add date'));
-    fireEvent.press(getByText('Confirm'));
   });
 
   it('Press Back Button', () => {
@@ -125,46 +130,9 @@ describe('Task Update Screen', () => {
     expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
   });
 
-  it('Update Successful', async () => {
-    mockedCanGoBack.mockReturnValue(true);
-    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
-    const taskName = 'Task A2';
-
-    const {getByA11yLabel, getByText} = renderApp({
-      Component: TaskUpdateScreen.Component,
-      navigationOptions: TaskUpdateScreen.options,
-      preloadedState: defaultState,
-      initialParams: defaultParams,
-    });
-
-    act(() => {
-      fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
-    });
-
-    act(() => {
-      fireEvent.press(getByA11yLabel('Selected Date'));
-    });
-
-    act(() => {
-      fireEvent.press(getByText('Cancel'));
-    });
-
-    await act(async () => {
-      await fireEvent.press(getByA11yLabel('Save'));
-    });
-
-    await expect(mockedGoBack).toBeCalledTimes(1);
-    expect(spyTaskActionUpdate).toBeCalledTimes(1);
-    expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10', name: 'Task A2', isCompleted: false},
-      id: 'idA',
-    });
-  });
-
-  it('Update Failed', async () => {
+  it('Update Name Successful', async () => {
     const spyToastShow = jest.spyOn(Toast, 'show');
-    mockFirestoreUpdate.mockRejectedValue(new Error('ERROR'));
-    mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
     const taskName = 'Task A2';
 
     const {getByA11yLabel} = renderApp({
@@ -174,16 +142,78 @@ describe('Task Update Screen', () => {
       initialParams: defaultParams,
     });
 
+    expect(spyToastShow).toBeCalledTimes(0);
     act(() => {
       fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
     });
 
-    await act(async () => {
-      await fireEvent.press(getByA11yLabel('Save'));
+    fireEvent(getByA11yLabel('Task Name'), 'onBlur');
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
+
+    expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {date: '2021-04-10', name: 'Task A2', isCompleted: false},
+      id: 'idA',
+    });
+  });
+
+  it('Update Date Successful', async () => {
+    const date = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
+      representation: 'date',
+    });
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+    const spyToastShow = jest.spyOn(Toast, 'show');
+
+    const {getByText} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
     });
 
-    await expect(mockedGoBack).toBeCalledTimes(0);
-    expect(spyToastShow).toBeCalledTimes(1);
+    expect(spyToastShow).toBeCalledTimes(0);
+
+    fireEvent.press(getByText('Add date'));
+    fireEvent.press(getByText('Confirm'));
+
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
+    expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {date: date, name: 'Task A', isCompleted: false},
+      id: 'idA',
+    });
+  });
+
+  it('Update Failed', async () => {
+    mockFirestoreUpdate.mockRejectedValue(new Error('ERROR'));
+    const spyToastShow = jest.spyOn(Toast, 'show');
+    const taskName = 'Task A2';
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: defaultState,
+      initialParams: defaultParams,
+    });
+
+    expect(spyToastShow).toBeCalledTimes(0);
+    act(() => {
+      fireEvent.changeText(getByA11yLabel('Task Name'), taskName);
+    });
+
+    fireEvent(getByA11yLabel('Task Name'), 'onBlur');
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
     expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
   });
 

@@ -1,10 +1,4 @@
-import {
-  BackButton,
-  DatePickerInput,
-  Header,
-  SaveButton,
-  TaskNameInput,
-} from '@components';
+import {BackButton, DatePickerInput, Header, TaskNameInput} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -13,7 +7,8 @@ import {TaskActions, TaskSelectors} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {Appbar} from 'react-native-paper';
+import {Appbar, useTheme} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import {IsCompletedInput} from './components';
 
 interface FormData {
@@ -32,6 +27,7 @@ const Component = (): JSX.Element => {
   const {control, handleSubmit, errors, setValue, watch} = useForm<FormData>();
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
   const isCompleted = watch('isCompleted', false);
+  const {colors} = useTheme();
 
   useEffect(() => {
     data?.name && setValue('name', data.name);
@@ -43,22 +39,33 @@ const Component = (): JSX.Element => {
     canGoBack() && goBack();
   };
 
-  const onDelete = () => {
-    doAction(TaskActions.remove(id));
+  const onDelete = async () => {
+    const isSuccessful = await doAction(TaskActions.remove(id));
+    isSuccessful && onBack();
   };
 
   const onUpdate = handleSubmit(async (changes) => {
-    doAction(TaskActions.update({id, changes}));
+    const isSuccessful = await doAction(TaskActions.update({id, changes}));
+    isSuccessful && onBack();
   });
 
   const doAction = async (action: any) => {
-    const isSuccessful = await dispatchAsyncAction({
+    return await dispatchAsyncAction({
       setStatus,
       dispatch,
       action: action,
     });
-    isSuccessful && onBack();
   };
+
+  const onUpdateValue = handleSubmit(async (changes) => {
+    const isSuccessful = await doAction(TaskActions.update({id, changes}));
+    isSuccessful &&
+      Toast.show({
+        type: 'success',
+        text2: 'Updated',
+        position: 'bottom',
+      });
+  });
 
   return (
     <Screen>
@@ -76,15 +83,19 @@ const Component = (): JSX.Element => {
         control={control}
         errors={errors}
         isCompleted={isCompleted}
+        onUpdate={onUpdateValue}
       />
 
-      <DatePickerInput control={control} />
+      <DatePickerInput control={control} onUpdate={onUpdateValue} />
       <IsCompletedInput control={control} onPress={onUpdate} />
-      <SaveButton
-        disabled={status === STATUS.LOADING}
-        loading={status === STATUS.LOADING}
-        onPress={onUpdate}
-      />
+
+      {status === STATUS.LOADING && (
+        <ActivityIndicator
+          accessibilityLabel="Loading Indicator"
+          size="large"
+          color={colors.primary}
+        />
+      )}
     </Screen>
   );
 };
@@ -100,4 +111,10 @@ export default class TaskUpdateScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
+`;
+
+const ActivityIndicator = styled.ActivityIndicator`
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
 `;

@@ -12,12 +12,14 @@ interface Props {
   control: any;
   accessibilityLabel?: string;
   name?: string;
+  onUpdate?: () => any;
 }
 
 const DatePickerInput = ({
   control,
   accessibilityLabel = 'Selected Date',
   name = 'date',
+  onUpdate,
 }: Props) => {
   const [show, setShow] = useState(false);
 
@@ -32,12 +34,18 @@ const DatePickerInput = ({
   const onConfirm = (selectedDate: Date, onChange: any) => {
     setShow(false);
     onChange(formatISO(selectedDate as Date, {representation: 'date'}));
+    onUpdate && onUpdate();
   };
 
   return (
     <Controller
       control={control}
       render={({onChange, value}) => {
+        const onClearDate = () => {
+          onChange(null);
+          onUpdate && onUpdate();
+        };
+
         return (
           <>
             <Input
@@ -48,7 +56,7 @@ const DatePickerInput = ({
               description={() => (
                 <Description
                   value={value}
-                  onChange={onChange}
+                  onClearDate={onClearDate}
                   accessibilityLabel={accessibilityLabel}
                 />
               )}
@@ -62,7 +70,7 @@ const DatePickerInput = ({
                 onConfirm={(date) => onConfirm(date, onChange)}
                 onCancel={onCancel}
                 is24Hour={false}
-                date={getDateValue(value)}
+                date={getDateValue(value || undefined)}
               />
             )}
           </>
@@ -82,12 +90,11 @@ const ChipContainer = styled.View`
   flex-direction: row;
 `;
 
-const getDateValue = (value: string | null): Date => {
-  if (value) {
-    return parseISO(value);
-  }
-
-  return new Date(new Date().setHours(0, 0, 0, 0));
+const TODAY_DATE_STRING = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
+  representation: 'date',
+});
+const getDateValue = (value: string = TODAY_DATE_STRING): Date => {
+  return parseISO(value);
 };
 
 const Input = styled(List.Item)`
@@ -95,7 +102,7 @@ const Input = styled(List.Item)`
   padding-bottom: 0px;
 `;
 
-const Description = ({value, onChange, accessibilityLabel}: any) => {
+const Description = ({value, onClearDate, accessibilityLabel}: any) => {
   return (
     <DescriptionContainer>
       {value ? (
@@ -104,7 +111,7 @@ const Description = ({value, onChange, accessibilityLabel}: any) => {
             testID="ShowDateTimePicker"
             mode="outlined"
             accessibilityLabel={accessibilityLabel}
-            onClose={() => onChange(null)}>
+            onClose={onClearDate}>
             {format('EEE, d MMM')(parseISO(value))}
           </Chip>
         </ChipContainer>
