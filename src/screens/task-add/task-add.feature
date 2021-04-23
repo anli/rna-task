@@ -4,7 +4,6 @@ Feature: Task Add Screen
     Given any
     When I am at 'Task Add' Screen
     Then I should see 'Back' Button
-    And I should see 'Add date'
     And I should see 'Task Name' Input
     And I should see 'Save' Button
 

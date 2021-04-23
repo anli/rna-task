@@ -31,7 +31,7 @@ const Component = (): JSX.Element => {
 
   useEffect(() => {
     data?.name && setValue('name', data.name);
-    data?.date && setValue('date', data.date);
+    setValue('date', data?.date || null);
     setValue('isCompleted', Boolean(data?.isCompleted));
   }, [setValue, data]);
 
