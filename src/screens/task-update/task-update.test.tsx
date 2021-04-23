@@ -245,10 +245,46 @@ describe('Task Update Screen', () => {
       await fireEvent.press(getByText('Mark not completed'));
     });
 
-    await expect(mockedGoBack).toBeCalledTimes(1);
+    await expect(mockedGoBack).toBeCalledTimes(0);
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
       changes: {date: '2021-04-10', name: 'Task A', isCompleted: false},
+      id: 'idA',
+    });
+  });
+
+  it('Mark task completed', async () => {
+    mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+
+    const {getByText} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+              date: '2021-04-10',
+              isCompleted: false,
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Mark completed'));
+    });
+
+    await expect(mockedGoBack).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {date: '2021-04-10', name: 'Task A', isCompleted: true},
       id: 'idA',
     });
   });
