@@ -17,6 +17,7 @@ interface Props {
   isCompleted?: boolean;
   onProcessText?: (date: string) => void;
   onUpdate?: () => void;
+  editable?: boolean;
 }
 
 type FormattedValue = (string | Element)[] | string | undefined;
@@ -66,11 +67,12 @@ const TaskNameInput = ({
             onChangeText('');
             onUpdate();
           };
-          const canClear = !R.isEmpty(value);
+          const canClear = !isCompleted && !R.isEmpty(value);
 
           return (
             <InputContainer>
               <Input
+                editable={!isCompleted}
                 isCompleted={isCompleted}
                 placeholder={label}
                 onChangeText={(text) => {
