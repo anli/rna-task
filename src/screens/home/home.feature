@@ -8,11 +8,6 @@ Feature: Home Screen
     And I should see 'Task A'
     And I should see 'Task B'
 
-  Scenario: Add Task Button
-    Given I am at 'Home' Screen
-    When I press 'Add Task' Button
-    Then I should see 'Task Add' Screen
-
   Scenario: Update Task
     Given I have a task 'Task A'
     And I am at 'Home' Screen

@@ -39,7 +39,7 @@ const Component = (): JSX.Element => {
   );
 };
 
-export const options = getBottomTabOptions('cog');
+export const options = getBottomTabOptions('cog', 'Setting');
 
 export default class SettingScreen {
   static Component = Component;

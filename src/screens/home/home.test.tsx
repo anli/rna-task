@@ -29,18 +29,6 @@ describe('Home Screen', () => {
     expect(getByText('Task B')).toBeDefined();
   });
 
-  it('Add Task Button', () => {
-    const {getByA11yLabel} = renderApp({
-      Component: HomeScreen.Component,
-      navigationOptions: HomeScreen.options,
-    });
-
-    fireEvent.press(getByA11yLabel('Add Task'));
-
-    expect(mockedNavigate).toBeCalledTimes(1);
-    expect(mockedNavigate).toBeCalledWith('TaskAddScreen');
-  });
-
   it('Update Task', () => {
     const {getByText} = renderApp({
       Component: HomeScreen.Component,

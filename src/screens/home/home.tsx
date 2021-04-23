@@ -1,4 +1,4 @@
-import {FAB, Header} from '@components';
+import {Header} from '@components';
 import styled from '@emotion/native';
 import {Filter, useFilter} from '@filter';
 import {useNavigation} from '@react-navigation/native';
@@ -10,7 +10,7 @@ import R from 'ramda';
 import React from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
-import {Appbar, useTheme} from 'react-native-paper';
+import {Appbar} from 'react-native-paper';
 import {Task as TaskComponent} from './components';
 
 const getData = (data: Task[], filter: Filter) => {
@@ -37,7 +37,6 @@ const getData = (data: Task[], filter: Filter) => {
 const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
-  const {colors} = useTheme();
   const dispatch = useAppDispatch();
   const {filter, onFilter, filterOptions} = useFilter();
 
@@ -45,10 +44,6 @@ const Component = (): JSX.Element => {
 
   const data = getData(allData, filter);
   const title = filterOptions[filter];
-
-  const onAdd = () => {
-    navigate('TaskAddScreen');
-  };
 
   const onUpdate = (id: string) => {
     navigate('TaskUpdateScreen', {id});
@@ -104,17 +99,11 @@ const Component = (): JSX.Element => {
         }}
         keyExtractor={({id}) => id}
       />
-      <FAB
-        backgroundColor={colors.primary}
-        accessibilityLabel="Add Task"
-        icon="plus"
-        onPress={onAdd}
-      />
     </Screen>
   );
 };
 
-export const options = getBottomTabOptions('home-variant-outline');
+export const options = getBottomTabOptions('home-variant-outline', 'Home');
 
 export default class HomeScreen {
   static Component = Component;
