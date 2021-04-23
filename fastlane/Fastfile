@@ -20,34 +20,36 @@ platform :android do
       gradle_file: "android/app/build.gradle"
     )
 
-    gradle(
-      task: 'clean',
-      project_dir: 'android/',
-      print_command_output: false,
-      print_command: true
-    )
+    # gradle(
+    #   task: 'clean',
+    #   project_dir: 'android/',
+    #   print_command_output: false,
+    #   print_command: true
+    # )
 
-    gradle(      
-      task: 'bundle',
-      build_type: 'Release',
-      project_dir: 'android/',
-      properties: {
-        "android.injected.signing.store.file" => file,
-        "android.injected.signing.store.password" => ENV['ANDROID_STORE_PASSWORD'],
-        "android.injected.signing.key.alias" => ENV['ANDROID_KEY_ALIAS'],
-        "android.injected.signing.key.password" => ENV['ANDROID_KEY_PASSWORD'],
-      },
-      print_command_output: false,
-      print_command: false
-    )
+    # gradle(      
+    #   task: 'bundle',
+    #   build_type: 'Release',
+    #   project_dir: 'android/',
+    #   properties: {
+    #     "android.injected.signing.store.file" => file,
+    #     "android.injected.signing.store.password" => ENV['ANDROID_STORE_PASSWORD'],
+    #     "android.injected.signing.key.alias" => ENV['ANDROID_KEY_ALIAS'],
+    #     "android.injected.signing.key.password" => ENV['ANDROID_KEY_PASSWORD'],
+    #   },
+    #   print_command_output: false,
+    #   print_command: false
+    # )
 
-    upload_to_play_store
+    # upload_to_play_store
     
     git_commit(
       path: ["./*"],
       message: "chore(version): bump version to " + load_json(json_path: "package.json")["version"],
       skip_git_hooks: true
     )
+
+    add_git_tag
   end
 
 end

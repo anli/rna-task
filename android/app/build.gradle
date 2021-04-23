@@ -132,7 +132,7 @@ android {
         applicationId "io.anli.task"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
+        versionCode 37
         versionName "1.2.0"
         multiDexEnabled true
     }
