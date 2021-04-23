@@ -8,15 +8,17 @@ platform :android do
     Dotenv.overload '../.env'
 
     file = getFolderPath().concat(ENV['ANDROID_STORE_FILE'])
+    buildNumber = number_of_commits()
+    version = load_json(json_path: "package.json")["version"]
     
     android_set_version_name(
-      version_name: load_json(json_path: "package.json")["version"],
+      version_name: version,
       gradle_file: "android/app/build.gradle"
     )
 
 
     android_set_version_code(
-      version_code: number_of_commits(),
+      version_code: buildNumber,
       gradle_file: "android/app/build.gradle"
     )
 
@@ -45,8 +47,12 @@ platform :android do
     
     git_commit(
       path: ["./*"],
-      message: "chore(version): bump version to " + load_json(json_path: "package.json")["version"],
+      message: "chore(version): bump version to " + version,
       skip_git_hooks: true
+    )
+
+    add_git_tag(
+      tag: version,
     )
   end
 
