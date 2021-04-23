@@ -8,48 +8,52 @@ platform :android do
     Dotenv.overload '../.env'
 
     file = getFolderPath().concat(ENV['ANDROID_STORE_FILE'])
+    buildNumber = number_of_commits()
+    version = load_json(json_path: "package.json")["version"]
     
     android_set_version_name(
-      version_name: load_json(json_path: "package.json")["version"],
+      version_name: version,
       gradle_file: "android/app/build.gradle"
     )
 
 
     android_set_version_code(
-      version_code: number_of_commits(),
+      version_code: buildNumber,
       gradle_file: "android/app/build.gradle"
     )
 
-    # gradle(
-    #   task: 'clean',
-    #   project_dir: 'android/',
-    #   print_command_output: false,
-    #   print_command: true
-    # )
+    gradle(
+      task: 'clean',
+      project_dir: 'android/',
+      print_command_output: false,
+      print_command: true
+    )
 
-    # gradle(      
-    #   task: 'bundle',
-    #   build_type: 'Release',
-    #   project_dir: 'android/',
-    #   properties: {
-    #     "android.injected.signing.store.file" => file,
-    #     "android.injected.signing.store.password" => ENV['ANDROID_STORE_PASSWORD'],
-    #     "android.injected.signing.key.alias" => ENV['ANDROID_KEY_ALIAS'],
-    #     "android.injected.signing.key.password" => ENV['ANDROID_KEY_PASSWORD'],
-    #   },
-    #   print_command_output: false,
-    #   print_command: false
-    # )
+    gradle(      
+      task: 'bundle',
+      build_type: 'Release',
+      project_dir: 'android/',
+      properties: {
+        "android.injected.signing.store.file" => file,
+        "android.injected.signing.store.password" => ENV['ANDROID_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['ANDROID_KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['ANDROID_KEY_PASSWORD'],
+      },
+      print_command_output: false,
+      print_command: false
+    )
 
-    # upload_to_play_store
+    upload_to_play_store
     
     git_commit(
       path: ["./*"],
-      message: "chore(version): bump version to " + load_json(json_path: "package.json")["version"],
+      message: "chore(version): bump version to " + version,
       skip_git_hooks: true
     )
 
-    add_git_tag
+    add_git_tag(
+      tag: version,
+    )
   end
 
 end
