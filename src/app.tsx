@@ -23,6 +23,7 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
+import useVersionCheck from './utils/use-version-check';
 
 const navigationTheme = {
   ...NavigationDefaultTheme,
@@ -44,6 +45,7 @@ const Stack = createStackNavigator();
 
 const App = (): JSX.Element => {
   const {isLoading, isAuthenticated} = useAuthentication();
+  useVersionCheck();
 
   return (
     <StoreProvider store={store}>

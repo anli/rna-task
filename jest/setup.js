@@ -27,3 +27,7 @@ jest.mock('react-native-bottomsheet', () => ({
 }));
 
 jest.mock('react-native-device-info', () => mockRNDeviceInfo);
+
+jest.mock('react-native-version-check', () => ({
+  getStoreUrl: jest.fn().mockResolvedValue('STORE_URL'),
+}));
