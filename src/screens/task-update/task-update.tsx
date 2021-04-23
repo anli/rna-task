@@ -9,7 +9,6 @@ import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Appbar, useTheme} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IsCompletedInput} from './components';
 
 interface FormData {
@@ -115,12 +114,6 @@ const Screen = styled.SafeAreaView`
 `;
 
 const ActivityIndicator = styled.ActivityIndicator`
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-`;
-
-const SuccessIndicator = styled(Icon)`
   position: absolute;
   bottom: 16px;
   right: 16px;
