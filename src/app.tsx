@@ -16,8 +16,9 @@ import {
 } from '@screens';
 import store from '@store';
 import {defaultTheme} from '@themes';
+import {getBottomTabOptions} from '@utils';
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import {
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
@@ -86,6 +87,9 @@ const Navigator = ({
 
 const Tab = createBottomTabNavigator();
 
+/* istanbul ignore next */
+const PlaceholderComponent = () => <View />;
+
 const TabScreens = () => {
   return (
     <Tab.Navigator tabBarOptions={{showLabel: false}}>
@@ -93,6 +97,17 @@ const TabScreens = () => {
         name="HomeScreen"
         component={HomeScreen.Component}
         options={HomeScreen.options}
+      />
+      <Tab.Screen
+        name="Create"
+        component={PlaceholderComponent}
+        options={getBottomTabOptions('plus-box-outline', 'Add Task')}
+        listeners={({navigation}) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('TaskAddScreen');
+          },
+        })}
       />
       <Tab.Screen
         name="SettingScreen"
