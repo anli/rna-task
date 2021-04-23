@@ -1,5 +1,5 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {render, waitFor} from '@testing-library/react-native';
+import {fireEvent, render, waitFor} from '@testing-library/react-native';
 import React from 'react';
 import App from './app';
 
@@ -18,6 +18,7 @@ jest.mock('@react-native-firebase/auth', () => ({
 
 describe('App', () => {
   beforeEach(() => {
+    mockedOnAuthStateChanged.mockImplementation((cb: any) => cb(defaultUser));
     jest.clearAllMocks();
   });
 
@@ -35,5 +36,11 @@ describe('App', () => {
     await waitFor(() => expect(getByA11yLabel('Google Login')).toBeDefined());
 
     expect(getByA11yLabel('Google Login')).toBeDefined();
+  });
+
+  it('Press Add Task Bottom Tab Button', async () => {
+    const {getByA11yLabel} = render(<App />);
+    await waitFor(() => expect(getByA11yLabel('Add Task')).toBeDefined());
+    fireEvent.press(getByA11yLabel('Add Task'));
   });
 });
