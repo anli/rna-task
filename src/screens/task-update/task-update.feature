@@ -37,14 +37,20 @@ Feature: Task Update Screen
     When I press 'Delete' Button
     Then I should see Error Message
 
-  Scenario: Update Successful
+  Scenario: Update Name Successful
     Given I am at 'Task Update' Screen
     When that I change 'Task Name' to 'Task A2'
-    And I press 'Sat, 10 Apr'
-    And I press 'Cancel' Button
-    And I press 'Save' Button
+    And I lose focus on 'Task Name'
+    And I press 'Back Button'
     Then I should see 'Dashboard Screen'
-    And I should see 'Task A2', date 'Sat, 10 Apr'
+    And I should see 'Task A2'
+
+  Scenario: Update Date Successful
+    Given I am at 'Task Update' Screen
+    And Task 'date' is null
+    When that I change 'date' to 'Today'
+    Then I should see 'date' to 'Today'
+    And I should see 'Task' 'Updated'
 
   Scenario: Update Failed
     Given I am at 'Task Update' Screen
