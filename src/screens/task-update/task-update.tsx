@@ -86,7 +86,11 @@ const Component = (): JSX.Element => {
         onUpdate={onUpdateValue}
       />
 
-      <DatePickerInput control={control} onUpdate={onUpdateValue} />
+      <DatePickerInput
+        control={control}
+        onUpdate={onUpdateValue}
+        disabled={isCompleted}
+      />
       <IsCompletedInput control={control} onPress={onUpdate} />
 
       {status === STATUS.LOADING && (
