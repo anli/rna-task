@@ -19,7 +19,6 @@ const Component = (): JSX.Element => {
       const googleCredential = auth.GoogleAuthProvider?.credential(idToken);
       setIsLoading(true);
       await auth().signInWithCredential(googleCredential);
-      setIsLoading(false);
       return;
     } catch ({message}) {
       setIsLoading(false);
