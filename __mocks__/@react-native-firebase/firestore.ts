@@ -1,6 +1,7 @@
 export const mockFirestoreAdd = jest.fn().mockResolvedValue(true);
 export const mockFirestoreDelete = jest.fn().mockResolvedValue(true);
 export const mockFirestoreUpdate = jest.fn().mockResolvedValue(true);
+export const mockFirestoreSet = jest.fn().mockResolvedValue(true);
 
 const firestore = jest.fn().mockReturnValue({
   collection: jest.fn().mockReturnValue({
@@ -34,6 +35,18 @@ const firestore = jest.fn().mockReturnValue({
       delete: mockFirestoreDelete,
       update: mockFirestoreUpdate,
     }),
+  }),
+  doc: jest.fn().mockReturnValue({
+    onSnapshot: jest.fn((callback) => {
+      const query = {
+        data: () => ({
+          filter: 'all',
+        }),
+      };
+      callback(query);
+      return jest.fn();
+    }),
+    set: mockFirestoreSet,
   }),
 });
 
