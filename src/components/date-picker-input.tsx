@@ -4,7 +4,8 @@ import {format} from 'date-fns/fp';
 import React, {useState} from 'react';
 import {Controller} from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {Chip, List, Text} from 'react-native-paper';
+import {Chip, List, useTheme} from 'react-native-paper';
+import Text from './text';
 
 const NO_TITLE_STYLE = {height: 0};
 
@@ -16,6 +17,7 @@ interface Props {
   accessibilityLabel?: string;
   name?: string;
   onUpdate?: () => any;
+  disabled?: boolean;
 }
 
 const DatePickerInput = ({
@@ -23,6 +25,7 @@ const DatePickerInput = ({
   accessibilityLabel = 'Selected Date',
   name = 'date',
   onUpdate,
+  disabled = false,
 }: Props) => {
   const [show, setShow] = useState(false);
 
@@ -52,12 +55,14 @@ const DatePickerInput = ({
         return (
           <>
             <Input
+              disabled={disabled}
               testID="DateInput"
               onPress={onShow}
               titleStyle={NO_TITLE_STYLE}
               title={null}
               description={() => (
                 <Description
+                  disabled={disabled}
                   value={value}
                   onClearDate={onClearDate}
                   accessibilityLabel={accessibilityLabel}
@@ -102,21 +107,30 @@ const Input = styled(List.Item)`
   padding-bottom: 0px;
 `;
 
-const Description = ({value, onClearDate, accessibilityLabel}: any) => {
+const Description = ({
+  value,
+  onClearDate,
+  accessibilityLabel,
+  disabled,
+}: any) => {
+  const {colors} = useTheme();
+  const color = disabled ? colors.disabled : colors.text;
+
   return (
     <DescriptionContainer>
       {value ? (
         <ChipContainer>
           <Chip
+            disabled={disabled}
             testID="ShowDateTimePicker"
             mode="outlined"
             accessibilityLabel={accessibilityLabel}
-            onClose={onClearDate}>
+            onClose={() => !disabled && onClearDate()}>
             {format('EEE, d MMM')(parseISO(value))}
           </Chip>
         </ChipContainer>
       ) : (
-        <Text>Add date</Text>
+        <Text color={color}>Add date</Text>
       )}
     </DescriptionContainer>
   );
