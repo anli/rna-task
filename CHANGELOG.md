@@ -1,3 +1,29 @@
+# [2.0.0](https://github.com/anli/rna-task/compare/1.2.0...2.0.0) (2021-04-23)
+
+
+### Bug Fixes
+
+* **save-button:** change color to background theme color ([#63](https://github.com/anli/rna-task/issues/63)) ([e65a91e](https://github.com/anli/rna-task/commit/e65a91ef0afb259192cbbba59063b4b4d4f12a9d)), closes [#36](https://github.com/anli/rna-task/issues/36)
+
+
+### Features
+
+* **app:** add bottom tab button for Add Task ([#67](https://github.com/anli/rna-task/issues/67)) ([ad8082a](https://github.com/anli/rna-task/commit/ad8082a2a9df42fff3bfb56de14d1eb4a7cd4e90)), closes [#40](https://github.com/anli/rna-task/issues/40)
+* **app:** add react-native-version-check ([#66](https://github.com/anli/rna-task/issues/66)) ([40516fc](https://github.com/anli/rna-task/commit/40516fc7eb4029b09cbf1d944e3ff8a526dbd011)), closes [#39](https://github.com/anli/rna-task/issues/39)
+* **date-picker-input, task-name, task-update:** add disable input when task is mark completed ([#69](https://github.com/anli/rna-task/issues/69)) ([009e8b7](https://github.com/anli/rna-task/commit/009e8b72c0b8dc337ecccb900680a9e94ea6fb14)), closes [#51](https://github.com/anli/rna-task/issues/51)
+* **date-picker-input, task-update:** add default date to be today ([e406806](https://github.com/anli/rna-task/commit/e4068064744a4b5a56a99d66d30dc2ff8857e088)), closes [#56](https://github.com/anli/rna-task/issues/56)
+* **home, filter:** add persistFilter for user at HomeScreen ([#65](https://github.com/anli/rna-task/issues/65)) ([e3ef9fd](https://github.com/anli/rna-task/commit/e3ef9fd8666e09f7af0f62045d2706bd887ef679)), closes [#38](https://github.com/anli/rna-task/issues/38)
+* **login:** add loading indicator onLogin ([#60](https://github.com/anli/rna-task/issues/60)) ([cc49ea1](https://github.com/anli/rna-task/commit/cc49ea1783494956cda82efd08b25b075d016234)), closes [#25](https://github.com/anli/rna-task/issues/25)
+* **task-update:** add auto-update at Task Update Screen ([#59](https://github.com/anli/rna-task/issues/59)) ([354e7e0](https://github.com/anli/rna-task/commit/354e7e0a8dcc6aa63acb47ff606e9b9cce61ae75)), closes [#24](https://github.com/anli/rna-task/issues/24)
+* **task-update:** change only goBack when mark complete ([#70](https://github.com/anli/rna-task/issues/70)) ([e175b3e](https://github.com/anli/rna-task/commit/e175b3e10b8d7ed8fd943f08f1b1e8adf89ce046)), closes [#52](https://github.com/anli/rna-task/issues/52)
+
+
+### BREAKING CHANGES
+
+* **app:** show alert to store when breaking version is released
+
+
+
 # [1.2.0](https://github.com/anli/rna-task/compare/1.1.0...1.2.0) (2021-04-22)
 
 ### Features
