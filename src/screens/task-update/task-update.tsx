@@ -45,7 +45,7 @@ const Component = (): JSX.Element => {
   };
 
   const onUpdate = handleSubmit(async (changes) => {
-    const isSuccessful = doAction(TaskActions.update({id, changes}));
+    const isSuccessful = await doAction(TaskActions.update({id, changes}));
     isSuccessful && onBack();
   });
 
