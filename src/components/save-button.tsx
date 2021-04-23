@@ -14,6 +14,7 @@ const SaveButton = ({onPress, disabled, loading}: Props) => {
   return (
     <FAB
       backgroundColor={colors.primary}
+      color={colors.background}
       disabled={disabled}
       loading={loading}
       accessibilityLabel="Save"
