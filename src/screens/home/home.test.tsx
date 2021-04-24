@@ -80,7 +80,7 @@ describe('Home Screen', () => {
     );
   });
 
-  it('Filter tasks by What I did Yesterday', async () => {
+  it('Filter tasks by What I did Previously', async () => {
     jest
       .spyOn(BottomSheet, 'showBottomSheetWithOptions')
       .mockImplementation((_, callback: any) => {
@@ -95,7 +95,7 @@ describe('Home Screen', () => {
     fireEvent.press(getByA11yLabel('Filter'));
 
     await waitFor(() =>
-      expect(getByText('What I did Yesterday')).toBeDefined(),
+      expect(getByText('What I did Previously')).toBeDefined(),
     );
   });
 
