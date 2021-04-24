@@ -1,16 +1,20 @@
 import {logout, switchAccount, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
-import {getBottomTabOptions} from '@utils';
+import {getBottomTabOptions, useUpdateNeeded} from '@utils';
 import React from 'react';
-import {getVersion} from 'react-native-device-info';
+import ContentLoader, {Rect} from 'react-content-loader/native';
+import {Linking} from 'react-native';
 import {Appbar, List} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
 const Component = (): JSX.Element => {
-  const version = getVersion();
   const {user} = useAuthentication();
   const email = user?.email;
+  const {
+    data: updateNeeded,
+    isLoading: isLoadingUpdateNeeded,
+  } = useUpdateNeeded({depth: 3});
 
   const onLogout = async () => {
     errorHandler(logout);
@@ -31,6 +35,15 @@ const Component = (): JSX.Element => {
     }
   };
 
+  const onUpdateVersion = () => {
+    updateNeeded?.storeUrl && Linking.openURL(updateNeeded.storeUrl);
+  };
+
+  const versionTitle = `Version ${updateNeeded?.currentVersion}`;
+  const versionDescription = updateNeeded?.isNeeded
+    ? `New version ${updateNeeded.latestVersion} is available`
+    : 'You are on the latest version';
+
   return (
     <Screen>
       <Header>
@@ -42,7 +55,16 @@ const Component = (): JSX.Element => {
         description="Switch Account"
         onPress={onSwitchAccount}
       />
-      <List.Item title={version} description="Version" />
+      {isLoadingUpdateNeeded ? (
+        <SettingItemIndicator />
+      ) : (
+        <List.Item
+          accessibilityLabel="Update Version"
+          title={versionTitle}
+          description={versionDescription}
+          onPress={onUpdateVersion}
+        />
+      )}
       <List.Item
         accessibilityLabel="Logout"
         onPress={onLogout}
@@ -62,3 +84,10 @@ export default class SettingScreen {
 const Screen = styled.SafeAreaView`
   flex: 1;
 `;
+
+const SettingItemIndicator = () => (
+  <ContentLoader height={69}>
+    <Rect x="16" y="16" rx="0" ry="0" width={100} height={16} />
+    <Rect x="16" y="40" rx="0" ry="0" width={200} height={12} />
+  </ContentLoader>
+);

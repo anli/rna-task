@@ -1,8 +1,9 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {renderApp} from '@test';
 import {fireEvent, waitFor} from '@testing-library/react-native';
-import ReactNativeDeviceInfo from 'react-native-device-info';
+import {Linking} from 'react-native';
 import Toast from 'react-native-toast-message';
+import VersionCheck from 'react-native-version-check';
 import SettingScreen from './setting';
 
 const mockedSignOut = jest.fn();
@@ -23,15 +24,14 @@ describe('Setting Screen', () => {
     jest.clearAllMocks();
   });
 
-  it('See UI', () => {
-    jest.spyOn(ReactNativeDeviceInfo, 'getVersion').mockReturnValue('1.0.0');
-
+  it('See UI', async () => {
     const {getByText} = renderApp({
       Component: SettingScreen.Component,
       navigationOptions: SettingScreen.options,
     });
 
-    expect(getByText('1.0.0')).toBeDefined();
+    await waitFor(() => expect(getByText('Version 1.0.0')).toBeDefined());
+    expect(getByText('You are on the latest version')).toBeDefined();
     expect(getByText('user@email.com')).toBeDefined();
   });
 
@@ -80,5 +80,35 @@ describe('Setting Screen', () => {
     fireEvent.press(getByA11yLabel('Switch Account'));
 
     await waitFor(() => expect(mockedSignInWithCredential).toBeCalledTimes(1));
+  });
+
+  it('See UI when new version is available', async () => {
+    jest.spyOn(VersionCheck, 'needUpdate').mockResolvedValue({
+      isNeeded: true,
+      currentVersion: '1.0.0',
+      latestVersion: '2.0.0',
+      storeUrl: 'STORE_URL',
+    });
+
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() => expect(getByText('Version 1.0.0')).toBeDefined());
+    expect(getByText('New version 2.0.0 is available')).toBeDefined();
+  });
+
+  it('Press version to go to store URL', async () => {
+    const spyOpenUrl = jest.spyOn(Linking, 'openURL');
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() => expect(getByText('Version 1.0.0')).toBeDefined());
+    fireEvent.press(getByText('Version 1.0.0'));
+    expect(spyOpenUrl).toBeCalledTimes(1);
+    expect(spyOpenUrl).toBeCalledWith('STORE_URL');
   });
 });
