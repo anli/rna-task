@@ -1,4 +1,4 @@
-import {logout, useAuthentication} from '@authentication';
+import {logout, switchAccount, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
 import {getBottomTabOptions} from '@utils';
@@ -13,8 +13,16 @@ const Component = (): JSX.Element => {
   const email = user?.email;
 
   const onLogout = async () => {
+    errorHandler(logout);
+  };
+
+  const onSwitchAccount = async () => {
+    errorHandler(switchAccount);
+  };
+
+  const errorHandler = async (promise: () => Promise<any>) => {
     try {
-      await logout();
+      await promise();
     } catch ({message}) {
       Toast.show({
         type: 'error',
@@ -29,12 +37,17 @@ const Component = (): JSX.Element => {
         <Appbar.Content title="Setting" />
       </Header>
       <List.Item
-        accessibilityLabel="Logout"
-        title="Logout"
-        description={email}
-        onPress={onLogout}
+        accessibilityLabel="Switch Account"
+        title={email}
+        description="Switch Account"
+        onPress={onSwitchAccount}
       />
       <List.Item title={version} description="Version" />
+      <List.Item
+        accessibilityLabel="Logout"
+        onPress={onLogout}
+        title="Logout"
+      />
     </Screen>
   );
 };

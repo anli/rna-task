@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import SettingScreen from './setting';
 
 const mockedSignOut = jest.fn();
+const mockedSignInWithCredential = jest.fn();
 jest.mock('@react-native-firebase/auth', () => ({
   __esModule: true,
   default: () => ({
@@ -13,6 +14,7 @@ jest.mock('@react-native-firebase/auth', () => ({
     onAuthStateChanged: jest.fn((callback) => {
       callback({uid: 'USER_ID', email: 'user@email.com'});
     }),
+    signInWithCredential: mockedSignInWithCredential,
   }),
 }));
 
@@ -63,5 +65,20 @@ describe('Setting Screen', () => {
     await waitFor(() => expect(mockedSignOut).toBeCalledTimes(1));
     expect(spyToastShow).toBeCalledTimes(1);
     expect(spyToastShow).toBeCalledWith({text2: 'ERROR', type: 'error'});
+  });
+
+  it('Switch account successfully', async () => {
+    jest
+      .spyOn(GoogleSignin, 'signIn')
+      .mockReturnValue({idToken: 'MOCKED_ID_TOKEN'} as any);
+
+    const {getByA11yLabel} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    fireEvent.press(getByA11yLabel('Switch Account'));
+
+    await waitFor(() => expect(mockedSignInWithCredential).toBeCalledTimes(1));
   });
 });

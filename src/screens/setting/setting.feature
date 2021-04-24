@@ -20,3 +20,8 @@ Feature: Setting Screen
     When App load
     And I press 'Logout' Button
     Then I should see 'Error Message'
+
+  Scenario: Switch account successfully
+    Given I am at 'Setting' screen
+    When I press 'Switch Account' button
+    Then I should be 'logged in'
