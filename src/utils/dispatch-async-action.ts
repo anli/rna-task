@@ -8,13 +8,13 @@ export enum STATUS {
 
 const dispatchAsyncAction = async ({setStatus, dispatch, action}: any) => {
   try {
-    setStatus(STATUS.LOADING);
+    setStatus && setStatus(STATUS.LOADING);
     const action$ = await dispatch(action);
     await unwrapResult(action$);
-    setStatus(STATUS.IDLE);
+    setStatus && setStatus(STATUS.IDLE);
     return true;
   } catch ({message}) {
-    setStatus(STATUS.IDLE);
+    setStatus && setStatus(STATUS.IDLE);
     Toast.show({
       type: 'error',
       text2: message,
