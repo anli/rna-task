@@ -35,13 +35,28 @@ Feature: Home Screen
     And I press 'What I did Yesterday'
     Then I should see 'What I did Yesterday'
 
-  Scenario: Mark task as done
+  Scenario: Mark task as completed
     Given I have 'Task A' not completed
     When App load
     And I press 'Task A' 'Mark as complete' Button
     Then I should see 'Task A' completed
+    And I should see 'Succesful Toast'
 
   Scenario: See completed tasks
     Given I am at 'Home' Screen
     When I press 'Completed' button
     Then I should see 'Completed Tasks'
+
+  Scenario: Mark task as not completed
+    Given I have 'Completed Task' completed
+    And I am at 'Home' Screen
+    And I press 'Completed Task' 'Mark as not complete' Button
+    Then I should see 'Completed Task' not completed
+    And I should see 'Succesful Toast'
+
+  Scenario: Mark task as done failed
+    Given I have 'Task A' not completed
+    And API to update task will fail
+    And I am at 'Home' Screen
+    When I press 'Task A' 'Mark as complete' Button
+    Then I should see 'Error Toast'
