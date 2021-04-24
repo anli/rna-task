@@ -1,5 +1,7 @@
-import {format, parseISO} from 'date-fns/fp';
+import {dateLocale} from '@i18n';
+import {format, parseISO} from 'date-fns';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import {List, useTheme} from 'react-native-paper';
 
@@ -19,6 +21,8 @@ const Task = ({
   onCompletePress,
 }: Props) => {
   const {colors} = useTheme();
+  const {t} = useTranslation();
+
   const icon = isCompleted ? 'check' : 'checkbox-blank-outline';
   const iconColor = isCompleted ? colors.primary : colors.backdrop;
   const titleStyle: {} = isCompleted
@@ -26,8 +30,8 @@ const Task = ({
     : {textDecorationLine: 'none'};
 
   const accessibilityHint = isCompleted
-    ? 'Mark not completed'
-    : 'Mark completed';
+    ? t('task_is_completed_input.not_completed_label', 'Mark not completed')
+    : t('task_is_completed_input.completed_label', 'Mark completed');
 
   return (
     <List.Item
@@ -50,7 +54,7 @@ export default Task;
 
 const getDescription = (value?: string) => {
   if (value) {
-    return format('EEE, d MMM')(parseISO(value));
+    return format(parseISO(value), 'EEE, d MMM', {locale: dateLocale});
   }
   return null;
 };

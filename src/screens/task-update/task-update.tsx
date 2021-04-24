@@ -7,6 +7,7 @@ import {TaskActions, TaskSelectors} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
 import {Appbar, useTheme} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {IsCompletedInput} from './components';
@@ -28,6 +29,7 @@ const Component = (): JSX.Element => {
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
   const isCompleted = watch('isCompleted', false);
   const {colors} = useTheme();
+  const {t} = useTranslation();
 
   useEffect(() => {
     data?.name && setValue('name', data.name);
@@ -62,7 +64,7 @@ const Component = (): JSX.Element => {
     isSuccessful &&
       Toast.show({
         type: 'success',
-        text2: 'Updated',
+        text2: t('toast.update_successful', 'Updated'),
         position: 'bottom',
       });
   });
@@ -75,7 +77,10 @@ const Component = (): JSX.Element => {
         <Appbar.Action
           disabled={status === STATUS.LOADING}
           icon="trash-can-outline"
-          accessibilityLabel="Delete"
+          accessibilityLabel={t(
+            'task_delete_button.accessibility_label',
+            'Delete',
+          )}
           onPress={onDelete}
         />
       </Header>
@@ -91,7 +96,22 @@ const Component = (): JSX.Element => {
         onUpdate={onUpdateValue}
         disabled={isCompleted}
       />
-      <IsCompletedInput control={control} onPress={onUpdate} />
+      <IsCompletedInput
+        completedLabel={t(
+          'task_is_completed_input.completed_label',
+          'Mark not completed',
+        )}
+        notCompletedLabel={t(
+          'task_is_completed_input.not_completed_label',
+          'Mark completed',
+        )}
+        accessibilityLabel={t(
+          'task_is_completed_input.accessibility_label',
+          'Is Completed',
+        )}
+        control={control}
+        onPress={onUpdate}
+      />
 
       {status === STATUS.LOADING && (
         <ActivityIndicator

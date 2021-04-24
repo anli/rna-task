@@ -6,9 +6,15 @@ interface Props {
   onPress: () => any;
   disabled: boolean;
   loading: boolean;
+  accessibilityLabel: string;
 }
 
-const SaveButton = ({onPress, disabled, loading}: Props) => {
+const SaveButton = ({
+  onPress,
+  disabled,
+  loading,
+  accessibilityLabel,
+}: Props) => {
   const {colors} = useTheme();
 
   return (
@@ -17,7 +23,7 @@ const SaveButton = ({onPress, disabled, loading}: Props) => {
       color={colors.background}
       disabled={disabled}
       loading={loading}
-      accessibilityLabel="Save"
+      accessibilityLabel={accessibilityLabel}
       icon="check"
       onPress={onPress}
     />

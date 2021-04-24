@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
-import {formatISO, parseISO} from 'date-fns';
-import {format} from 'date-fns/fp';
+import {dateLocale} from '@i18n';
+import {format, formatISO, parseISO} from 'date-fns';
 import React, {useState} from 'react';
 import {Controller} from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -18,6 +18,7 @@ interface Props {
   name?: string;
   onUpdate?: () => any;
   disabled?: boolean;
+  placeholder?: string;
 }
 
 const DatePickerInput = ({
@@ -26,6 +27,7 @@ const DatePickerInput = ({
   name = 'date',
   onUpdate,
   disabled = false,
+  placeholder = 'Add date',
 }: Props) => {
   const [show, setShow] = useState(false);
 
@@ -62,6 +64,7 @@ const DatePickerInput = ({
               title={null}
               description={() => (
                 <Description
+                  placeholder={placeholder}
                   disabled={disabled}
                   value={value}
                   onClearDate={onClearDate}
@@ -108,6 +111,7 @@ const Input = styled(List.Item)`
 `;
 
 const Description = ({
+  placeholder,
   value,
   onClearDate,
   accessibilityLabel,
@@ -126,11 +130,11 @@ const Description = ({
             mode="outlined"
             accessibilityLabel={accessibilityLabel}
             onClose={() => !disabled && onClearDate()}>
-            {format('EEE, d MMM')(parseISO(value))}
+            {format(parseISO(value), 'EEE, d MMM', {locale: dateLocale})}
           </Chip>
         </ChipContainer>
       ) : (
-        <Text color={color}>Add date</Text>
+        <Text color={color}>{placeholder}</Text>
       )}
     </DescriptionContainer>
   );

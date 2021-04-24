@@ -4,11 +4,18 @@ import {useEffect, useState} from 'react';
 
 export type Filter = keyof typeof filterOptions;
 
-const filterOptions = {
+const filterOptionsDefaultValue = {
   canDo: 'What I can do',
   wantToDoToday: 'What I want to do Today',
   didPreviously: 'What I did Previously',
   all: 'All Tasks',
+};
+
+const filterOptions = {
+  canDo: 'filter_option.can_do',
+  wantToDoToday: 'filter_option.want_to_do_today',
+  didPreviously: 'filter_option.did_previously',
+  all: 'filter_option.all',
 };
 
 const defaultFilter: Filter = 'all';
@@ -35,7 +42,7 @@ const useFilter = () => {
     setFilter(_filter);
   };
 
-  return {filter, onFilter, filterOptions};
+  return {filter, onFilter, filterOptions, filterOptionsDefaultValue};
 };
 
 export default useFilter;
