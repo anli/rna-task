@@ -1,3 +1,4 @@
+import {setup} from '@i18n';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {AppRegistry} from 'react-native';
 import 'react-native-gesture-handler';
@@ -8,5 +9,7 @@ import {App} from './src';
 GoogleSignin.configure({
   webClientId: '800010873210-s6t6soj3pk6nbvhd4vdgagdf1jt3ejv1',
 });
+
+setup();
 
 AppRegistry.registerComponent(appName, () => App);

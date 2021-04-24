@@ -1,5 +1,6 @@
 import {useAuthentication} from '@authentication';
 import {Toast} from '@components';
+import {useI18n} from '@i18n';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   DefaultTheme as NavigationDefaultTheme,
@@ -47,6 +48,7 @@ const Stack = createStackNavigator();
 const App = (): JSX.Element => {
   const {isLoading, isAuthenticated} = useAuthentication();
   useVersionCheck();
+  useI18n();
 
   return (
     <StoreProvider store={store}>

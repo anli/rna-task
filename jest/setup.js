@@ -34,3 +34,23 @@ jest.mock('react-native-version-check', () => ({
     storeUrl: 'STORE_URL',
   }),
 }));
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => {
+    return {
+      t: (str, options) => {
+        switch (typeof options) {
+          case 'string':
+            return options;
+          case 'object':
+            return options.defaultValue.replace('{{value}}', options?.value);
+          default:
+            return str;
+        }
+      },
+      i18n: {
+        changeLanguage: () => new Promise(() => {}),
+      },
+    };
+  },
+}));

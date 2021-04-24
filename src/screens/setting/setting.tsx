@@ -4,6 +4,7 @@ import styled from '@emotion/native';
 import {getBottomTabOptions, useUpdateNeeded} from '@utils';
 import React from 'react';
 import ContentLoader, {Rect} from 'react-content-loader/native';
+import {useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
 import {Appbar, List} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
@@ -15,6 +16,7 @@ const Component = (): JSX.Element => {
     data: updateNeeded,
     isLoading: isLoadingUpdateNeeded,
   } = useUpdateNeeded({depth: 3});
+  const {t} = useTranslation();
 
   const onLogout = async () => {
     errorHandler(logout);
@@ -39,36 +41,43 @@ const Component = (): JSX.Element => {
     updateNeeded?.storeUrl && Linking.openURL(updateNeeded.storeUrl);
   };
 
-  const versionTitle = `Version ${updateNeeded?.currentVersion}`;
+  const versionTitle = t('setting.version', {
+    defaultValue: 'Version {{value}}',
+    value: updateNeeded?.currentVersion,
+  });
+
   const versionDescription = updateNeeded?.isNeeded
-    ? `New version ${updateNeeded.latestVersion} is available`
-    : 'You are on the latest version';
+    ? t('setting.version_new_available', {
+        value: updateNeeded.latestVersion,
+        defaultValue: 'New version {{value}} is available',
+      })
+    : t('setting.version_is_latest', 'You are on the latest version');
 
   return (
     <Screen>
       <Header>
-        <Appbar.Content title="Setting" />
+        <Appbar.Content title={t('setting.screen_title', 'Setting')} />
       </Header>
       <List.Item
-        accessibilityLabel="Switch Account"
+        accessibilityLabel={t('setting.switch_account', 'Switch Account')}
         title={email}
-        description="Switch Account"
+        description={t('setting.switch_account', 'Switch Account')}
         onPress={onSwitchAccount}
       />
       {isLoadingUpdateNeeded ? (
         <SettingItemIndicator />
       ) : (
         <List.Item
-          accessibilityLabel="Update Version"
+          accessibilityLabel={t('setting.update_version', 'Update Version')}
           title={versionTitle}
           description={versionDescription}
           onPress={onUpdateVersion}
         />
       )}
       <List.Item
-        accessibilityLabel="Logout"
+        accessibilityLabel={t('setting.logout', 'Logout')}
         onPress={onLogout}
-        title="Logout"
+        title={t('setting.logout', 'Logout')}
       />
     </Screen>
   );
