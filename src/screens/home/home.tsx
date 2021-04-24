@@ -102,15 +102,14 @@ const Component = (): JSX.Element => {
       action: TaskActions.update({id, changes}),
     });
 
-    if (isSuccessful) {
-      const status = changes.isCompleted ? 'completed' : 'not completed';
-      const message = `Marked ${status} successfully`;
-      return Toast.show({
+    isSuccessful &&
+      Toast.show({
         position: 'bottom',
         type: 'success',
-        text2: message,
+        text2: `Marked ${
+          changes.isCompleted ? 'completed' : 'not completed'
+        } successfully`,
       });
-    }
   };
 
   const onCompletedListExpandedPress = () =>
