@@ -4,13 +4,14 @@ import {Filter, useFilter} from '@filter';
 import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '@store';
 import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
-import {getBottomTabOptions} from '@utils';
+import {dispatchAsyncAction, getBottomTabOptions} from '@utils';
 import {isToday, isYesterday} from 'date-fns';
 import R from 'ramda';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, List} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import {Task as TaskComponent} from './components';
 
 const getData = (data: Task[], filter: Filter) => {
@@ -95,7 +96,21 @@ const Component = (): JSX.Element => {
   };
 
   const onComplete = async (id: string, changes: {isCompleted: boolean}) => {
-    dispatch(TaskActions.update({id, changes}));
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus: undefined,
+      dispatch,
+      action: TaskActions.update({id, changes}),
+    });
+
+    if (isSuccessful) {
+      const status = changes.isCompleted ? 'completed' : 'not completed';
+      const message = `Marked ${status} successfully`;
+      return Toast.show({
+        position: 'bottom',
+        type: 'success',
+        text2: message,
+      });
+    }
   };
 
   const onCompletedListExpandedPress = () =>
