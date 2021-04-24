@@ -40,3 +40,8 @@ Feature: Home Screen
     When App load
     And I press 'Task A' 'Mark as complete' Button
     Then I should see 'Task A' completed
+
+  Scenario: See completed tasks
+    Given I am at 'Home' Screen
+    When I press 'Completed' button
+    Then I should see 'Completed Tasks'
