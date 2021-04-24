@@ -8,14 +8,18 @@ const NO_TITLE_STYLE = {height: 0};
 
 interface Props {
   control: any;
-  accessibilityLabel?: string;
+  accessibilityLabel: string;
   name?: string;
   onPress: () => void;
+  completedLabel: string;
+  notCompletedLabel: string;
 }
 const IsCompletedInput = ({
   control,
-  accessibilityLabel = 'Is Completed',
+  accessibilityLabel,
   name = 'isCompleted',
+  completedLabel,
+  notCompletedLabel,
   onPress,
 }: Props) => {
   const {colors} = useTheme();
@@ -38,7 +42,7 @@ const IsCompletedInput = ({
             title={null}
             description={() => (
               <Description color={colors.primary}>
-                {value ? 'Mark not completed' : 'Mark completed'}
+                {value ? completedLabel : notCompletedLabel}
               </Description>
             )}
             left={(props) => <List.Icon {...props} icon="check" />}
