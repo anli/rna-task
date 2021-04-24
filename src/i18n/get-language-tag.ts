@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import * as RNLocalize from 'react-native-localize';
 import configs from './configs';
 

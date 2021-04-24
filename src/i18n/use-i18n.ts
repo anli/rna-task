@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import i18next from 'i18next';
 import {useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
