@@ -13,6 +13,7 @@ import {TaskActions} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
+import {useTranslation} from 'react-i18next';
 import {Appbar} from 'react-native-paper';
 
 interface FormData {
@@ -25,6 +26,7 @@ const Component = (): JSX.Element => {
   const {control, handleSubmit, errors, setValue} = useForm<FormData>();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
+  const {t} = useTranslation();
 
   const onBack = () => {
     canGoBack() && goBack();
@@ -50,12 +52,25 @@ const Component = (): JSX.Element => {
         <Appbar.Content title="" />
       </Header>
       <TaskNameInput
+        label={t('task_name_input.label', 'Enter title')}
+        accessibilityLabel={t(
+          'task_name_input.accessibility_label',
+          'Task Name',
+        )}
         control={control}
         errors={errors}
         onProcessText={onProcessText}
       />
-      <DatePickerInput control={control} />
+      <DatePickerInput
+        placeholder={t('task_name_input.placeholder', 'Add date')}
+        control={control}
+        accessibilityLabel={t(
+          'date_picker_input.accessibility_label',
+          'Selected Date',
+        )}
+      />
       <SaveButton
+        accessibilityLabel={t('task_save_button.accessibility_label', 'Save')}
         disabled={status === STATUS.LOADING}
         loading={status === STATUS.LOADING}
         onPress={onSave}
