@@ -43,7 +43,7 @@ jest.mock('react-i18next', () => ({
           case 'string':
             return options;
           case 'object':
-            return options.defaultValue.replace('{{value}}', options?.value);
+            return options.defaultValue.replace('{{value}}', options.value);
           default:
             return str;
         }
