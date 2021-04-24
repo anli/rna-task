@@ -7,7 +7,7 @@ export type Filter = keyof typeof filterOptions;
 const filterOptions = {
   canDo: 'What I can do',
   wantToDoToday: 'What I want to do Today',
-  didYesterday: 'What I did Yesterday',
+  didPreviously: 'What I did Previously',
   all: 'All Tasks',
 };
 

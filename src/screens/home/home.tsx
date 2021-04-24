@@ -5,7 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '@store';
 import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
 import {dispatchAsyncAction, getBottomTabOptions} from '@utils';
-import {isToday, isYesterday} from 'date-fns';
+import {isToday, startOfToday} from 'date-fns';
+import {isBefore} from 'date-fns/fp';
 import R from 'ramda';
 import React, {useState} from 'react';
 import {FlatList} from 'react-native';
@@ -33,14 +34,20 @@ const getData = (data: Task[], filter: Filter) => {
         notCompleted: R.pipe(filterNotCompleted, filterToday)(data),
         completed: R.pipe(filterToday, filterCompleted)(data),
       };
-    case 'didYesterday':
-      const filterYesterday = R.filter<Task>((task) =>
-        isDatePeriod(task, isYesterday),
+    case 'didPreviously':
+      const filterIsBeforeToday = R.filter<Task>((task) =>
+        isDatePeriod(task, isBefore(startOfToday())),
       );
+      const previousDates: Task[] = R.pipe(
+        filterCompleted,
+        filterIsBeforeToday,
+      )(data);
 
       return {
         notCompleted: [],
-        completed: R.pipe(filterCompleted, filterYesterday)(data),
+        completed: R.filter<Task>(
+          (task) => task?.date === R.head(R.pluck('date', previousDates)),
+        )(data),
       };
 
     default:
@@ -86,7 +93,7 @@ const Component = (): JSX.Element => {
 
         onFilter(key);
 
-        if (key === 'didYesterday') {
+        if (key === 'didPreviously') {
           return setCompetedListExpanded(true);
         }
 

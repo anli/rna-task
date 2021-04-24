@@ -32,8 +32,8 @@ Feature: Home Screen
     Given I am logged in
     When App load
     And I press 'Filter' Button
-    And I press 'What I did Yesterday'
-    Then I should see 'What I did Yesterday'
+    And I press 'What I did Previously'
+    Then I should see 'What I did Previously'
 
   Scenario: Mark task as completed
     Given I have 'Task A' not completed
