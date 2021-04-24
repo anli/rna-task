@@ -9,6 +9,7 @@ import {isToday, startOfToday} from 'date-fns';
 import {isBefore} from 'date-fns/fp';
 import R from 'ramda';
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, List} from 'react-native-paper';
@@ -62,15 +63,22 @@ const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
   const dispatch = useAppDispatch();
-  const {filter, onFilter, filterOptions} = useFilter();
+  const {
+    filter,
+    onFilter,
+    filterOptions,
+    filterOptionsDefaultValue,
+  } = useFilter();
   const [competedListExpanded, setCompetedListExpanded] = useState<boolean>(
     false,
   );
+  const {t} = useTranslation();
 
   useFetchTask();
 
   const data = getData(allData, filter);
-  const title = filterOptions[filter];
+
+  const title = t(filterOptions[filter], filterOptionsDefaultValue[filter]);
   const notCompletedTaskCount = data.completed.length;
 
   const onUpdate = (id: string) => {
@@ -78,20 +86,24 @@ const Component = (): JSX.Element => {
   };
 
   const onPresentFilterRelativeDay = () => {
+    const options = [
+      ...Object.keys(filterOptions).map((value) =>
+        t(
+          filterOptions[value as Filter],
+          filterOptionsDefaultValue[value as Filter],
+        ),
+      ),
+      t('filter_option.cancel', 'Cancel'),
+    ];
     BottomSheet.showBottomSheetWithOptions(
       {
-        options: [...Object.values(filterOptions), 'Cancel'],
-        title: 'See',
+        options,
+        title: t('filter_option_title', 'See'),
         cancelButtonIndex: Object.values(filterOptions).length,
       },
       (index) => {
-        const value = Object.values(filterOptions)[index];
-        const key = Object.keys(filterOptions).find((filterKey) => {
-          const filterValue = filterOptions[filterKey as Filter];
-          return filterValue === value;
-        }) as Filter;
-
-        onFilter(key);
+        const key = Object.keys(filterOptions)[index] as Filter;
+        key && onFilter(key);
 
         if (key === 'didPreviously') {
           return setCompetedListExpanded(true);
@@ -109,13 +121,18 @@ const Component = (): JSX.Element => {
       action: TaskActions.update({id, changes}),
     });
 
+    const message = changes.isCompleted
+      ? t('toast.mark_completed_successful', 'Marked completed successfully')
+      : t(
+          'toast.mark_not_completed_successful',
+          'Marked not completed successfully',
+        );
+
     isSuccessful &&
       Toast.show({
         position: 'bottom',
         type: 'success',
-        text2: `Marked ${
-          changes.isCompleted ? 'completed' : 'not completed'
-        } successfully`,
+        text2: message,
       });
   };
 
@@ -129,7 +146,7 @@ const Component = (): JSX.Element => {
       <Header>
         <Appbar.Content title={title} />
         <Appbar.Action
-          accessibilityLabel="Filter"
+          accessibilityLabel={t('home.filter', 'Filter')}
           icon="filter-variant"
           onPress={onPresentFilterRelativeDay}
         />

@@ -19,6 +19,7 @@ import store from '@store';
 import {defaultTheme} from '@themes';
 import {getBottomTabOptions} from '@utils';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {StatusBar, View} from 'react-native';
 import {
   DefaultTheme as PaperDefaultTheme,
@@ -47,6 +48,7 @@ const Stack = createStackNavigator();
 
 const App = (): JSX.Element => {
   const {isLoading, isAuthenticated} = useAuthentication();
+  const {ready} = useTranslation(undefined, {useSuspense: false});
   useVersionCheck();
   useI18n();
 
@@ -59,7 +61,10 @@ const App = (): JSX.Element => {
           barStyle="dark-content"
         />
         <NavigationContainer theme={navigationTheme}>
-          <Navigator isLoading={isLoading} isAuthenticated={isAuthenticated} />
+          <Navigator
+            isLoading={isLoading || !ready}
+            isAuthenticated={isAuthenticated}
+          />
           <Toast />
         </NavigationContainer>
       </PaperProvider>
