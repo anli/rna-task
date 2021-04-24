@@ -22,7 +22,6 @@ target 'Task' do
     flipper_post_install(installer)
   end
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'GoogleSignIn', '~> 5.0.2'
 end
 
