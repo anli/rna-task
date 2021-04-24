@@ -63,7 +63,7 @@ const Component = (): JSX.Element => {
 
   const data = getData(allData, filter);
   const title = filterOptions[filter];
-  const notCompletedTaskCount = data?.completed?.length;
+  const notCompletedTaskCount = data.completed.length;
 
   const onUpdate = (id: string) => {
     navigate('TaskUpdateScreen', {id});
@@ -101,7 +101,7 @@ const Component = (): JSX.Element => {
   const onCompletedListExpandedPress = () =>
     setCompetedListExpanded(!competedListExpanded);
 
-  const showCompletedSection = !R.isEmpty(data?.completed);
+  const showCompletedSection = !R.isEmpty(data.completed);
 
   return (
     <Screen>
@@ -115,7 +115,7 @@ const Component = (): JSX.Element => {
       </Header>
       <Sections>
         <TaskList
-          data={data?.notCompleted}
+          data={data.notCompleted}
           onComplete={onComplete}
           onUpdate={onUpdate}
         />
@@ -126,7 +126,7 @@ const Component = (): JSX.Element => {
             expanded={competedListExpanded}
             onPress={onCompletedListExpandedPress}>
             <TaskList
-              data={data?.completed}
+              data={data.completed}
               onComplete={onComplete}
               onUpdate={onUpdate}
             />
