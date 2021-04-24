@@ -1,3 +1,18 @@
+# [2.1.0](https://github.com/anli/rna-task/compare/2.0.0...2.1.0) (2021-04-24)
+
+
+### Features
+
+* **app, i18n:** add i18next, i18nexus, translation ([#84](https://github.com/anli/rna-task/issues/84)) ([3a15681](https://github.com/anli/rna-task/commit/3a15681d02ad951d50ebbf5b5f481e5e00f8a184)), closes [#58](https://github.com/anli/rna-task/issues/58)
+* **authentication, setting:** add switch account button in Setting Screen ([#73](https://github.com/anli/rna-task/issues/73)) ([324765f](https://github.com/anli/rna-task/commit/324765fc513a01a0262afc642064dfa6a247f6f9)), closes [#41](https://github.com/anli/rna-task/issues/41)
+* **home:** add accordion list for completed tasks ([#74](https://github.com/anli/rna-task/issues/74)) ([ac2f0f4](https://github.com/anli/rna-task/commit/ac2f0f42ec63b008ec0826afb5da2f863562149f)), closes [#50](https://github.com/anli/rna-task/issues/50)
+* **home:** show toast when task is marked complete or not complete ([#75](https://github.com/anli/rna-task/issues/75)) ([3ddd196](https://github.com/anli/rna-task/commit/3ddd1966f02a3ed4fb8da3ed97b393f033020fb0)), closes [#53](https://github.com/anli/rna-task/issues/53)
+* **home, use-filter:** change didYesterday to didPreviously ([#78](https://github.com/anli/rna-task/issues/78)) ([f8d4b5a](https://github.com/anli/rna-task/commit/f8d4b5a098e00481b7e947ea4482f363d3131890)), closes [#72](https://github.com/anli/rna-task/issues/72)
+* **setting:** add version check, and link to store URL ([#77](https://github.com/anli/rna-task/issues/77)) ([9533207](https://github.com/anli/rna-task/commit/953320719e7f2e0404abde1eb21bd001790d572e)), closes [#54](https://github.com/anli/rna-task/issues/54)
+* **task-name-input:** add processText value to onChange ([#82](https://github.com/anli/rna-task/issues/82)) ([eb380b8](https://github.com/anli/rna-task/commit/eb380b8e0196fad709b24fe3d546dcdf3b91730a)), closes [#57](https://github.com/anli/rna-task/issues/57)
+
+
+
 # [2.0.0](https://github.com/anli/rna-task/compare/1.2.0...2.0.0) (2021-04-23)
 
 
