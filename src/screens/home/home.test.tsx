@@ -108,4 +108,15 @@ describe('Home Screen', () => {
     expect(spy).toBeCalledTimes(1);
     expect(spy).toBeCalledWith({changes: {isCompleted: true}, id: 'idA'});
   });
+
+  it('See completed tasks', async () => {
+    const {getByText, getByTestId} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    fireEvent.press(getByTestId('CompletedTaskListAccordion'));
+
+    expect(getByText('Completed Task')).toBeDefined();
+  });
 });

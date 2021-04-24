@@ -7,30 +7,46 @@ import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
 import {getBottomTabOptions} from '@utils';
 import {isToday, isYesterday} from 'date-fns';
 import R from 'ramda';
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
-import {Appbar} from 'react-native-paper';
+import {Appbar, List} from 'react-native-paper';
 import {Task as TaskComponent} from './components';
 
 const getData = (data: Task[], filter: Filter) => {
-  const sort = R.sortBy(R.prop('isCompleted'));
+  const filterNotCompleted = R.filter<Task>((task) => !task?.isCompleted);
+  const filterCompleted = R.filter<Task>((task) => Boolean(task?.isCompleted));
+  const isDatePeriod = (task: Task, isPeriod: (date: Date) => boolean) =>
+    typeof task?.date === 'string' && isPeriod(new Date(task.date));
+
   switch (filter) {
     case 'canDo':
-      return sort(data.filter((task) => !task?.isCompleted));
+      return {
+        notCompleted: R.pipe(filterNotCompleted)(data),
+        completed: [],
+      };
     case 'wantToDoToday':
-      return sort(
-        data.filter((task) => task?.date && isToday(new Date(task.date))),
-      );
+      const filterToday = R.filter<Task>((task) => isDatePeriod(task, isToday));
+
+      return {
+        notCompleted: R.pipe(filterNotCompleted, filterToday)(data),
+        completed: R.pipe(filterToday, filterCompleted)(data),
+      };
     case 'didYesterday':
-      return sort(
-        data.filter(
-          (task) =>
-            task?.isCompleted && task?.date && isYesterday(new Date(task.date)),
-        ),
+      const filterYesterday = R.filter<Task>((task) =>
+        isDatePeriod(task, isYesterday),
       );
+
+      return {
+        notCompleted: [],
+        completed: R.pipe(filterCompleted, filterYesterday)(data),
+      };
+
     default:
-      return sort(data);
+      return {
+        notCompleted: R.pipe(filterNotCompleted)(data),
+        completed: R.pipe(filterCompleted)(data),
+      };
   }
 };
 
@@ -39,11 +55,15 @@ const Component = (): JSX.Element => {
   const allData = useAppSelector(TaskSelectors.selectAll);
   const dispatch = useAppDispatch();
   const {filter, onFilter, filterOptions} = useFilter();
+  const [competedListExpanded, setCompetedListExpanded] = useState<boolean>(
+    false,
+  );
 
   useFetchTask();
 
   const data = getData(allData, filter);
   const title = filterOptions[filter];
+  const notCompletedTaskCount = data?.completed?.length;
 
   const onUpdate = (id: string) => {
     navigate('TaskUpdateScreen', {id});
@@ -64,6 +84,12 @@ const Component = (): JSX.Element => {
         }) as Filter;
 
         onFilter(key);
+
+        if (key === 'didYesterday') {
+          return setCompetedListExpanded(true);
+        }
+
+        return setCompetedListExpanded(false);
       },
     );
   };
@@ -71,6 +97,11 @@ const Component = (): JSX.Element => {
   const onComplete = async (id: string, changes: {isCompleted: boolean}) => {
     dispatch(TaskActions.update({id, changes}));
   };
+
+  const onCompletedListExpandedPress = () =>
+    setCompetedListExpanded(!competedListExpanded);
+
+  const showCompletedSection = !R.isEmpty(data?.completed);
 
   return (
     <Screen>
@@ -82,23 +113,26 @@ const Component = (): JSX.Element => {
           onPress={onPresentFilterRelativeDay}
         />
       </Header>
-      <FlatList
-        data={data}
-        renderItem={({item: {name, id, date, isCompleted}}) => {
-          return (
-            <TaskComponent
-              title={name}
-              onPress={() => onUpdate(id)}
-              date={date}
-              isCompleted={isCompleted}
-              onCompletePress={() =>
-                onComplete(id, {isCompleted: !isCompleted})
-              }
+      <Sections>
+        <TaskList
+          data={data?.notCompleted}
+          onComplete={onComplete}
+          onUpdate={onUpdate}
+        />
+        {showCompletedSection && (
+          <List.Accordion
+            testID="CompletedTaskListAccordion"
+            title={`Completed (${notCompletedTaskCount})`}
+            expanded={competedListExpanded}
+            onPress={onCompletedListExpandedPress}>
+            <TaskList
+              data={data?.completed}
+              onComplete={onComplete}
+              onUpdate={onUpdate}
             />
-          );
-        }}
-        keyExtractor={({id}) => id}
-      />
+          </List.Accordion>
+        )}
+      </Sections>
     </Screen>
   );
 };
@@ -113,3 +147,33 @@ export default class HomeScreen {
 const Screen = styled.SafeAreaView`
   flex: 1;
 `;
+
+const Sections = styled.View``;
+
+const TaskList = ({
+  data,
+  onUpdate,
+  onComplete,
+}: {
+  data: Task[];
+  onUpdate: (id: string) => void;
+  onComplete: (id: string, changes: {isCompleted: boolean}) => void;
+}) => {
+  return (
+    <FlatList
+      data={data}
+      renderItem={({item: {name, id, date, isCompleted}}) => {
+        return (
+          <TaskComponent
+            title={name}
+            onPress={() => onUpdate(id)}
+            date={date}
+            isCompleted={isCompleted}
+            onCompletePress={() => onComplete(id, {isCompleted: !isCompleted})}
+          />
+        );
+      }}
+      keyExtractor={({id}) => id}
+    />
+  );
+};
