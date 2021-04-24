@@ -40,14 +40,15 @@ const TaskNameInput = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const {colors} = useTheme();
 
-  const onChangeText = (input: string) => {
+  const onChangeText = (input: string, onChange?: (text: string) => any) => {
     const result = processText(input, colors.primary);
 
     if (result) {
-      const {texts, date} = result;
+      const {texts, date, value} = result;
       setFormattedValue(texts);
       onProcessText && onProcessText(date);
       setIsProcessing(false);
+      onChange && onChange(value);
       return;
     }
 
@@ -67,7 +68,7 @@ const TaskNameInput = ({
             onChangeText('');
             onUpdate();
           };
-          const canClear = !isCompleted && !R.isEmpty(value);
+          const canClear = !isProcessing && !isCompleted && !R.isEmpty(value);
 
           return (
             <InputContainer>
@@ -78,7 +79,7 @@ const TaskNameInput = ({
                 onChangeText={(text) => {
                   onProcessText && setIsProcessing(true);
                   onChange(text);
-                  onProcessText && debounce(() => onChangeText(text));
+                  onProcessText && debounce(() => onChangeText(text, onChange));
                 }}
                 onBlur={() => {
                   onBlur;
@@ -143,7 +144,12 @@ const processText = (input: string, color: string) => {
     ];
 
     const date = formatISO(result.start.date(), {representation: 'date'});
-    return {texts, date};
+    const value = R.pipe(
+      R.trim,
+      R.replace(/  +/g, ' '),
+    )(R.slice(0, startPosition)(input) + R.slice(endPosition, Infinity)(input));
+
+    return {texts, date, value};
   }
 
   return undefined;
