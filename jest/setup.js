@@ -1,4 +1,3 @@
-import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock';
 import 'react-native-gesture-handler/jestSetup';
 
 jest.mock('react-native-reanimated', () => {
@@ -26,8 +25,12 @@ jest.mock('react-native-bottomsheet', () => ({
   showBottomSheetWithOptions: jest.fn(),
 }));
 
-jest.mock('react-native-device-info', () => mockRNDeviceInfo);
-
 jest.mock('react-native-version-check', () => ({
   getStoreUrl: jest.fn().mockResolvedValue('STORE_URL'),
+  needUpdate: jest.fn().mockResolvedValue({
+    isNeeded: false,
+    currentVersion: '1.0.0',
+    latestVersion: '1.0.0',
+    storeUrl: 'STORE_URL',
+  }),
 }));
