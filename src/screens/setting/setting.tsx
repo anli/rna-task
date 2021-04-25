@@ -1,4 +1,4 @@
-import {logout, switchAccount, useAuthentication} from '@authentication';
+import {logout, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
 import {getBottomTabOptions, useUpdateNeeded} from '@utils';
@@ -23,7 +23,9 @@ const Component = (): JSX.Element => {
   };
 
   const onSwitchAccount = async () => {
-    errorHandler(switchAccount);
+    throw new Error('My first Sentry error!');
+
+    // errorHandler(switchAccount);
   };
 
   const errorHandler = async (promise: () => Promise<any>) => {
