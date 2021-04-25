@@ -150,26 +150,35 @@ const Component = (): JSX.Element => {
           onPress={onPresentFilterRelativeDay}
         />
       </Header>
-      <Sections>
-        <TaskList
-          data={data.notCompleted}
-          onComplete={onComplete}
-          onUpdate={onUpdate}
-        />
-        {showCompletedSection && (
-          <List.Accordion
-            testID="CompletedTaskListAccordion"
-            title={`Completed (${notCompletedTaskCount})`}
-            expanded={competedListExpanded}
-            onPress={onCompletedListExpandedPress}>
-            <TaskList
-              data={data.completed}
-              onComplete={onComplete}
-              onUpdate={onUpdate}
-            />
-          </List.Accordion>
-        )}
-      </Sections>
+      <FlatList
+        data={[data.notCompleted, data.completed]}
+        renderItem={({item, index}: any) => {
+          if (index === 0) {
+            return (
+              <TaskList
+                data={item}
+                onComplete={onComplete}
+                onUpdate={onUpdate}
+              />
+            );
+          }
+
+          return showCompletedSection ? (
+            <List.Accordion
+              testID="CompletedTaskListAccordion"
+              title={`Completed (${notCompletedTaskCount})`}
+              expanded={competedListExpanded}
+              onPress={onCompletedListExpandedPress}>
+              <TaskList
+                data={data.completed}
+                onComplete={onComplete}
+                onUpdate={onUpdate}
+              />
+            </List.Accordion>
+          ) : null;
+        }}
+        keyExtractor={(_, index) => String(index)}
+      />
     </Screen>
   );
 };
@@ -184,8 +193,6 @@ export default class HomeScreen {
 const Screen = styled.SafeAreaView`
   flex: 1;
 `;
-
-const Sections = styled.View``;
 
 const TaskList = ({
   data,
