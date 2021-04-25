@@ -8,7 +8,7 @@ import {dispatchAsyncAction, getBottomTabOptions} from '@utils';
 import {isToday, startOfToday} from 'date-fns';
 import {isBefore} from 'date-fns/fp';
 import R from 'ramda';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList} from 'react-native';
 import BottomSheet from 'react-native-bottomsheet';
@@ -73,8 +73,13 @@ const Component = (): JSX.Element => {
     false,
   );
   const {t} = useTranslation();
-
   useFetchTask();
+
+  useEffect(() => {
+    if (filter === 'didPreviously') {
+      return setCompetedListExpanded(true);
+    }
+  }, [filter]);
 
   const data = getData(allData, filter);
 
@@ -104,12 +109,6 @@ const Component = (): JSX.Element => {
       (index) => {
         const key = Object.keys(filterOptions)[index] as Filter;
         key && onFilter(key);
-
-        if (key === 'didPreviously') {
-          return setCompetedListExpanded(true);
-        }
-
-        return setCompetedListExpanded(false);
       },
     );
   };
