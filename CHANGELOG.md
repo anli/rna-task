@@ -1,3 +1,14 @@
+# [2.2.0](https://github.com/anli/rna-task/compare/2.1.0...2.2.0) (2021-04-25)
+
+
+### Bug Fixes
+
+* **home:** add useEffect to expand when filter is didPreviously ([#87](https://github.com/anli/rna-task/issues/87)) ([e7ee2e5](https://github.com/anli/rna-task/commit/e7ee2e55413223653809bf4d8606340af10c1862)), closes [#79](https://github.com/anli/rna-task/issues/79)
+* **home:** fix to show correct flatlist layout ([#89](https://github.com/anli/rna-task/issues/89)) ([5d688f5](https://github.com/anli/rna-task/commit/5d688f54c6aa76de521ce5ee51c3682348bf6479)), closes [#83](https://github.com/anli/rna-task/issues/83)
+* **sentry:** disable error reporting in dev mode ([#88](https://github.com/anli/rna-task/issues/88)) ([15c100e](https://github.com/anli/rna-task/commit/15c100ec1d396890b8238b96b497ff9e05a300df))
+
+
+
 # [2.1.0](https://github.com/anli/rna-task/compare/2.0.0...2.1.0) (2021-04-24)
 
 
