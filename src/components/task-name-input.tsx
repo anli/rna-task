@@ -157,7 +157,10 @@ const processText = (input: string, color: string) => {
 
 const DateText = styled(Text)``;
 
-const ProcessTextIndicator = styled.ActivityIndicator``;
+const ProcessTextIndicator = styled.ActivityIndicator`
+  justify-content: flex-start;
+  padding-top: 6px;
+`;
 
 const InputContainer = styled.View`
   padding: 16px 16px 16px 16px;
