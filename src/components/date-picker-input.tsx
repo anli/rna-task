@@ -4,15 +4,15 @@ import {format, formatISO, parseISO} from 'date-fns';
 import React, {useState} from 'react';
 import {Controller} from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {Chip, List, useTheme} from 'react-native-paper';
-import Text from './text';
+import {List} from 'react-native-paper';
+import ChipInput from './chip-input';
 
 const NO_TITLE_STYLE = {height: 0};
 
 const TODAY_DATE_STRING = formatISO(new Date(new Date().setHours(0, 0, 0, 0)), {
   representation: 'date',
 });
-interface Props {
+export interface Props {
   control: any;
   accessibilityLabel?: string;
   name?: string;
@@ -62,15 +62,23 @@ const DatePickerInput = ({
               onPress={onShow}
               titleStyle={NO_TITLE_STYLE}
               title={null}
-              description={() => (
-                <Description
-                  placeholder={placeholder}
-                  disabled={disabled}
-                  value={value}
-                  onClearDate={onClearDate}
-                  accessibilityLabel={accessibilityLabel}
-                />
-              )}
+              description={() => {
+                const chipValue = value
+                  ? format(parseISO(value), 'EEE, d MMM', {
+                      locale: dateLocale,
+                    })
+                  : null;
+                return (
+                  <ChipInput
+                    placeholder={placeholder}
+                    disabled={disabled}
+                    value={chipValue}
+                    onClear={onClearDate}
+                    accessibilityLabel={accessibilityLabel}
+                    closeIconAccessibilityLabel="Clear Date"
+                  />
+                );
+              }}
               left={(props) => <List.Icon {...props} icon="calendar" />}
             />
             {show && (
@@ -96,11 +104,6 @@ const DatePickerInput = ({
 
 export default DatePickerInput;
 
-const ChipContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-`;
-
 const getDateValue = (value: string = TODAY_DATE_STRING): Date => {
   return parseISO(value);
 };
@@ -108,38 +111,4 @@ const getDateValue = (value: string = TODAY_DATE_STRING): Date => {
 const Input = styled(List.Item)`
   padding-top: 0px;
   padding-bottom: 0px;
-`;
-
-const Description = ({
-  placeholder,
-  value,
-  onClearDate,
-  accessibilityLabel,
-  disabled,
-}: any) => {
-  const {colors} = useTheme();
-  const color = disabled ? colors.disabled : colors.text;
-
-  return (
-    <DescriptionContainer>
-      {value ? (
-        <ChipContainer>
-          <Chip
-            disabled={disabled}
-            testID="ShowDateTimePicker"
-            mode="outlined"
-            accessibilityLabel={accessibilityLabel}
-            onClose={() => !disabled && onClearDate()}>
-            {format(parseISO(value), 'EEE, d MMM', {locale: dateLocale})}
-          </Chip>
-        </ChipContainer>
-      ) : (
-        <Text color={color}>{placeholder}</Text>
-      )}
-    </DescriptionContainer>
-  );
-};
-
-const DescriptionContainer = styled.View`
-  margin-left: -12px;
 `;

@@ -3,6 +3,7 @@ import {
   DatePickerInput,
   Header,
   SaveButton,
+  ScheduleInput,
   TaskNameInput,
 } from '@components';
 import styled from '@emotion/native';
@@ -19,6 +20,7 @@ import {Appbar} from 'react-native-paper';
 interface FormData {
   name: string;
   date?: string;
+  schedule?: {period: string; frequency: number};
 }
 
 const Component = (): JSX.Element => {
@@ -51,24 +53,35 @@ const Component = (): JSX.Element => {
         <BackButton onPress={onBack} />
         <Appbar.Content title="" />
       </Header>
-      <TaskNameInput
-        label={t('task_name_input.label', 'Enter title')}
-        accessibilityLabel={t(
-          'task_name_input.accessibility_label',
-          'Task Name',
-        )}
-        control={control}
-        errors={errors}
-        onProcessText={onProcessText}
-      />
-      <DatePickerInput
-        placeholder={t('task_name_input.placeholder', 'Add date')}
-        control={control}
-        accessibilityLabel={t(
-          'date_picker_input.accessibility_label',
-          'Selected Date',
-        )}
-      />
+      <Content>
+        <TaskNameInput
+          label={t('task_name_input.label', 'Enter title')}
+          accessibilityLabel={t(
+            'task_name_input.accessibility_label',
+            'Task Name',
+          )}
+          control={control}
+          errors={errors}
+          onProcessText={onProcessText}
+        />
+        <DatePickerInput
+          placeholder={t('task_name_input.placeholder', 'Add date')}
+          control={control}
+          accessibilityLabel={t(
+            'date_picker_input.accessibility_label',
+            'Selected Date',
+          )}
+        />
+
+        <ScheduleInput
+          placeholder={t('schedule_input.placeholder', 'Repeat')}
+          control={control}
+          accessibilityLabel={t(
+            'schedule_input.accessibility_label',
+            'Schedule',
+          )}
+        />
+      </Content>
       <SaveButton
         accessibilityLabel={t('task_save_button.accessibility_label', 'Save')}
         disabled={status === STATUS.LOADING}
@@ -90,4 +103,8 @@ export default class TaskAddScreen {
 
 const Screen = styled.SafeAreaView`
   flex: 1;
+`;
+
+const Content = styled.View`
+  padding-left: 4px;
 `;

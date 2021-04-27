@@ -1,8 +1,10 @@
 export {default as BackButton} from './back-button';
+export {default as ChipInput} from './chip-input';
 export {default as DatePickerInput} from './date-picker-input';
 export {default as FAB} from './fab';
 export {default as Header} from './header';
 export {default as SaveButton} from './save-button';
+export {default as ScheduleInput} from './schedule-input';
 export {default as TaskNameInput} from './task-name-input';
 export {default as Text} from './text';
 export {default as Toast} from './toast';

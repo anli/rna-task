@@ -8,6 +8,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import {reducer, RootState} from '@store';
 import {render} from '@testing-library/react-native';
 import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
 
 export const initialState: RootState = {task: {ids: [], entities: {}}};
@@ -32,16 +33,18 @@ const renderApp = ({
   const Stack = createStackNavigator();
   const App = () => (
     <StoreProvider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={Component}
-            options={navigationOptions}
-            initialParams={initialParams}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={Component}
+              options={navigationOptions}
+              initialParams={initialParams}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     </StoreProvider>
   );
   return {...render(<App />), store};

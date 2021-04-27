@@ -71,3 +71,35 @@ Feature: Task Update Screen
     When I press 'Mark completed'
     Then I should see 'Dashboard Screen'
     And I should see Task has 'isCompleted' as 'true'
+
+  Scenario: Update Schedule Successful
+    Given I am at 'Task Update' Screen
+    And Task 'schedule' is null
+    When that I press 'Repeat'
+    And I press 'Done'
+    Then I should see 'schedule' to 'Repeats every 1 week'
+    And I should see 'Task' 'Updated'
+
+  Scenario: Update Schedule Frequency Successful
+    Given I am at 'Task Update' Screen
+    And Task 'schedule' is 'Repeats every 1 week'
+    When that I press 'Repeats every 2 week'
+    And that I move slider to '2'
+    And I press 'Done'
+    Then I should see 'schedule' to 'Repeats every 2 week'
+    And I should see 'Task' 'Updated'
+
+  Scenario: Clear Schedule Successful
+    Given I am at 'Task Update' Screen
+    And Task 'schedule' is 'Repeats every 1 week'
+    When that I press 'Clear Schedule'
+    Then I should see 'schedule' to 'Repeat'
+    And I should see 'Task' 'Updated'
+
+  Scenario: Mark schedule task as completed
+    Given I am at 'Task Update' Screen
+    And Task 'schedule' is 'Repeats every 1 week'
+    When that I press 'mark completed'
+    Then I should see 'Dashboard Screen'
+    And I should see Task has 'isCompleted' as 'true'
+    And I should see new Task with date '1 week later' and not completed

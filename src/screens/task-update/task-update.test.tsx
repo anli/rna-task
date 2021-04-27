@@ -1,4 +1,8 @@
-import {mockFirestoreDelete, mockFirestoreUpdate} from '@mocks';
+import {
+  mockFirestoreAdd,
+  mockFirestoreDelete,
+  mockFirestoreUpdate,
+} from '@mocks';
 import {RootState} from '@store';
 import {TaskActions} from '@task';
 import {initialState, renderApp} from '@test';
@@ -57,8 +61,8 @@ describe('Task Update Screen', () => {
     expect(spyTaskActionUpdate).toBeCalledTimes(0);
     expect(spyToastShow).toBeCalledTimes(0);
 
-    expect(getByA11yLabel('Close')).toBeDefined();
-    fireEvent.press(getByA11yLabel('Close'));
+    expect(getByA11yLabel('Clear Date')).toBeDefined();
+    fireEvent.press(getByA11yLabel('Clear Date'));
     await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(getByText('Add date')).toBeDefined();
@@ -152,7 +156,12 @@ describe('Task Update Screen', () => {
 
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10', name: 'Task A2', isCompleted: false},
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A2',
+        isCompleted: false,
+        schedule: null,
+      },
       id: 'idA',
     });
   });
@@ -190,7 +199,7 @@ describe('Task Update Screen', () => {
     await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: date, name: 'Task A', isCompleted: false},
+      changes: {date: date, name: 'Task A', isCompleted: false, schedule: null},
       id: 'idA',
     });
   });
@@ -219,7 +228,7 @@ describe('Task Update Screen', () => {
 
   it('Mark task as not completed', async () => {
     mockedCanGoBack.mockReturnValue(true);
-    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'complete');
 
     const {getByText} = renderApp({
       Component: TaskUpdateScreen.Component,
@@ -248,14 +257,19 @@ describe('Task Update Screen', () => {
     await expect(mockedGoBack).toBeCalledTimes(0);
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10', name: 'Task A', isCompleted: false},
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: false,
+        schedule: null,
+      },
       id: 'idA',
     });
   });
 
   it('Mark task completed', async () => {
     mockedCanGoBack.mockReturnValue(true);
-    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'complete');
 
     const {getByText} = renderApp({
       Component: TaskUpdateScreen.Component,
@@ -284,8 +298,188 @@ describe('Task Update Screen', () => {
     await expect(mockedGoBack).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledTimes(1);
     expect(spyTaskActionUpdate).toBeCalledWith({
-      changes: {date: '2021-04-10', name: 'Task A', isCompleted: true},
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: true,
+        schedule: null,
+      },
       id: 'idA',
+    });
+  });
+
+  it('Update Schedule Successful', async () => {
+    mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+
+    const {getByText} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+              date: '2021-04-10',
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Repeat'));
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Done'));
+    });
+
+    await expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: false,
+        schedule: {frequency: 1, period: 'weeks'},
+      },
+      id: 'idA',
+    });
+  });
+
+  it('Update Schedule Frequency Successful', async () => {
+    mockedCanGoBack.mockReturnValue(true);
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+
+    const {getByText, getByA11yLabel} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+              date: '2021-04-10',
+              schedule: {frequency: 1, period: 'weeks'},
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Repeats every 1 week'));
+    });
+
+    await act(async () => {
+      await fireEvent(
+        getByA11yLabel('Frequency Slider Input'),
+        'onValueChange',
+        2,
+      );
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Done'));
+    });
+
+    await expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: false,
+        schedule: {frequency: 2, period: 'weeks'},
+      },
+      id: 'idA',
+    });
+  });
+
+  it('Clear Schedule Successful', async () => {
+    const spyTaskActionUpdate = jest.spyOn(TaskActions, 'update');
+
+    const {getByA11yLabel} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+              date: '2021-04-10',
+              schedule: {frequency: 1, period: 'weeks'},
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByA11yLabel('Clear Schedule'));
+    });
+
+    await expect(spyTaskActionUpdate).toBeCalledTimes(1);
+    expect(spyTaskActionUpdate).toBeCalledWith({
+      changes: {
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: false,
+        schedule: null,
+      },
+      id: 'idA',
+    });
+  });
+
+  it('Mark schedule task as completed', async () => {
+    const {getByText} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+              date: '2021-04-10',
+              schedule: {frequency: 1, period: 'weeks'},
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Mark completed'));
+    });
+
+    await expect(mockFirestoreUpdate).toBeCalledTimes(1);
+    expect(mockFirestoreUpdate).toBeCalledWith({
+      date: '2021-04-10',
+      name: 'Task A',
+      isCompleted: true,
+      schedule: {frequency: 1, period: 'weeks'},
+    });
+    await expect(mockFirestoreAdd).toBeCalledTimes(1);
+    expect(mockFirestoreAdd).toBeCalledWith({
+      date: '2021-04-17',
+      isCompleted: false,
+      name: 'Task A',
+      schedule: {frequency: 1, period: 'weeks'},
     });
   });
 });

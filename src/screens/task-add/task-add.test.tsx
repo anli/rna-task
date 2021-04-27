@@ -115,6 +115,7 @@ describe('Task Add Screen', () => {
     expect(spyTaskActionCreate).toBeCalledWith({
       name: taskName,
       date,
+      schedule: null,
     });
   });
 
