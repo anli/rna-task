@@ -60,3 +60,8 @@ Feature: Home Screen
     And I am at 'Home' Screen
     When I press 'Task A' 'Mark as complete' Button
     Then I should see 'Error Toast'
+
+  Scenario: See schedule tasks
+    Given App load
+    When I am at 'Home' Screen
+    Then I should see 'Scheduled Task'

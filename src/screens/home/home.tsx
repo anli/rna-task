@@ -206,13 +206,14 @@ const TaskList = ({
   return (
     <FlatList
       data={data}
-      renderItem={({item: {name, id, date, isCompleted}}) => {
+      renderItem={({item: {name, id, date, isCompleted, schedule}}) => {
         return (
           <TaskComponent
             title={name}
             onPress={() => onUpdate(id)}
             date={date}
             isCompleted={isCompleted}
+            schedule={schedule}
             onCompletePress={() => onComplete(id, {isCompleted: !isCompleted})}
           />
         );

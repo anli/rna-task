@@ -6,6 +6,7 @@ export interface Task {
   name: string;
   date?: string;
   isCompleted?: boolean;
+  schedule?: {period: string; frequency: number};
 }
 
 const taskAdapter = createEntityAdapter<Task>({

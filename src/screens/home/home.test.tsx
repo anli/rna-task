@@ -167,4 +167,13 @@ describe('Home Screen', () => {
 
     expect(getByText('Completed Task')).toBeDefined();
   });
+
+  it('See schedule tasks', () => {
+    const {getByText} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    expect(getByText('Scheduled Task')).toBeDefined();
+  });
 });

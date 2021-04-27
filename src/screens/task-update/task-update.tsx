@@ -1,4 +1,10 @@
-import {BackButton, DatePickerInput, Header, TaskNameInput} from '@components';
+import {
+  BackButton,
+  DatePickerInput,
+  Header,
+  ScheduleInput,
+  TaskNameInput,
+} from '@components';
 import styled from '@emotion/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationOptions} from '@react-navigation/stack';
@@ -16,6 +22,7 @@ interface FormData {
   name: string;
   date?: string;
   isCompleted?: boolean;
+  schedule?: {period: string; frequency: number};
 }
 
 const Component = (): JSX.Element => {
@@ -35,6 +42,7 @@ const Component = (): JSX.Element => {
     data?.name && setValue('name', data.name);
     setValue('date', data?.date || null);
     setValue('isCompleted', Boolean(data?.isCompleted));
+    setValue('schedule', data?.schedule || null);
   }, [setValue, data]);
 
   const onBack = () => {
@@ -84,35 +92,48 @@ const Component = (): JSX.Element => {
           onPress={onDelete}
         />
       </Header>
-      <TaskNameInput
-        control={control}
-        errors={errors}
-        isCompleted={isCompleted}
-        onUpdate={onUpdateValue}
-      />
 
-      <DatePickerInput
-        control={control}
-        onUpdate={onUpdateValue}
-        disabled={isCompleted}
-      />
-      <IsCompletedInput
-        completedLabel={t(
-          'task_is_completed_input.completed_label',
-          'Mark not completed',
-        )}
-        notCompletedLabel={t(
-          'task_is_completed_input.not_completed_label',
-          'Mark completed',
-        )}
-        accessibilityLabel={t(
-          'task_is_completed_input.accessibility_label',
-          'Is Completed',
-        )}
-        control={control}
-        onPress={onUpdate}
-      />
+      <Content>
+        <TaskNameInput
+          control={control}
+          errors={errors}
+          isCompleted={isCompleted}
+          onUpdate={onUpdateValue}
+        />
 
+        <DatePickerInput
+          control={control}
+          onUpdate={onUpdateValue}
+          disabled={isCompleted}
+        />
+
+        <ScheduleInput
+          placeholder={t('schedule_input.placeholder', 'Repeat')}
+          control={control}
+          onUpdate={onUpdateValue}
+          accessibilityLabel={t(
+            'schedule_input.accessibility_label',
+            'Schedule',
+          )}
+        />
+
+        <IsCompletedInput
+          completedLabel={t(
+            'task_is_completed_input.completed_label',
+            'Mark not completed',
+          )}
+          notCompletedLabel={t(
+            'task_is_completed_input.not_completed_label',
+            'Mark completed',
+          )}
+          accessibilityLabel={t(
+            'task_is_completed_input.accessibility_label',
+            'Is Completed',
+          )}
+          control={control}
+          onPress={onUpdate}
+        />
+      </Content>
       {status === STATUS.LOADING && (
         <ActivityIndicator
           accessibilityLabel="Loading Indicator"
@@ -141,4 +162,8 @@ const ActivityIndicator = styled.ActivityIndicator`
   position: absolute;
   bottom: 16px;
   right: 16px;
+`;
+
+const Content = styled.View`
+  padding-left: 4px;
 `;
