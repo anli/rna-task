@@ -95,3 +95,11 @@ Feature: Task Update Screen
     When that I press 'Clear Schedule'
     Then I should see 'schedule' to 'Repeat'
     And I should see 'Task' 'Updated'
+
+  Scenario: Mark schedule task as completed
+    Given I am at 'Task Update' Screen
+    And Task 'schedule' is 'Repeats every 1 week'
+    When that I press 'mark completed'
+    Then I should see 'Dashboard Screen'
+    And I should see Task has 'isCompleted' as 'true'
+    And I should see new Task with date '1 week later' and not completed

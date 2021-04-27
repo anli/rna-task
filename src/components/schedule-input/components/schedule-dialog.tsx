@@ -36,7 +36,7 @@ const ScheduleDialog = ({
 
   const LABEL_STYLE_DISABLED = {fontSize: 14, color: colors.disabled};
   const defaultFrequency = values?.frequency || 1;
-  const defaultPeriod = values?.period || 'week';
+  const defaultPeriod = values?.period || 'weeks';
 
   const onDone = handleSubmit(async (formData) => {
     onConfirm(formData);
@@ -79,18 +79,18 @@ const ScheduleDialog = ({
                   disabled
                   labelStyle={LABEL_STYLE_DISABLED}
                   label="Day"
-                  value="day"
+                  value="days"
                 />
                 <PeriodOption
                   labelStyle={LABEL_STYLE}
                   label="Week"
-                  value="week"
+                  value="weeks"
                 />
                 <PeriodOption
                   disabled
                   labelStyle={LABEL_STYLE_DISABLED}
                   label="Month"
-                  value="month"
+                  value="months"
                 />
               </RadioButton.Group>
             )}

@@ -105,12 +105,20 @@ describe('Home Screen', () => {
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
-    const spy = jest.spyOn(TaskActions, 'update');
+    const spy = jest.spyOn(TaskActions, 'complete');
 
     fireEvent.press(getAllByA11yHint('Mark completed')[0]);
 
     expect(spy).toBeCalledTimes(1);
-    expect(spy).toBeCalledWith({changes: {isCompleted: true}, id: 'idA'});
+    expect(spy).toBeCalledWith({
+      changes: {
+        id: 'idA',
+        date: '2021-04-10',
+        name: 'Task A',
+        isCompleted: true,
+      },
+      id: 'idA',
+    });
     await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
     expect(spyToastShow).toBeCalledWith({
       position: 'bottom',
@@ -125,14 +133,19 @@ describe('Home Screen', () => {
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
-    const spy = jest.spyOn(TaskActions, 'update');
+    const spy = jest.spyOn(TaskActions, 'complete');
 
     fireEvent.press(getByTestId('CompletedTaskListAccordion'));
     fireEvent.press(getAllByA11yHint('Mark not completed')[0]);
 
     expect(spy).toBeCalledTimes(1);
     expect(spy).toBeCalledWith({
-      changes: {isCompleted: false},
+      changes: {
+        isCompleted: false,
+        date: '2021-04-09',
+        id: 'CompletedTaskId',
+        name: 'Completed Task',
+      },
       id: 'CompletedTaskId',
     });
     await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));

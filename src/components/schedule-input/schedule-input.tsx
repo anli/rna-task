@@ -90,7 +90,8 @@ const Input = styled(List.Item)`
 
 const getChipValue = (value: any) => {
   if (value) {
-    const period = value?.frequency > 1 ? value?.period + 's' : value?.period;
+    const period =
+      value?.frequency === 1 ? value?.period.slice(0, -1) : value?.period;
     return `Repeats every ${value?.frequency} ${period}`;
   }
 

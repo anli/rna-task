@@ -54,8 +54,8 @@ const Component = (): JSX.Element => {
     isSuccessful && onBack();
   };
 
-  const onUpdate = handleSubmit(async (changes) => {
-    const isSuccessful = await doAction(TaskActions.update({id, changes}));
+  const onUpdateIsComplete = handleSubmit(async (changes) => {
+    const isSuccessful = await doAction(TaskActions.complete({id, changes}));
     changes.isCompleted && isSuccessful && onBack();
   });
 
@@ -108,6 +108,7 @@ const Component = (): JSX.Element => {
         />
 
         <ScheduleInput
+          disabled={isCompleted}
           placeholder={t('schedule_input.placeholder', 'Repeat')}
           control={control}
           onUpdate={onUpdateValue}
@@ -131,7 +132,7 @@ const Component = (): JSX.Element => {
             'Is Completed',
           )}
           control={control}
-          onPress={onUpdate}
+          onPress={onUpdateIsComplete}
         />
       </Content>
       {status === STATUS.LOADING && (

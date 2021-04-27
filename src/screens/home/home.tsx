@@ -113,11 +113,11 @@ const Component = (): JSX.Element => {
     );
   };
 
-  const onComplete = async (id: string, changes: {isCompleted: boolean}) => {
+  const onComplete = async (id: string, changes: Partial<Task>) => {
     const isSuccessful = await dispatchAsyncAction({
       setStatus: undefined,
       dispatch,
-      action: TaskActions.update({id, changes}),
+      action: TaskActions.complete({id, changes}),
     });
 
     const message = changes.isCompleted
@@ -206,7 +206,8 @@ const TaskList = ({
   return (
     <FlatList
       data={data}
-      renderItem={({item: {name, id, date, isCompleted, schedule}}) => {
+      renderItem={({item}) => {
+        const {name, id, date, isCompleted, schedule} = item;
         return (
           <TaskComponent
             title={name}
@@ -214,7 +215,9 @@ const TaskList = ({
             date={date}
             isCompleted={isCompleted}
             schedule={schedule}
-            onCompletePress={() => onComplete(id, {isCompleted: !isCompleted})}
+            onCompletePress={() =>
+              onComplete(id, {...item, isCompleted: !isCompleted})
+            }
           />
         );
       }}
