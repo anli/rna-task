@@ -113,31 +113,35 @@ const Component = (): JSX.Element => {
     );
   };
 
+  const completeTask = async (id: string, changes: Partial<Task>) => {
+    const isSuccessful = await dispatchAsyncAction({
+      setStatus: undefined,
+      dispatch,
+      action: TaskActions.complete({id, changes}),
+    });
+
+    const message = changes.isCompleted
+      ? t('toast.mark_completed_successful', 'Marked completed successfully')
+      : t(
+          'toast.mark_not_completed_successful',
+          'Marked not completed successfully',
+        );
+
+    return (
+      isSuccessful &&
+      Toast.show({
+        position: 'bottom',
+        type: 'success',
+        text2: message,
+      })
+    );
+  };
+
   const onComplete = async (id: string, changes: Partial<Task>) => {
     const isValid = !(changes?.isCompleted && R.isNil(changes?.date));
 
     if (isValid) {
-      const isSuccessful = await dispatchAsyncAction({
-        setStatus: undefined,
-        dispatch,
-        action: TaskActions.complete({id, changes}),
-      });
-
-      const message = changes.isCompleted
-        ? t('toast.mark_completed_successful', 'Marked completed successfully')
-        : t(
-            'toast.mark_not_completed_successful',
-            'Marked not completed successfully',
-          );
-
-      return (
-        isSuccessful &&
-        Toast.show({
-          position: 'bottom',
-          type: 'success',
-          text2: message,
-        })
-      );
+      return completeTask(id, changes);
     }
 
     return Toast.show({
