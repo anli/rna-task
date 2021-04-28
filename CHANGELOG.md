@@ -1,3 +1,18 @@
+# [3.0.0](https://github.com/anli/rna-task/compare/2.2.0...3.0.0) (2021-04-28)
+
+
+### Bug Fixes
+
+* **task-name-input:** add ProcessTextIndicator flex-start styling ([#96](https://github.com/anli/rna-task/issues/96)) ([34745d3](https://github.com/anli/rna-task/commit/34745d3347b1d017df76a78e35b153c2c2a2facc)), closes [#93](https://github.com/anli/rna-task/issues/93)
+
+
+### Features
+
+* **home, task-update:** add validation for date when mark completed ([#97](https://github.com/anli/rna-task/issues/97)) ([c6f886d](https://github.com/anli/rna-task/commit/c6f886dcd862810d59209aec459a48afedb2cfcb)), closes [#90](https://github.com/anli/rna-task/issues/90)
+* **task-add, task-update, home:** add schedule input ([#95](https://github.com/anli/rna-task/issues/95)) ([9cd67e1](https://github.com/anli/rna-task/commit/9cd67e1a9e765085c7c8e8af103ff7a42ed19316)), closes [#23](https://github.com/anli/rna-task/issues/23)
+
+
+
 # [2.2.0](https://github.com/anli/rna-task/compare/2.1.0...2.2.0) (2021-04-25)
 
 
