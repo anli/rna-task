@@ -65,3 +65,9 @@ Feature: Home Screen
     Given App load
     When I am at 'Home' Screen
     Then I should see 'Scheduled Task'
+
+  Scenario: Mark task as done validation failed
+    Given I have 'Task B' with no date
+    And I am at 'Home' Screen
+    When I press 'Task B' 'Mark not completed' Button
+    Then I should see 'Error Toast' 'Please enter a date first.'

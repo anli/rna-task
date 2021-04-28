@@ -103,3 +103,9 @@ Feature: Task Update Screen
     Then I should see 'Dashboard Screen'
     And I should see Task has 'isCompleted' as 'true'
     And I should see new Task with date '1 week later' and not completed
+
+  Scenario: Mark task completed validation failed
+    Given I am at 'Task Update' Screen
+    And Task 'date' is blank
+    When that I press 'mark completed'
+    Then I should see 'Please enter a date first.'

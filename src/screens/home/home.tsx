@@ -113,7 +113,7 @@ const Component = (): JSX.Element => {
     );
   };
 
-  const onComplete = async (id: string, changes: Partial<Task>) => {
+  const completeTask = async (id: string, changes: Partial<Task>) => {
     const isSuccessful = await dispatchAsyncAction({
       setStatus: undefined,
       dispatch,
@@ -127,12 +127,31 @@ const Component = (): JSX.Element => {
           'Marked not completed successfully',
         );
 
-    isSuccessful &&
+    return (
+      isSuccessful &&
       Toast.show({
         position: 'bottom',
         type: 'success',
         text2: message,
-      });
+      })
+    );
+  };
+
+  const onComplete = async (id: string, changes: Partial<Task>) => {
+    const isValid = !(changes?.isCompleted && R.isNil(changes?.date));
+
+    if (isValid) {
+      return completeTask(id, changes);
+    }
+
+    return Toast.show({
+      position: 'bottom',
+      type: 'error',
+      text2: t(
+        'task_is_completed_input.validation_message',
+        'Please enter a date first.',
+      ),
+    });
   };
 
   const onCompletedListExpandedPress = () =>

@@ -189,4 +189,21 @@ describe('Home Screen', () => {
 
     expect(getByText('Scheduled Task')).toBeDefined();
   });
+
+  it('Mark task as done validation failed', async () => {
+    const spyToastShow = jest.spyOn(Toast, 'show');
+    const {getAllByA11yHint} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    fireEvent.press(getAllByA11yHint('Mark completed')[3]);
+
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
+    expect(spyToastShow).toBeCalledWith({
+      position: 'bottom',
+      text2: 'Please enter a date first.',
+      type: 'error',
+    });
+  });
 });

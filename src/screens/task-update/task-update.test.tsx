@@ -482,4 +482,31 @@ describe('Task Update Screen', () => {
       schedule: {frequency: 1, period: 'weeks'},
     });
   });
+
+  it('Mark task completed validation failed', async () => {
+    const {getByText} = renderApp({
+      Component: TaskUpdateScreen.Component,
+      navigationOptions: TaskUpdateScreen.options,
+      preloadedState: {
+        ...defaultState,
+        task: {
+          ids: ['idA'],
+          entities: {
+            idA: {
+              id: 'idA',
+              name: 'Task A',
+            },
+          },
+        },
+      },
+      initialParams: defaultParams,
+    });
+
+    await act(async () => {
+      await fireEvent.press(getByText('Mark completed'));
+    });
+
+    await expect(mockFirestoreUpdate).toBeCalledTimes(0);
+    expect(getByText('Please enter a date first.')).toBeDefined();
+  });
 });
