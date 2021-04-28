@@ -114,25 +114,40 @@ const Component = (): JSX.Element => {
   };
 
   const onComplete = async (id: string, changes: Partial<Task>) => {
-    const isSuccessful = await dispatchAsyncAction({
-      setStatus: undefined,
-      dispatch,
-      action: TaskActions.complete({id, changes}),
-    });
+    const isValid = !(changes?.isCompleted && R.isNil(changes?.date));
 
-    const message = changes.isCompleted
-      ? t('toast.mark_completed_successful', 'Marked completed successfully')
-      : t(
-          'toast.mark_not_completed_successful',
-          'Marked not completed successfully',
-        );
-
-    isSuccessful &&
-      Toast.show({
-        position: 'bottom',
-        type: 'success',
-        text2: message,
+    if (isValid) {
+      const isSuccessful = await dispatchAsyncAction({
+        setStatus: undefined,
+        dispatch,
+        action: TaskActions.complete({id, changes}),
       });
+
+      const message = changes.isCompleted
+        ? t('toast.mark_completed_successful', 'Marked completed successfully')
+        : t(
+            'toast.mark_not_completed_successful',
+            'Marked not completed successfully',
+          );
+
+      return (
+        isSuccessful &&
+        Toast.show({
+          position: 'bottom',
+          type: 'success',
+          text2: message,
+        })
+      );
+    }
+
+    return Toast.show({
+      position: 'bottom',
+      type: 'error',
+      text2: t(
+        'task_is_completed_input.validation_message',
+        'Please enter a date first.',
+      ),
+    });
   };
 
   const onCompletedListExpandedPress = () =>

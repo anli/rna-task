@@ -11,6 +11,7 @@ import {StackNavigationOptions} from '@react-navigation/stack';
 import {useAppDispatch, useAppSelector} from '@store';
 import {TaskActions, TaskSelectors} from '@task';
 import {dispatchAsyncAction, STATUS} from '@utils';
+import R from 'ramda';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
@@ -32,7 +33,14 @@ const Component = (): JSX.Element => {
   } = useRoute() as any;
   const data = useAppSelector(TaskSelectors.getSelectById(id));
   const dispatch = useAppDispatch();
-  const {control, handleSubmit, errors, setValue, watch} = useForm<FormData>();
+  const {
+    control,
+    handleSubmit,
+    errors,
+    setValue,
+    watch,
+    getValues,
+  } = useForm<FormData>();
   const [status, setStatus] = useState<STATUS>(STATUS.IDLE);
   const isCompleted = watch('isCompleted', false);
   const {colors} = useTheme();
@@ -56,7 +64,7 @@ const Component = (): JSX.Element => {
 
   const onUpdateIsComplete = handleSubmit(async (changes) => {
     const isSuccessful = await doAction(TaskActions.complete({id, changes}));
-    changes.isCompleted && isSuccessful && onBack();
+    return changes.isCompleted && isSuccessful && onBack();
   });
 
   const doAction = async (action: any) => {
@@ -76,6 +84,11 @@ const Component = (): JSX.Element => {
         position: 'bottom',
       });
   });
+
+  const validateIsComplete = (isCompleted: boolean) => {
+    const date = getValues('date');
+    return !(isCompleted && R.isNil(date));
+  };
 
   return (
     <Screen>
@@ -133,6 +146,11 @@ const Component = (): JSX.Element => {
           )}
           control={control}
           onPress={onUpdateIsComplete}
+          validate={validateIsComplete}
+          validationMessage={t(
+            'task_is_completed_input.validation_message',
+            'Please enter a date first.',
+          )}
         />
       </Content>
       {status === STATUS.LOADING && (
