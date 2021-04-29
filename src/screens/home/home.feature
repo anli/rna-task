@@ -17,22 +17,19 @@ Feature: Home Screen
   Scenario: Filter tasks by What I can do
     Given I am logged in
     When App load
-    And I press 'Filter' Button
-    And I press 'What I can do'
+    And I press 'Can do' Button
     Then I should see 'What I can do'
 
   Scenario: Filter tasks by What I want to do Today
     Given I am logged in
     When App load
-    And I press 'Filter' Button
-    And I press 'What I want to do Today'
+    And I press 'Today' Button
     Then I should see 'What I want to do Today'
 
-  Scenario: Filter tasks by What I did Yesterday
+  Scenario: Filter tasks by What I did Previously
     Given I am logged in
     When App load
-    And I press 'Filter' Button
-    And I press 'What I did Previously'
+    And I press 'Previously' Button
     Then I should see 'What I did Previously'
 
   Scenario: Mark task as completed

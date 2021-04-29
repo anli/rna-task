@@ -4,6 +4,7 @@ import {Filter, useFilter} from '@filter';
 import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '@store';
 import {Task, TaskActions, TaskSelectors, useFetchTask} from '@task';
+import {Tab, TabView} from '@ui-kitten/components';
 import {dispatchAsyncAction, getBottomTabOptions} from '@utils';
 import {isToday, startOfToday} from 'date-fns';
 import {isBefore} from 'date-fns/fp';
@@ -11,10 +12,37 @@ import R from 'ramda';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {FlatList} from 'react-native';
-import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, List} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {Task as TaskComponent} from './components';
+
+const FilterTaskTabs = ({
+  onSelect,
+  titles,
+}: {
+  onSelect: any;
+  titles: string[];
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
+  const onSelectIndex = (index: number) => {
+    setSelectedIndex(index);
+    onSelect(index);
+  };
+  return (
+    <TabView selectedIndex={selectedIndex} onSelect={onSelectIndex}>
+      {titles.map((title) => {
+        return (
+          <Tab key={title} title={title}>
+            <EmptyTab />
+          </Tab>
+        );
+      })}
+    </TabView>
+  );
+};
+
+const EmptyTab = styled.View``;
 
 const getData = (data: Task[], filter: Filter) => {
   const filterNotCompleted = R.filter<Task>((task) => !task?.isCompleted);
@@ -68,6 +96,7 @@ const Component = (): JSX.Element => {
     onFilter,
     filterOptions,
     filterOptionsDefaultValue,
+    filterTabTitles,
   } = useFilter();
   const [competedListExpanded, setCompetedListExpanded] = useState<boolean>(
     false,
@@ -81,36 +110,10 @@ const Component = (): JSX.Element => {
     }
   }, [filter]);
 
-  const data = getData(allData, filter);
-
   const title = t(filterOptions[filter], filterOptionsDefaultValue[filter]);
-  const notCompletedTaskCount = data.completed.length;
 
   const onUpdate = (id: string) => {
     navigate('TaskUpdateScreen', {id});
-  };
-
-  const onPresentFilterRelativeDay = () => {
-    const options = [
-      ...Object.keys(filterOptions).map((value) =>
-        t(
-          filterOptions[value as Filter],
-          filterOptionsDefaultValue[value as Filter],
-        ),
-      ),
-      t('filter_option.cancel', 'Cancel'),
-    ];
-    BottomSheet.showBottomSheetWithOptions(
-      {
-        options,
-        title: t('filter_option_title', 'See'),
-        cancelButtonIndex: Object.values(filterOptions).length,
-      },
-      (index) => {
-        const key = Object.keys(filterOptions)[index] as Filter;
-        key && onFilter(key);
-      },
-    );
   };
 
   const completeTask = async (id: string, changes: Partial<Task>) => {
@@ -157,18 +160,21 @@ const Component = (): JSX.Element => {
   const onCompletedListExpandedPress = () =>
     setCompetedListExpanded(!competedListExpanded);
 
+  const data = getData(allData, filter);
   const showCompletedSection = !R.isEmpty(data.completed);
+  const notCompletedTaskCount = data.completed.length;
+
+  const onFilterTab = (index: number) => {
+    const key = Object.keys(filterOptions)[index] as Filter;
+    onFilter(key);
+  };
 
   return (
     <Screen>
       <Header>
         <Appbar.Content title={title} />
-        <Appbar.Action
-          accessibilityLabel={t('home.filter', 'Filter')}
-          icon="filter-variant"
-          onPress={onPresentFilterRelativeDay}
-        />
       </Header>
+      <FilterTaskTabs titles={filterTabTitles} onSelect={onFilterTab} />
       <FlatList
         data={[data.notCompleted, data.completed]}
         renderItem={({item, index}: any) => {

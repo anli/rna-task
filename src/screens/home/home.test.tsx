@@ -2,7 +2,6 @@ import {mockFirestoreUpdate} from '@mocks';
 import {TaskActions} from '@task';
 import {renderApp} from '@test';
 import {fireEvent, waitFor} from '@testing-library/react-native';
-import BottomSheet from 'react-native-bottomsheet';
 import Toast from 'react-native-toast-message';
 import HomeScreen from './home';
 
@@ -45,35 +44,23 @@ describe('Home Screen', () => {
   });
 
   it('Filter tasks by What I can do', async () => {
-    jest
-      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
-      .mockImplementation((_, callback: any) => {
-        callback(0);
-      });
-
-    const {getByText, getByA11yLabel} = renderApp({
+    const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByA11yLabel('Filter'));
+    fireEvent.press(getByText('Can do'));
 
     await waitFor(() => expect(getByText('What I can do')).toBeDefined());
   });
 
   it('Filter tasks by What I want to do Today', async () => {
-    jest
-      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
-      .mockImplementation((_, callback: any) => {
-        callback(1);
-      });
-
-    const {getByText, getByA11yLabel} = renderApp({
+    const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByA11yLabel('Filter'));
+    fireEvent.press(getByText('Today'));
 
     await waitFor(() =>
       expect(getByText('What I want to do Today')).toBeDefined(),
@@ -81,18 +68,12 @@ describe('Home Screen', () => {
   });
 
   it('Filter tasks by What I did Previously', async () => {
-    jest
-      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
-      .mockImplementation((_, callback: any) => {
-        callback(2);
-      });
-
-    const {getByText, getByA11yLabel} = renderApp({
+    const {getByText} = renderApp({
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByA11yLabel('Filter'));
+    fireEvent.press(getByText('Previously'));
 
     await waitFor(() =>
       expect(getByText('What I did Previously')).toBeDefined(),

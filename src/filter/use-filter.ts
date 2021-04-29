@@ -1,6 +1,7 @@
 import {useAuthentication} from '@authentication';
 import firestore from '@react-native-firebase/firestore';
 import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 export type Filter = keyof typeof filterOptions;
 
@@ -18,12 +19,27 @@ const filterOptions = {
   all: 'filter_option.all',
 };
 
+const filterTabTitles = {
+  canDo: 'filter_tab_title.can_do',
+  wantToDoToday: 'filter_tab_title.want_to_do_today',
+  didPreviously: 'filter_tab_title.did_previously',
+  all: 'filter_tab_title.all',
+};
+
+const filterTabDefaultTitles = {
+  canDo: 'Can do',
+  wantToDoToday: 'Today',
+  didPreviously: 'Previously',
+  all: 'All',
+};
+
 const defaultFilter: Filter = 'all';
 
 const useFilter = () => {
   const [filter, setFilter] = useState<Filter>(defaultFilter);
   const {user} = useAuthentication();
   const userId = user?.uid as string;
+  const {t} = useTranslation();
 
   useEffect(() => {
     const url = `users/${userId}`;
@@ -42,7 +58,18 @@ const useFilter = () => {
     setFilter(_filter);
   };
 
-  return {filter, onFilter, filterOptions, filterOptionsDefaultValue};
+  const defaultTitles = Object.values(filterTabDefaultTitles);
+  const tabTitles = Object.values(filterTabTitles).map((value, index) =>
+    t(value, defaultTitles[index]),
+  );
+
+  return {
+    filter,
+    onFilter,
+    filterOptions,
+    filterOptionsDefaultValue,
+    filterTabTitles: tabTitles,
+  };
 };
 
 export default useFilter;
