@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import * as eva from '@eva-design/eva';
 import {NavigationContainer} from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -7,6 +8,7 @@ import {
 import {configureStore} from '@reduxjs/toolkit';
 import {reducer, RootState} from '@store';
 import {render} from '@testing-library/react-native';
+import {ApplicationProvider} from '@ui-kitten/components';
 import React from 'react';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
@@ -33,18 +35,20 @@ const renderApp = ({
   const Stack = createStackNavigator();
   const App = () => (
     <StoreProvider store={store}>
-      <PaperProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={Component}
-              options={navigationOptions}
-              initialParams={initialParams}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <PaperProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                component={Component}
+                options={navigationOptions}
+                initialParams={initialParams}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PaperProvider>
+      </ApplicationProvider>
     </StoreProvider>
   );
   return {...render(<App />), store};

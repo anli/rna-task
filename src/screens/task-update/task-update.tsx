@@ -85,9 +85,9 @@ const Component = (): JSX.Element => {
       });
   });
 
-  const validateIsComplete = (isCompleted: boolean) => {
+  const validateIsComplete = (value: boolean) => {
     const date = getValues('date');
-    return !(isCompleted && R.isNil(date));
+    return !(value && R.isNil(date));
   };
 
   return (

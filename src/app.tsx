@@ -1,5 +1,6 @@
 import {useAuthentication} from '@authentication';
 import {Toast} from '@components';
+import * as eva from '@eva-design/eva';
 import {useI18n} from '@i18n';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -17,6 +18,7 @@ import {
 } from '@screens';
 import store from '@store';
 import {defaultTheme} from '@themes';
+import {ApplicationProvider} from '@ui-kitten/components';
 import {getBottomTabOptions} from '@utils';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -54,20 +56,22 @@ const App = (): JSX.Element => {
 
   return (
     <StoreProvider store={store}>
-      <PaperProvider theme={paperTheme}>
-        <StatusBar
-          animated={true}
-          backgroundColor={paperTheme.colors.background}
-          barStyle="dark-content"
-        />
-        <NavigationContainer theme={navigationTheme}>
-          <Navigator
-            isLoading={isLoading || !ready}
-            isAuthenticated={isAuthenticated}
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <PaperProvider theme={paperTheme}>
+          <StatusBar
+            animated={true}
+            backgroundColor={paperTheme.colors.background}
+            barStyle="dark-content"
           />
-          <Toast />
-        </NavigationContainer>
-      </PaperProvider>
+          <NavigationContainer theme={navigationTheme}>
+            <Navigator
+              isLoading={isLoading || !ready}
+              isAuthenticated={isAuthenticated}
+            />
+            <Toast />
+          </NavigationContainer>
+        </PaperProvider>
+      </ApplicationProvider>
     </StoreProvider>
   );
 };
