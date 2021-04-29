@@ -91,7 +91,7 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/style.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community|@?react-native-firebase|@react-native-google-signin)"
+      "node_modules/(?!(jest-)?react-native|@?react-navigation|@?react-native-community|@?react-native-firebase|@react-native-google-signin|@ui-kitten)"
     ],
     "setupFiles": [
       "<rootDir>/__mocks__/react-native-modules.ts",
