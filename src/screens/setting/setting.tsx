@@ -1,8 +1,9 @@
 import {logout, switchAccount, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {getBottomTabOptions, useUpdateNeeded} from '@utils';
-import React from 'react';
+import React, {useCallback} from 'react';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 import {useTranslation} from 'react-i18next';
 import {Linking} from 'react-native';
@@ -15,8 +16,15 @@ const Component = (): JSX.Element => {
   const {
     data: updateNeeded,
     isLoading: isLoadingUpdateNeeded,
+    checkVersion,
   } = useUpdateNeeded({depth: 3});
   const {t} = useTranslation();
+
+  useFocusEffect(
+    useCallback(() => {
+      checkVersion();
+    }, [checkVersion]),
+  );
 
   const onLogout = async () => {
     errorHandler(logout);
