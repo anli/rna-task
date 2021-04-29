@@ -1,3 +1,13 @@
+# [3.1.0](https://github.com/anli/rna-task/compare/3.0.0...3.1.0) (2021-04-29)
+
+
+### Features
+
+* **home:** add filter tabs UX ([#101](https://github.com/anli/rna-task/issues/101)) ([8f26527](https://github.com/anli/rna-task/commit/8f2652710b314b457d0aba45d6db770b17c755c5)), closes [#98](https://github.com/anli/rna-task/issues/98)
+* **setting:** add CheckVersion when SettingScreen isFocused ([#102](https://github.com/anli/rna-task/issues/102)) ([5d9ff44](https://github.com/anli/rna-task/commit/5d9ff44895dfb227da9c6ab22fba4e479b09cd25)), closes [#94](https://github.com/anli/rna-task/issues/94)
+
+
+
 # [3.0.0](https://github.com/anli/rna-task/compare/2.2.0...3.0.0) (2021-04-28)
 
 
