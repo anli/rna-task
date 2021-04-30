@@ -20,9 +20,10 @@ import store from '@store';
 import {defaultTheme} from '@themes';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {getBottomTabOptions} from '@utils';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StatusBar, View} from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
 import {
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
@@ -53,6 +54,13 @@ const App = (): JSX.Element => {
   const {ready} = useTranslation(undefined, {useSuspense: false});
   useVersionCheck();
   useI18n();
+  useEffect(() => {
+    const init = async () => {};
+
+    init().finally(async () => {
+      await RNBootSplash.hide({fade: true});
+    });
+  }, []);
 
   return (
     <StoreProvider store={store}>
