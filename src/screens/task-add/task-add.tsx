@@ -1,3 +1,4 @@
+import {analytics} from '@analytics';
 import {
   BackButton,
   DatePickerInput,
@@ -40,6 +41,7 @@ const Component = (): JSX.Element => {
       dispatch,
       action: TaskActions.create(task),
     });
+    await analytics.logEvent('task_add');
     isSuccessful && onBack();
   });
 

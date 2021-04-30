@@ -1,3 +1,4 @@
+import {analytics} from '@analytics';
 import {
   BackButton,
   DatePickerInput,
@@ -64,6 +65,7 @@ const Component = (): JSX.Element => {
 
   const onUpdateIsComplete = handleSubmit(async (changes) => {
     const isSuccessful = await doAction(TaskActions.complete({id, changes}));
+    await analytics.logEvent('task_update', {isCompleted: changes.isCompleted});
     return changes.isCompleted && isSuccessful && onBack();
   });
 

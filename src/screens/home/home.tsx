@@ -1,3 +1,4 @@
+import {analytics} from '@analytics';
 import {Header} from '@components';
 import styled from '@emotion/native';
 import {Filter, useFilter} from '@filter';
@@ -122,6 +123,7 @@ const Component = (): JSX.Element => {
       dispatch,
       action: TaskActions.complete({id, changes}),
     });
+    await analytics.logEvent('task_update', {isCompleted: changes.isCompleted});
 
     const message = changes.isCompleted
       ? t('toast.mark_completed_successful', 'Marked completed successfully')
