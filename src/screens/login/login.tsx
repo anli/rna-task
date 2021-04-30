@@ -1,3 +1,4 @@
+import {analytics} from '@analytics';
 import styled from '@emotion/native';
 import auth from '@react-native-firebase/auth';
 import {
@@ -19,6 +20,7 @@ const Component = (): JSX.Element => {
       const googleCredential = auth.GoogleAuthProvider?.credential(idToken);
       setIsLoading(true);
       await auth().signInWithCredential(googleCredential);
+      await analytics.logLogin({method: 'google.com'});
       return;
     } catch ({message}) {
       setIsLoading(false);
