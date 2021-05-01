@@ -630,11 +630,11 @@ PODS:
     - React-Core
   - RNLocalize (2.0.3):
     - React-Core
-  - RNReanimated (1.13.2):
+  - RNReanimated (1.13.3):
     - React-Core
   - RNScreens (2.18.0):
     - React-Core
-  - RNSentry (2.4.1):
+  - RNSentry (2.4.2):
     - React-Core
     - Sentry (= 6.1.4)
   - RNSVG (12.1.1):
@@ -866,7 +866,7 @@ SPEC CHECKSUMS:
   React-RCTText: 5c51df3f08cb9dedc6e790161195d12bac06101c
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
-  RNBootSplash: 8532aaaa6178cb9d45bb0a1f804c18af6dadb43d
+  RNBootSplash: a7750857d7c7c51fb37ba453cd506b5950e62f74
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDateTimePicker: d943800c936fb01c352fcfb70439550d2cb57092
   RNFBAnalytics: 75df265f4794afbc829cebe7c284f8c5a57b3bb2
@@ -876,9 +876,9 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNGoogleSignin: 111fd4792913208f338fe3178005f7a22e490ff9
   RNLocalize: 99e59cad311ca1b6872b1764514009416ccba03d
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f0d7a2a440a8ba9f4574ca1ddb3368f473891be4
-  RNSentry: 824a6a0ec885428163fe6827aa08014f9962f223
+  RNSentry: e86fb2e2fec0365644f4b582938bf66be515acce
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
