@@ -20,11 +20,13 @@ import {Task as TaskComponent} from './components';
 const FilterTaskTabs = ({
   onSelect,
   titles,
+  initialIndex,
 }: {
   onSelect: any;
   titles: string[];
+  initialIndex: number;
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(initialIndex);
 
   const onSelectIndex = (index: number) => {
     setSelectedIndex(index);
@@ -171,12 +173,20 @@ const Component = (): JSX.Element => {
     onFilter(key);
   };
 
+  const initialTabIndex = Object.keys(filterOptions).findIndex(
+    (key) => key === filter,
+  );
+
   return (
     <Screen>
       <Header>
         <Appbar.Content title={title} />
       </Header>
-      <FilterTaskTabs titles={filterTabTitles} onSelect={onFilterTab} />
+      <FilterTaskTabs
+        initialIndex={initialTabIndex}
+        titles={filterTabTitles}
+        onSelect={onFilterTab}
+      />
       <FlatList
         data={[data.notCompleted, data.completed]}
         renderItem={({item, index}: any) => {
