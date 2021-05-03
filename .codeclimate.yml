@@ -54,4 +54,4 @@ exclude_patterns:
   - 'ios/'
   - 'coverage/'
   - '**/*.test.*'
-  - '__mocks___/'
+  - '__mocks__/'
