@@ -40,3 +40,21 @@ Feature: Setting Screen
     Given I am at 'Setting' Screen
     When I press 'Version 1.0.0' button
     Then I should go to 'Store URL'
+
+  Scenario: See enabled notification setting UI
+    Given I enabled notification
+    When I am at 'Setting' Screen
+    Then I should see 'Daily notification is enabled' text
+    And I should see 'Every morning at 9AM' text
+
+  Scenario: See disabled notification setting UI
+    Given I disabled notification
+    When I am at 'Setting' Screen
+    Then I should see 'Daily notification is disabled' text
+    And I should see 'Every morning at 9AM' text
+
+  Scenario: Disable notification setting
+    Given I enabled notification
+    And I am at 'Setting' Screen
+    When I press 'Daily notification is enabled' text button
+    Then I should see 'Daily notification is disabled' text

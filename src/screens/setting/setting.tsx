@@ -1,6 +1,7 @@
 import {logout, switchAccount, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
+import {useNotification} from '@notification';
 import {useFocusEffect} from '@react-navigation/native';
 import {getBottomTabOptions, useUpdateNeeded} from '@utils';
 import React, {useCallback} from 'react';
@@ -19,6 +20,12 @@ const Component = (): JSX.Element => {
     checkVersion,
   } = useUpdateNeeded({depth: 3});
   const {t} = useTranslation();
+  const {
+    hasNotification,
+    isLoading: isLoadingNotification,
+    start: startNotification,
+    end: endNotification,
+  } = useNotification();
 
   useFocusEffect(
     useCallback(() => {
@@ -49,6 +56,33 @@ const Component = (): JSX.Element => {
     updateNeeded?.storeUrl && Linking.openURL(updateNeeded.storeUrl);
   };
 
+  /* istanbul ignore next */
+  const onUpdateNotification = async () => {
+    if (hasNotification) {
+      await endNotification();
+      Toast.show({
+        position: 'bottom',
+        type: 'success',
+        text2: t(
+          'setting.update_notification_disabled_title',
+          'Daily notification is disabled',
+        ),
+      });
+      return;
+    }
+
+    await startNotification();
+    Toast.show({
+      position: 'bottom',
+      type: 'success',
+      text2: t(
+        'setting.update_notification_disabled_title',
+        'Daily notification is disabled',
+      ),
+    });
+    return;
+  };
+
   const versionTitle = t('setting.version', {
     defaultValue: 'Version {{value}}',
     value: updateNeeded?.currentVersion,
@@ -60,6 +94,16 @@ const Component = (): JSX.Element => {
         defaultValue: 'New version {{value}} is available',
       })
     : t('setting.version_is_latest', 'You are on the latest version');
+
+  const notificationTitle = hasNotification
+    ? t(
+        'setting.update_notification_enabled_title',
+        'Daily notification is enabled',
+      )
+    : t(
+        'setting.update_notification_disabled_title',
+        'Daily notification is disabled',
+      );
 
   return (
     <Screen>
@@ -73,13 +117,26 @@ const Component = (): JSX.Element => {
         onPress={onSwitchAccount}
       />
       {isLoadingUpdateNeeded ? (
-        <SettingItemIndicator />
+        <ListItemIndicator />
       ) : (
         <List.Item
           accessibilityLabel={t('setting.update_version', 'Update Version')}
           title={versionTitle}
           description={versionDescription}
           onPress={onUpdateVersion}
+        />
+      )}
+      {isLoadingNotification ? (
+        <ListItemIndicator />
+      ) : (
+        <List.Item
+          accessibilityLabel={notificationTitle}
+          title={notificationTitle}
+          description={t(
+            'setting.update_notification_description',
+            'Every morning at 9AM',
+          )}
+          onPress={onUpdateNotification}
         />
       )}
       <List.Item
@@ -102,7 +159,7 @@ const Screen = styled.SafeAreaView`
   flex: 1;
 `;
 
-const SettingItemIndicator = () => (
+const ListItemIndicator = () => (
   <ContentLoader height={69}>
     <Rect x="16" y="16" rx="0" ry="0" width={100} height={16} />
     <Rect x="16" y="40" rx="0" ry="0" width={200} height={12} />
