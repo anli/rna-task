@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "coverage": "npm run test -- --coverage || open coverage/lcov-report/index.html",
-    "deploy": "npx standard-changelog && fastlane android build",
+    "deploy:major": "npm version patch --no-git-tag-version && npx standard-changelog && fastlane android build",
+    "deploy:minor": "npm version patch --no-git-tag-version && npx standard-changelog && fastlane android build",
+    "deploy:patch": "npm version patch --no-git-tag-version && npx standard-changelog && fastlane android build",
     "cc": "npm run test -- --coverage && npx codecov",
     "cq": "cp .codeclimate.yml src && cd src && codeclimate analyze -f html > code-quality.html && open code-quality.html && cd ..",
     "ci": "npm run lint && npm run cc",
