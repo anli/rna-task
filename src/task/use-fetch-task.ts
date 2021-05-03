@@ -29,7 +29,27 @@ const useFetchTask = () => {
     dispatch(taskSlice.actions.fetched([]));
   }, [userId, dispatch]);
 
-  return {};
+  const deleteObsoleteTasks = async (date: string) => {
+    const url = `users/${userId}/tasks`;
+    const querySnapshot = await firestore()
+      .collection(url)
+      .where('isCompleted', '==', true)
+      .where('date', '<', date)
+      .get();
+
+    const batch = firestore().batch();
+
+    querySnapshot.forEach((documentSnapshot) => {
+      batch.delete(documentSnapshot.ref);
+    });
+
+    await batch.commit();
+    return true;
+  };
+
+  return {
+    deleteObsoleteTasks,
+  };
 };
 
 export default useFetchTask;

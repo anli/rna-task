@@ -2,6 +2,8 @@ import {mockFirestoreUpdate} from '@mocks';
 import {TaskActions} from '@task';
 import {renderApp} from '@test';
 import {fireEvent, waitFor} from '@testing-library/react-native';
+import {Alert} from 'react-native';
+import BottomSheet from 'react-native-bottomsheet';
 import Toast from 'react-native-toast-message';
 import HomeScreen from './home';
 
@@ -185,6 +187,35 @@ describe('Home Screen', () => {
       position: 'bottom',
       text2: 'Please enter a date first.',
       type: 'error',
+    });
+  });
+
+  it('Delete obsolete tasks', async () => {
+    const spyToastShow = jest.spyOn(Toast, 'show');
+    jest
+      .spyOn(BottomSheet, 'showBottomSheetWithOptions')
+      .mockImplementation((_, callback) => {
+        callback && callback(0);
+      });
+    jest
+      .spyOn(Alert, 'alert')
+      .mockImplementation((_title, _description, buttons) => {
+        const onPress = buttons?.[1]?.onPress;
+        onPress && onPress();
+      });
+
+    const {getByA11yLabel} = renderApp({
+      Component: HomeScreen.Component,
+      navigationOptions: HomeScreen.options,
+    });
+
+    fireEvent.press(getByA11yLabel('More'));
+
+    await waitFor(() => expect(spyToastShow).toBeCalledTimes(1));
+    expect(spyToastShow).toBeCalledWith({
+      position: 'bottom',
+      text2: 'Deleted obsolete tasks successfully',
+      type: 'success',
     });
   });
 });
