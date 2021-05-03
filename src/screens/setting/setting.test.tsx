@@ -161,4 +161,26 @@ describe('Setting Screen', () => {
 
     await expect(getByText('Daily notification is disabled')).toBeDefined();
   });
+
+  it('Enabled notification setting', async () => {
+    jest
+      .spyOn(getHasNotification, 'default')
+      .mockResolvedValueOnce(false)
+      .mockResolvedValue(true);
+
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() =>
+      expect(getByText('Daily notification is disabled')).toBeDefined(),
+    );
+
+    await act(async () => {
+      fireEvent.press(getByText('Daily notification is disabled'));
+    });
+
+    await expect(getByText('Daily notification is enabled')).toBeDefined();
+  });
 });

@@ -56,7 +56,6 @@ const Component = (): JSX.Element => {
     updateNeeded?.storeUrl && Linking.openURL(updateNeeded.storeUrl);
   };
 
-  /* istanbul ignore next */
   const onUpdateNotification = async () => {
     if (hasNotification) {
       await endNotification();
@@ -88,22 +87,13 @@ const Component = (): JSX.Element => {
     value: updateNeeded?.currentVersion,
   });
 
-  const versionDescription = updateNeeded?.isNeeded
-    ? t('setting.version_new_available', {
-        value: updateNeeded.latestVersion,
-        defaultValue: 'New version {{value}} is available',
-      })
-    : t('setting.version_is_latest', 'You are on the latest version');
+  const versionDescription = getVersionDescription(
+    Boolean(updateNeeded?.isNeeded),
+    t,
+    updateNeeded?.latestVersion,
+  );
 
-  const notificationTitle = hasNotification
-    ? t(
-        'setting.update_notification_enabled_title',
-        'Daily notification is enabled',
-      )
-    : t(
-        'setting.update_notification_disabled_title',
-        'Daily notification is disabled',
-      );
+  const notificationTitle = getNotificationTitle(hasNotification, t);
 
   return (
     <Screen>
@@ -116,29 +106,26 @@ const Component = (): JSX.Element => {
         description={t('setting.switch_account', 'Switch Account')}
         onPress={onSwitchAccount}
       />
-      {isLoadingUpdateNeeded ? (
-        <ListItemIndicator />
-      ) : (
-        <List.Item
-          accessibilityLabel={t('setting.update_version', 'Update Version')}
-          title={versionTitle}
-          description={versionDescription}
-          onPress={onUpdateVersion}
-        />
-      )}
-      {isLoadingNotification ? (
-        <ListItemIndicator />
-      ) : (
-        <List.Item
-          accessibilityLabel={notificationTitle}
-          title={notificationTitle}
-          description={t(
-            'setting.update_notification_description',
-            'Every morning at 9AM',
-          )}
-          onPress={onUpdateNotification}
-        />
-      )}
+
+      <ListItem
+        isLoading={isLoadingUpdateNeeded}
+        accessibilityLabel={t('setting.update_version', 'Update Version')}
+        title={versionTitle}
+        description={versionDescription}
+        onPress={onUpdateVersion}
+      />
+
+      <ListItem
+        isLoading={isLoadingNotification}
+        accessibilityLabel={notificationTitle}
+        title={notificationTitle}
+        description={t(
+          'setting.update_notification_description',
+          'Every morning at 9AM',
+        )}
+        onPress={onUpdateNotification}
+      />
+
       <List.Item
         accessibilityLabel={t('setting.logout', 'Logout')}
         onPress={onLogout}
@@ -165,3 +152,40 @@ const ListItemIndicator = () => (
     <Rect x="16" y="40" rx="0" ry="0" width={200} height={12} />
   </ContentLoader>
 );
+
+const ListItem = ({isLoading, ...props}: any) => {
+  if (isLoading) {
+    return <ListItemIndicator />;
+  }
+
+  return <List.Item {...props} />;
+};
+
+const getVersionDescription = (
+  hasNewVersion: boolean,
+  t: any,
+  latestVersion: string = '',
+) => {
+  if (hasNewVersion) {
+    return t('setting.version_new_available', {
+      value: latestVersion,
+      defaultValue: 'New version {{value}} is available',
+    });
+  }
+
+  return t('setting.version_is_latest', 'You are on the latest version');
+};
+
+const getNotificationTitle = (hasNotification: boolean, t: any) => {
+  if (hasNotification) {
+    return t(
+      'setting.update_notification_enabled_title',
+      'Daily notification is enabled',
+    );
+  }
+
+  return t(
+    'setting.update_notification_disabled_title',
+    'Daily notification is disabled',
+  );
+};

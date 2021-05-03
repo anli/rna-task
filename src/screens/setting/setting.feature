@@ -58,3 +58,9 @@ Feature: Setting Screen
     And I am at 'Setting' Screen
     When I press 'Daily notification is enabled' text button
     Then I should see 'Daily notification is disabled' text
+
+  Scenario: Enable notification setting
+    Given I disabled notification
+    And I am at 'Setting' Screen
+    When I press 'Daily notification is disabled' text button
+    Then I should see 'Daily notification is enabled' text
