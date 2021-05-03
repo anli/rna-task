@@ -1,6 +1,7 @@
 import {logout, switchAccount, useAuthentication} from '@authentication';
 import {Header} from '@components';
 import styled from '@emotion/native';
+import {useNotification} from '@notification';
 import {useFocusEffect} from '@react-navigation/native';
 import {getBottomTabOptions, useUpdateNeeded} from '@utils';
 import React, {useCallback} from 'react';
@@ -19,6 +20,12 @@ const Component = (): JSX.Element => {
     checkVersion,
   } = useUpdateNeeded({depth: 3});
   const {t} = useTranslation();
+  const {
+    hasNotification,
+    isLoading: isLoadingNotification,
+    start: startNotification,
+    end: endNotification,
+  } = useNotification();
 
   useFocusEffect(
     useCallback(() => {
@@ -49,17 +56,44 @@ const Component = (): JSX.Element => {
     updateNeeded?.storeUrl && Linking.openURL(updateNeeded.storeUrl);
   };
 
+  const onUpdateNotification = async () => {
+    if (hasNotification) {
+      await endNotification();
+      Toast.show({
+        position: 'bottom',
+        type: 'success',
+        text2: t(
+          'setting.update_notification_disabled_title',
+          'Daily notification is disabled',
+        ),
+      });
+      return;
+    }
+
+    await startNotification();
+    Toast.show({
+      position: 'bottom',
+      type: 'success',
+      text2: t(
+        'setting.update_notification_disabled_title',
+        'Daily notification is disabled',
+      ),
+    });
+    return;
+  };
+
   const versionTitle = t('setting.version', {
     defaultValue: 'Version {{value}}',
     value: updateNeeded?.currentVersion,
   });
 
-  const versionDescription = updateNeeded?.isNeeded
-    ? t('setting.version_new_available', {
-        value: updateNeeded.latestVersion,
-        defaultValue: 'New version {{value}} is available',
-      })
-    : t('setting.version_is_latest', 'You are on the latest version');
+  const versionDescription = getVersionDescription(
+    Boolean(updateNeeded?.isNeeded),
+    t,
+    updateNeeded?.latestVersion,
+  );
+
+  const notificationTitle = getNotificationTitle(hasNotification, t);
 
   return (
     <Screen>
@@ -72,16 +106,26 @@ const Component = (): JSX.Element => {
         description={t('setting.switch_account', 'Switch Account')}
         onPress={onSwitchAccount}
       />
-      {isLoadingUpdateNeeded ? (
-        <SettingItemIndicator />
-      ) : (
-        <List.Item
-          accessibilityLabel={t('setting.update_version', 'Update Version')}
-          title={versionTitle}
-          description={versionDescription}
-          onPress={onUpdateVersion}
-        />
-      )}
+
+      <ListItem
+        isLoading={isLoadingUpdateNeeded}
+        accessibilityLabel={t('setting.update_version', 'Update Version')}
+        title={versionTitle}
+        description={versionDescription}
+        onPress={onUpdateVersion}
+      />
+
+      <ListItem
+        isLoading={isLoadingNotification}
+        accessibilityLabel={notificationTitle}
+        title={notificationTitle}
+        description={t(
+          'setting.update_notification_description',
+          'Every morning at 9AM',
+        )}
+        onPress={onUpdateNotification}
+      />
+
       <List.Item
         accessibilityLabel={t('setting.logout', 'Logout')}
         onPress={onLogout}
@@ -102,9 +146,46 @@ const Screen = styled.SafeAreaView`
   flex: 1;
 `;
 
-const SettingItemIndicator = () => (
+const ListItemIndicator = () => (
   <ContentLoader height={69}>
     <Rect x="16" y="16" rx="0" ry="0" width={100} height={16} />
     <Rect x="16" y="40" rx="0" ry="0" width={200} height={12} />
   </ContentLoader>
 );
+
+const ListItem = ({isLoading, ...props}: any) => {
+  if (isLoading) {
+    return <ListItemIndicator />;
+  }
+
+  return <List.Item {...props} />;
+};
+
+const getVersionDescription = (
+  hasNewVersion: boolean,
+  t: any,
+  latestVersion: string = '',
+) => {
+  if (hasNewVersion) {
+    return t('setting.version_new_available', {
+      value: latestVersion,
+      defaultValue: 'New version {{value}} is available',
+    });
+  }
+
+  return t('setting.version_is_latest', 'You are on the latest version');
+};
+
+const getNotificationTitle = (hasNotification: boolean, t: any) => {
+  if (hasNotification) {
+    return t(
+      'setting.update_notification_enabled_title',
+      'Daily notification is enabled',
+    );
+  }
+
+  return t(
+    'setting.update_notification_disabled_title',
+    'Daily notification is disabled',
+  );
+};
