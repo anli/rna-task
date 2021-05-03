@@ -1,3 +1,18 @@
+# [4.0.0](https://github.com/anli/rna-task/compare/3.1.0...4.0.0) (2021-05-03)
+
+
+### Bug Fixes
+
+* **home:** add initialIndex to FilterTaskTabs ([#108](https://github.com/anli/rna-task/issues/108)) ([86f1220](https://github.com/anli/rna-task/commit/86f12200a9a8d39e94200dcd1edf05dc6916822b)), closes [#106](https://github.com/anli/rna-task/issues/106)
+
+
+### Features
+
+* **app, setting:** add local schedule notification settings ([#110](https://github.com/anli/rna-task/issues/110)) ([6f0b66a](https://github.com/anli/rna-task/commit/6f0b66a54bf1e5ca9ad6e2bfe1e3aafd918af2a9)), closes [#43](https://github.com/anli/rna-task/issues/43)
+* **package, analytics, login, task-add, home:** add google analytics, and logLogin, task logEvent ([#103](https://github.com/anli/rna-task/issues/103)) ([9b4c666](https://github.com/anli/rna-task/commit/9b4c666a08f2077654630cc8c0f9bcaf6de394a8)), closes [#81](https://github.com/anli/rna-task/issues/81)
+
+
+
 # [3.1.0](https://github.com/anli/rna-task/compare/3.0.0...3.1.0) (2021-04-29)
 
 

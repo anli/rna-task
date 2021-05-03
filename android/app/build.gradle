@@ -133,8 +133,8 @@ android {
         applicationId "io.anli.task"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 70
-        versionName "3.1.0"
+        versionCode 78
+        versionName "4.0.0"
         multiDexEnabled true
     }
     splits {
