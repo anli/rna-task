@@ -1,9 +1,10 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {renderApp} from '@test';
-import {fireEvent, waitFor} from '@testing-library/react-native';
+import {act, fireEvent, waitFor} from '@testing-library/react-native';
 import {Linking} from 'react-native';
 import Toast from 'react-native-toast-message';
 import VersionCheck from 'react-native-version-check';
+import * as getHasNotification from '../../notification/get-has-notification';
 import SettingScreen from './setting';
 
 const mockedSignOut = jest.fn();
@@ -110,5 +111,76 @@ describe('Setting Screen', () => {
     fireEvent.press(getByText('Version 1.0.0'));
     expect(spyOpenUrl).toBeCalledTimes(1);
     expect(spyOpenUrl).toBeCalledWith('STORE_URL');
+  });
+
+  it('See enabled notification setting UI', async () => {
+    jest.spyOn(getHasNotification, 'default').mockResolvedValue(true);
+
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() =>
+      expect(getByText('Daily notification is enabled')).toBeDefined(),
+    );
+    expect(getByText('Every morning at 9AM')).toBeDefined();
+  });
+
+  it('See disabled notification setting UI', async () => {
+    jest.spyOn(getHasNotification, 'default').mockResolvedValue(false);
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() =>
+      expect(getByText('Daily notification is disabled')).toBeDefined(),
+    );
+    expect(getByText('Every morning at 9AM')).toBeDefined();
+  });
+
+  it('Disable notification setting', async () => {
+    jest
+      .spyOn(getHasNotification, 'default')
+      .mockResolvedValueOnce(true)
+      .mockResolvedValue(false);
+
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() =>
+      expect(getByText('Daily notification is enabled')).toBeDefined(),
+    );
+
+    await act(async () => {
+      fireEvent.press(getByText('Daily notification is enabled'));
+    });
+
+    await expect(getByText('Daily notification is disabled')).toBeDefined();
+  });
+
+  it('Enabled notification setting', async () => {
+    jest
+      .spyOn(getHasNotification, 'default')
+      .mockResolvedValueOnce(false)
+      .mockResolvedValue(true);
+
+    const {getByText} = renderApp({
+      Component: SettingScreen.Component,
+      navigationOptions: SettingScreen.options,
+    });
+
+    await waitFor(() =>
+      expect(getByText('Daily notification is disabled')).toBeDefined(),
+    );
+
+    await act(async () => {
+      fireEvent.press(getByText('Daily notification is disabled'));
+    });
+
+    await expect(getByText('Daily notification is enabled')).toBeDefined();
   });
 });

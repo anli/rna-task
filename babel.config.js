@@ -17,6 +17,7 @@ module.exports = {
           '.json',
         ],
         alias: {
+          '@notification': './src/notification',
           '@analytics': './src/analytics',
           '@i18n': './src/i18n',
           '@filter': './src/filter',
