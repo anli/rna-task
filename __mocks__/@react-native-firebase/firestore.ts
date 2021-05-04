@@ -33,6 +33,14 @@ const firestore = jest.fn().mockReturnValue({
               schedule: {frequency: 2, period: 'week'},
             }),
           },
+          {
+            id: 'ObsoleteTask',
+            data: () => ({
+              name: 'Obsolete Task',
+              date: '2021-04-02',
+              isCompleted: true,
+            }),
+          },
         ],
       };
       callback(query);
@@ -42,6 +50,15 @@ const firestore = jest.fn().mockReturnValue({
     doc: jest.fn().mockReturnValue({
       delete: mockFirestoreDelete,
       update: mockFirestoreUpdate,
+    }),
+    where: jest.fn().mockReturnValue({
+      where: jest.fn().mockReturnValue({
+        get: jest.fn().mockReturnValue({
+          forEach: (callback: any) => {
+            callback({ref: 'REF'});
+          },
+        }),
+      }),
     }),
   }),
   doc: jest.fn().mockReturnValue({
@@ -55,6 +72,10 @@ const firestore = jest.fn().mockReturnValue({
       return jest.fn();
     }),
     set: mockFirestoreSet,
+  }),
+  batch: jest.fn().mockReturnValue({
+    delete: jest.fn(),
+    commit: jest.fn(),
   }),
 });
 

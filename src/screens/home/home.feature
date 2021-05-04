@@ -68,3 +68,10 @@ Feature: Home Screen
     And I am at 'Home' Screen
     When I press 'Task B' 'Mark not completed' Button
     Then I should see 'Error Toast' 'Please enter a date first.'
+
+  Scenario: Delete obsolete tasks
+    Given I have 'Obsolete task'
+    And I am at 'Home' Screen
+    When I press 'more' Icon Button
+    And I press 'Delete completed tasks before previously' Button
+    Then I should see 'Success Toast' 'Deleted obsolete tasks successfull'

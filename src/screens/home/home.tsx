@@ -12,7 +12,8 @@ import {isBefore} from 'date-fns/fp';
 import R from 'ramda';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList} from 'react-native';
+import {Alert, FlatList} from 'react-native';
+import BottomSheet from 'react-native-bottomsheet';
 import {Appbar, List} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {Task as TaskComponent} from './components';
@@ -32,6 +33,7 @@ const FilterTaskTabs = ({
     setSelectedIndex(index);
     onSelect(index);
   };
+
   return (
     <TabView selectedIndex={selectedIndex} onSelect={onSelectIndex}>
       {titles.map((title) => {
@@ -47,12 +49,15 @@ const FilterTaskTabs = ({
 
 const EmptyTab = styled.View``;
 
-const getData = (data: Task[], filter: Filter) => {
-  const filterNotCompleted = R.filter<Task>((task) => !task?.isCompleted);
-  const filterCompleted = R.filter<Task>((task) => Boolean(task?.isCompleted));
-  const isDatePeriod = (task: Task, isPeriod: (date: Date) => boolean) =>
-    typeof task?.date === 'string' && isPeriod(new Date(task.date));
+const filterNotCompleted = R.filter<Task>((task) => !task?.isCompleted);
+const filterCompleted = R.filter<Task>((task) => Boolean(task?.isCompleted));
+const isDatePeriod = (task: Task, isPeriod: (date: Date) => boolean) =>
+  typeof task?.date === 'string' && isPeriod(new Date(task.date));
+const filterIsBeforeToday = R.filter<Task>((task) =>
+  isDatePeriod(task, isBefore(startOfToday())),
+);
 
+const getData = (data: Task[], filter: Filter) => {
   switch (filter) {
     case 'canDo':
       return {
@@ -67,9 +72,6 @@ const getData = (data: Task[], filter: Filter) => {
         completed: R.pipe(filterToday, filterCompleted)(data),
       };
     case 'didPreviously':
-      const filterIsBeforeToday = R.filter<Task>((task) =>
-        isDatePeriod(task, isBefore(startOfToday())),
-      );
       const previousDates: Task[] = R.pipe(
         filterCompleted,
         filterIsBeforeToday,
@@ -90,6 +92,15 @@ const getData = (data: Task[], filter: Filter) => {
   }
 };
 
+const getPreviousDate = (data: any[]) => {
+  return R.pipe(
+    filterCompleted,
+    filterIsBeforeToday,
+    R.pluck('date') as () => string[],
+    R.head as any,
+  )(data) as string | undefined;
+};
+
 const Component = (): JSX.Element => {
   const {navigate} = useNavigation();
   const allData = useAppSelector(TaskSelectors.selectAll);
@@ -105,7 +116,7 @@ const Component = (): JSX.Element => {
     false,
   );
   const {t} = useTranslation();
-  useFetchTask();
+  const {deleteObsoleteTasks} = useFetchTask();
 
   useEffect(() => {
     if (filter === 'didPreviously') {
@@ -114,6 +125,13 @@ const Component = (): JSX.Element => {
   }, [filter]);
 
   const title = t(filterOptions[filter], filterOptionsDefaultValue[filter]);
+  const data = getData(allData, filter);
+  const showCompletedSection = !R.isEmpty(data.completed);
+  const notCompletedTaskCount = data.completed.length;
+  const initialTabIndex = Object.keys(filterOptions).findIndex(
+    (key) => key === filter,
+  );
+  const previousDate = getPreviousDate(allData);
 
   const onUpdate = (id: string) => {
     navigate('TaskUpdateScreen', {id});
@@ -164,23 +182,66 @@ const Component = (): JSX.Element => {
   const onCompletedListExpandedPress = () =>
     setCompetedListExpanded(!competedListExpanded);
 
-  const data = getData(allData, filter);
-  const showCompletedSection = !R.isEmpty(data.completed);
-  const notCompletedTaskCount = data.completed.length;
-
   const onFilterTab = (index: number) => {
     const key = Object.keys(filterOptions)[index] as Filter;
     onFilter(key);
   };
 
-  const initialTabIndex = Object.keys(filterOptions).findIndex(
-    (key) => key === filter,
-  );
+  const onMore = () => {
+    const date = previousDate as string;
+
+    const options = [
+      {
+        label: 'Delete completed tasks before previously',
+        action: () => {
+          Alert.alert('Are you sure', 'This is irreversible', [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: async () => {
+                await deleteObsoleteTasks(date);
+                Toast.show({
+                  position: 'bottom',
+                  type: 'success',
+                  text2: t(
+                    'toast.delete_obsolete_successful',
+                    'Deleted obsolete tasks successfully',
+                  ),
+                });
+              },
+            },
+          ]);
+        },
+      },
+    ];
+    const labels = options.map((option) => option.label);
+
+    BottomSheet.showBottomSheetWithOptions(
+      {
+        options: labels,
+        cancelButtonIndex: labels.length,
+      },
+      (index) => {
+        const action = options[index]?.action;
+        action && action();
+      },
+    );
+  };
 
   return (
     <Screen>
       <Header>
         <Appbar.Content title={title} />
+        {previousDate && (
+          <Appbar.Action
+            icon="dots-vertical"
+            onPress={onMore}
+            accessibilityLabel="More"
+          />
+        )}
       </Header>
       <FilterTaskTabs
         initialIndex={initialTabIndex}
