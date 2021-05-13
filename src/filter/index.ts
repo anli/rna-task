@@ -1,4 +1,12 @@
-import {Filter as FilterNative} from './use-filter';
+import filterSlice, {FilterState as FilterStateNative} from './filter-slice';
 
-export {default as useFilter} from './use-filter';
-export type Filter = FilterNative;
+export {
+  default as filterSlice,
+  filters,
+  FilterSelectors,
+  setKey,
+} from './filter-slice';
+
+export type FilterState = FilterStateNative;
+
+export const FilterActions = filterSlice.actions;

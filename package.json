@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "scripts": {
-    "coverage": "npm run test -- --coverage || open coverage/lcov-report/index.html",
+    "coverage": "npm run test -- --coverage && open coverage/lcov-report/index.html",
     "deploy:major": "npm version major --no-git-tag-version && npx standard-changelog && fastlane android build",
     "deploy:minor": "npm version minor --no-git-tag-version && npx standard-changelog && fastlane android build",
     "deploy:patch": "npm version patch --no-git-tag-version && npx standard-changelog && fastlane android build",
@@ -21,6 +21,7 @@
     "@emotion/native": "^11.0.0",
     "@emotion/react": "^11.1.5",
     "@eva-design/eva": "^2.1.0",
+    "@react-native-async-storage/async-storage": "^1.15.4",
     "@react-native-community/datetimepicker": "^3.4.3",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.3",
@@ -62,7 +63,8 @@
     "react-native-toast-message": "^1.4.9",
     "react-native-vector-icons": "^8.1.0",
     "react-native-version-check": "^3.4.2",
-    "react-redux": "^7.2.2"
+    "react-redux": "^7.2.2",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

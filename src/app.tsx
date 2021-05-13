@@ -16,7 +16,7 @@ import {
   TaskAddScreen,
   TaskUpdateScreen,
 } from '@screens';
-import store from '@store';
+import store, {persistor} from '@store';
 import {defaultTheme} from '@themes';
 import {ApplicationProvider} from '@ui-kitten/components';
 import {getBottomTabOptions} from '@utils';
@@ -29,6 +29,7 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import useVersionCheck from './utils/use-version-check';
 
 const navigationTheme = {
@@ -64,22 +65,24 @@ const App = (): JSX.Element => {
 
   return (
     <StoreProvider store={store}>
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <PaperProvider theme={paperTheme}>
-          <StatusBar
-            animated={true}
-            backgroundColor={paperTheme.colors.background}
-            barStyle="dark-content"
-          />
-          <NavigationContainer theme={navigationTheme}>
-            <Navigator
-              isLoading={isLoading || !ready}
-              isAuthenticated={isAuthenticated}
+      <PersistGate loading={null} persistor={persistor}>
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <PaperProvider theme={paperTheme}>
+            <StatusBar
+              animated={true}
+              backgroundColor={paperTheme.colors.background}
+              barStyle="dark-content"
             />
-            <Toast />
-          </NavigationContainer>
-        </PaperProvider>
-      </ApplicationProvider>
+            <NavigationContainer theme={navigationTheme}>
+              <Navigator
+                isLoading={isLoading || !ready}
+                isAuthenticated={isAuthenticated}
+              />
+              <Toast />
+            </NavigationContainer>
+          </PaperProvider>
+        </ApplicationProvider>
+      </PersistGate>
     </StoreProvider>
   );
 };

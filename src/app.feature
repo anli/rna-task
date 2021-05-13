@@ -3,7 +3,10 @@ Feature: App
   Scenario: I am logged in
     Given I am logged in
     When App load
-    Then I should see 'All Tasks'
+    Then I should see 'Can do'
+    And I should see 'Today'
+    And I should see 'Previously'
+    And I should see 'All'
 
   Scenario: I am logged out
     Given I am logged out
