@@ -1,3 +1,13 @@
+# [5.0.0](https://github.com/anli/rna-task/compare/4.0.0...5.0.0) (2021-05-13)
+
+
+### Features
+
+* **home:** add delete obsolete task UX ([#114](https://github.com/anli/rna-task/issues/114)) ([58dbe7a](https://github.com/anli/rna-task/commit/58dbe7afeac60fed86e9a0432420b4efbe39b770)), closes [#55](https://github.com/anli/rna-task/issues/55)
+* **package, filter, home:** add redux-persist, store filter locally ([#118](https://github.com/anli/rna-task/issues/118)) ([099b1ce](https://github.com/anli/rna-task/commit/099b1ce43a62b5ef3c6ab2970a5fc655b7ecdf66)), closes [#116](https://github.com/anli/rna-task/issues/116)
+
+
+
 # [4.0.0](https://github.com/anli/rna-task/compare/3.1.0...4.0.0) (2021-05-03)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "rna-task",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "scripts": {
     "coverage": "npm run test -- --coverage && open coverage/lcov-report/index.html",
