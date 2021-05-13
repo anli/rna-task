@@ -24,9 +24,12 @@ describe('App', () => {
 
   it('I am logged in', async () => {
     const {getByText} = render(<App />);
-    await waitFor(() => expect(getByText('All Tasks')).toBeDefined());
+    await waitFor(() => expect(getByText('Can do')).toBeDefined());
 
-    expect(getByText('All Tasks')).toBeDefined();
+    expect(getByText('Can do')).toBeDefined();
+    expect(getByText('Today')).toBeDefined();
+    expect(getByText('Previously')).toBeDefined();
+    expect(getByText('All')).toBeDefined();
   });
 
   it('I am logged out', async () => {

@@ -18,19 +18,19 @@ Feature: Home Screen
     Given I am logged in
     When App load
     And I press 'Can do' Button
-    Then I should see 'What I can do'
+    Then I should see 'Can do' selected tab
 
   Scenario: Filter tasks by What I want to do Today
     Given I am logged in
     When App load
     And I press 'Today' Button
-    Then I should see 'What I want to do Today'
+    Then I should see 'Today' selected tab
 
   Scenario: Filter tasks by What I did Previously
     Given I am logged in
     When App load
     And I press 'Previously' Button
-    Then I should see 'What I did Previously'
+    Then I should see 'Previously' selected tab
 
   Scenario: Mark task as completed
     Given I have 'Task A' not completed

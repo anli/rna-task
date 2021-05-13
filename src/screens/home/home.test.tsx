@@ -7,6 +7,9 @@ import BottomSheet from 'react-native-bottomsheet';
 import Toast from 'react-native-toast-message';
 import HomeScreen from './home';
 
+const UNSELECTED_TAB_FONT_COLOR = '#8F9BB3';
+const SELECTED_TAB_FONT_COLOR = '#3366FF';
+
 const mockedNavigate = jest.fn();
 jest.mock('@react-navigation/native', () => {
   return {
@@ -28,7 +31,6 @@ describe('Home Screen', () => {
       Component: HomeScreen.Component,
       navigationOptions: HomeScreen.options,
     });
-    expect(getByText('All Tasks')).toBeDefined();
     expect(getByText('Task A')).toBeDefined();
     expect(getByText('Task B')).toBeDefined();
   });
@@ -51,9 +53,15 @@ describe('Home Screen', () => {
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByText('Can do'));
+    expect(getByText('Can do').props.style.reverse()[0].color).toEqual(
+      UNSELECTED_TAB_FONT_COLOR,
+    );
+    expect(getByText('Can do')).toBeDefined();
 
-    await waitFor(() => expect(getByText('What I can do')).toBeDefined());
+    fireEvent.press(getByText('Can do'));
+    expect(getByText('Can do').props.style.reverse()[0].color).toEqual(
+      SELECTED_TAB_FONT_COLOR,
+    );
   });
 
   it('Filter tasks by What I want to do Today', async () => {
@@ -62,10 +70,14 @@ describe('Home Screen', () => {
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByText('Today'));
+    expect(getByText('Today').props.style.reverse()[0].color).toEqual(
+      UNSELECTED_TAB_FONT_COLOR,
+    );
+    expect(getByText('Today')).toBeDefined();
 
-    await waitFor(() =>
-      expect(getByText('What I want to do Today')).toBeDefined(),
+    fireEvent.press(getByText('Today'));
+    expect(getByText('Today').props.style.reverse()[0].color).toEqual(
+      SELECTED_TAB_FONT_COLOR,
     );
   });
 
@@ -75,10 +87,14 @@ describe('Home Screen', () => {
       navigationOptions: HomeScreen.options,
     });
 
-    fireEvent.press(getByText('Previously'));
+    expect(getByText('Previously').props.style.reverse()[0].color).toEqual(
+      UNSELECTED_TAB_FONT_COLOR,
+    );
+    expect(getByText('Previously')).toBeDefined();
 
-    await waitFor(() =>
-      expect(getByText('What I did Previously')).toBeDefined(),
+    fireEvent.press(getByText('Previously'));
+    expect(getByText('Previously').props.style.reverse()[0].color).toEqual(
+      SELECTED_TAB_FONT_COLOR,
     );
   });
 
