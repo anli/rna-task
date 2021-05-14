@@ -16,10 +16,11 @@ import {
   TaskAddScreen,
   TaskUpdateScreen,
 } from '@screens';
-import store, {persistor} from '@store';
+import store, {persistor, useAppDispatch, useAppSelector} from '@store';
 import {defaultTheme} from '@themes';
 import {ApplicationProvider} from '@ui-kitten/components';
-import {getBottomTabOptions} from '@utils';
+import {getBottomTabOptions, useVersionCheck} from '@utils';
+import {VersionActions, VersionSelectors} from '@version';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StatusBar, View} from 'react-native';
@@ -30,7 +31,6 @@ import {
 } from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import useVersionCheck from './utils/use-version-check';
 
 const navigationTheme = {
   ...NavigationDefaultTheme,
@@ -55,6 +55,7 @@ const App = (): JSX.Element => {
   const {ready} = useTranslation(undefined, {useSuspense: false});
   useVersionCheck();
   useI18n();
+
   useEffect(() => {
     const init = async () => {};
 
@@ -113,6 +114,18 @@ const Tab = createBottomTabNavigator();
 const PlaceholderComponent = () => <View />;
 
 const TabScreens = () => {
+  const hasUpdate = useAppSelector(VersionSelectors.hasUpdate);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(VersionActions.checkUpdate());
+  }, [dispatch]);
+
+  const settingOptions = {
+    ...SettingScreen.options,
+    tabBarBadge: hasUpdate ? '' : undefined,
+  };
+
   return (
     <Tab.Navigator tabBarOptions={{showLabel: false}}>
       <Tab.Screen
@@ -134,7 +147,7 @@ const TabScreens = () => {
       <Tab.Screen
         name="SettingScreen"
         component={SettingScreen.Component}
-        options={SettingScreen.options}
+        options={settingOptions}
       />
     </Tab.Navigator>
   );

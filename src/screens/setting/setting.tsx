@@ -13,7 +13,6 @@ import Toast from 'react-native-toast-message';
 
 const Component = (): JSX.Element => {
   const {user} = useAuthentication();
-  const email = user?.email;
   const {
     data: updateNeeded,
     isLoading: isLoadingUpdateNeeded,
@@ -26,6 +25,8 @@ const Component = (): JSX.Element => {
     start: startNotification,
     end: endNotification,
   } = useNotification();
+
+  const email = user?.email;
 
   useFocusEffect(
     useCallback(() => {
