@@ -18,3 +18,9 @@ Feature: App
     When App load
     And I press 'Add Task' Button
     Then I should see 'Add Task' Screen
+
+  Scenario: See badge in Setting Tab Button
+    Given I am logged in
+    And there is App Update avaliable
+    When App load
+    Then I should see badge in Setting Tab Button
