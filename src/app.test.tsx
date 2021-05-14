@@ -1,6 +1,7 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {fireEvent, render, waitFor} from '@testing-library/react-native';
 import React from 'react';
+import VersionCheck from 'react-native-version-check';
 import App from './app';
 
 const defaultUser: Partial<FirebaseAuthTypes.User> = {
@@ -45,5 +46,17 @@ describe('App', () => {
     const {getByA11yLabel} = render(<App />);
     await waitFor(() => expect(getByA11yLabel('Add Task')).toBeDefined());
     fireEvent.press(getByA11yLabel('Add Task'));
+  });
+
+  it('See badge in Setting Tab Button', async () => {
+    jest.spyOn(VersionCheck, 'needUpdate').mockResolvedValue({
+      isNeeded: true,
+      currentVersion: '1.0.0',
+      latestVersion: '2.0.0',
+      storeUrl: 'STORE_URL',
+    });
+
+    const {getByA11yLabel} = render(<App />);
+    await waitFor(() => expect(getByA11yLabel('Setting')).toBeDefined());
   });
 });

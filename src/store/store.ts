@@ -6,6 +6,7 @@ import {
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
 import {taskSlice} from '@task';
+import {versionSlice} from '@version';
 import {
   FLUSH,
   PAUSE,
@@ -20,6 +21,7 @@ import {
 export const reducer = {
   task: taskSlice.reducer,
   filter: filterSlice.reducer,
+  version: versionSlice.reducer,
 };
 
 const rootReducer = combineReducers(reducer);
@@ -28,6 +30,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
+  whitelist: ['filter'],
 };
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);
