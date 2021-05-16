@@ -34,7 +34,6 @@ const ScheduleDialog = ({
   const {control, handleSubmit} = useForm<FormData>();
   const {colors} = useTheme();
 
-  const LABEL_STYLE_DISABLED = {fontSize: 14, color: colors.disabled};
   const defaultFrequency = values?.frequency || 1;
   const defaultPeriod = values?.period || 'weeks';
 
@@ -76,19 +75,12 @@ const ScheduleDialog = ({
             render={({onChange, value}) => (
               <RadioButton.Group onValueChange={onChange} value={value}>
                 <PeriodOption
-                  disabled
-                  labelStyle={LABEL_STYLE_DISABLED}
-                  label="Day"
-                  value="days"
-                />
-                <PeriodOption
                   labelStyle={LABEL_STYLE}
                   label="Week"
                   value="weeks"
                 />
                 <PeriodOption
-                  disabled
-                  labelStyle={LABEL_STYLE_DISABLED}
+                  labelStyle={LABEL_STYLE}
                   label="Month"
                   value="months"
                 />
